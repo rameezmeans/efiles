@@ -18,5 +18,5 @@ Route::get('/', function () {
     $user = User::first();
 
     dd($user);
-    // return view('welcome');
+    return view('welcome');
 });
