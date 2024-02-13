@@ -1,5 +1,6 @@
 <?php
 
+use ECUApp\SharedCode\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $user = User::first();
+
+    dd($user);
+    // return view('welcome');
 });
