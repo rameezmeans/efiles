@@ -1,0 +1,20 @@
+[13-Feb-2024 13:25:33 UTC] PHP Warning:  require(/home/admin/public_html/TuningXV2/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/admin/public_html/TuningXV2/public/index.php on line 34
+[13-Feb-2024 13:25:33 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/admin/public_html/TuningXV2/public/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/admin/public_html/TuningXV2/public/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/admin/public_html/TuningXV2/public/index.php on line 34
+[13-Feb-2024 13:25:34 UTC] PHP Warning:  require(/home/admin/public_html/TuningXV2/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/admin/public_html/TuningXV2/public/index.php on line 34
+[13-Feb-2024 13:25:34 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/admin/public_html/TuningXV2/public/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/admin/public_html/TuningXV2/public/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/admin/public_html/TuningXV2/public/index.php on line 34
+[13-Feb-2024 13:25:35 UTC] PHP Warning:  require(/home/admin/public_html/TuningXV2/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/admin/public_html/TuningXV2/public/index.php on line 34
+[13-Feb-2024 13:25:35 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/admin/public_html/TuningXV2/public/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/admin/public_html/TuningXV2/public/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/admin/public_html/TuningXV2/public/index.php on line 34
+[13-Feb-2024 13:25:37 UTC] PHP Warning:  require(/home/admin/public_html/TuningXV2/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/admin/public_html/TuningXV2/public/index.php on line 34
+[13-Feb-2024 13:25:37 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/admin/public_html/TuningXV2/public/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/admin/public_html/TuningXV2/public/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/admin/public_html/TuningXV2/public/index.php on line 34
