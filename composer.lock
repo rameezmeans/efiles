@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fe33f98a750b8c5a51b30c78bd3fab21",
+    "content-hash": "b2f16389b38e168ecd7503d7afc9d3e0",
     "packages": [
         {
             "name": "brick/math",
@@ -2987,6 +2987,42 @@
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
             "time": "2019-03-08T08:55:37+00:00"
+        },
+        {
+            "name": "rameezmeans/ecutech-code",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:rameezmeans/ecutech-shared-code.git",
+                "reference": "6f2f542312f4e26d0e1e73c93ee31499839903ef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rameezmeans/ecutech-shared-code/zipball/6f2f542312f4e26d0e1e73c93ee31499839903ef",
+                "reference": "6f2f542312f4e26d0e1e73c93ee31499839903ef",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ECUApp\\SharedCode\\Models\\": "src/models"
+                }
+            },
+            "authors": [
+                {
+                    "name": "rameez",
+                    "email": "xrkalix@gmail.com",
+                    "role": "admin"
+                }
+            ],
+            "description": "Your package description goes here",
+            "homepage": "https://yourcompany.com",
+            "support": {
+                "source": "https://github.com/rameezmeans/ecutech-shared-code/tree/main",
+                "issues": "https://github.com/rameezmeans/ecutech-shared-code/issues"
+            },
+            "time": "2024-02-13T10:35:01+00:00"
         },
         {
             "name": "ramsey/collection",
@@ -8207,7 +8243,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "rameezmeans/ecutech-code": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
