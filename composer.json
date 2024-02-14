@@ -26,7 +26,6 @@
         "laraveldaily/laravel-invoices": "^3.1",
         "league/omnipay": "^3.2",
         "mailchimp/marketing": "^3.0",
-        "munafio/chatify": "^1.6",
         "nategood/httpful": "^0.3.2",
         "omnipay/paypal": "^3.0",
         "ph-7/eu-vat-validator": "^3.1",
