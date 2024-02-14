@@ -5360,19 +5360,20 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:rameezmeans/ecutech-shared-code.git",
-                "reference": "6f2f542312f4e26d0e1e73c93ee31499839903ef"
+                "reference": "9812512d8244b04609e5d6bfaa06d4244697da86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rameezmeans/ecutech-shared-code/zipball/6f2f542312f4e26d0e1e73c93ee31499839903ef",
-                "reference": "6f2f542312f4e26d0e1e73c93ee31499839903ef",
+                "url": "https://api.github.com/repos/rameezmeans/ecutech-shared-code/zipball/9812512d8244b04609e5d6bfaa06d4244697da86",
+                "reference": "9812512d8244b04609e5d6bfaa06d4244697da86",
                 "shasum": ""
             },
             "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "ECUApp\\SharedCode\\Models\\": "src/models"
+                    "ECUApp\\SharedCode\\Models\\": "src/models",
+                    "ECUApp\\SharedCode\\Controllers\\": "src/controllers"
                 }
             },
             "authors": [
@@ -5388,7 +5389,7 @@
                 "source": "https://github.com/rameezmeans/ecutech-shared-code/tree/main",
                 "issues": "https://github.com/rameezmeans/ecutech-shared-code/issues"
             },
-            "time": "2024-02-13T10:35:01+00:00"
+            "time": "2024-02-14T18:05:50+00:00"
         },
         {
             "name": "ramsey/collection",

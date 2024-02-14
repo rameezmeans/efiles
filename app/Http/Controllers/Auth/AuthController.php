@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
   
 use App\Http\Controllers\Controller;
+use ECUApp\SharedCode\Controllers\AuthMainController;
 use ECUApp\SharedCode\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,14 @@ use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
+
+    private $authMainObj;
+
+    public function __construct()
+    {   
+        $this->authMainObj = new AuthMainController();
+    }
+
     /**
      * Write code on Method
      *
@@ -47,12 +56,19 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        dd($user);
+        $frontEndID = 2;
 
-        if (Auth::attempt($credentials)) {
+        if( $this->authMainObj->loginRule($frontEndID, $user) ){
 
-            return redirect()->intended('home')
-                        ->withSuccess('You have Successfully loggedin!');
+            if (Auth::attempt($credentials)) {
+
+                return redirect()->intended('home')
+                            ->withSuccess('You have Successfully loggedin!');
+            }
+        }
+        else{
+
+            return redirect("login")->withSuccess('You have entered invalid credentials!');
         }
   
         return redirect("login")->withSuccess('You have entered invalid credentials!');
