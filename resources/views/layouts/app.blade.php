@@ -10,12 +10,12 @@
     <meta name="id" content="{{env('LIVE_CHAT_ID')}}">
     <meta name="type" content="user">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'DEV | Tuning-X | Performance Excellence') }}</title>
 
     {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> --}}
-    <link href="{{ url('/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url('vendor/ecutech-code/css/bootstrap.min.css') }}" rel="stylesheet">
 
-    <link href="{{ url('/css/newappv1.css') }}" rel="stylesheet">
+    <link href="{{ url('vendor/ecutech-code/css/newappv1.css') }}" rel="stylesheet">
 
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
@@ -24,29 +24,29 @@
     {{-- <link href="{{url('/css/all.min.css')}}" rel="stylesheet"> --}}
 
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> --}}
-    <script src="{{url('/js/jquery.min.js')}}"></script>
+    <script src="{{url('vendor/ecutech-code/js/jquery.min.js')}}"></script>
 
     {{-- <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script> --}}
-    <script src="{{url('/js/dropzone.min.js')}}"></script>
+    <script src="{{url('vendor/ecutech-code/js/dropzone.min.js')}}"></script>
 
     {{-- <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" /> --}}
-    <link rel="stylesheet" href="{{url('/css/dropzone.min.css')}}" type="text/css" />
+    <link rel="stylesheet" href="{{url('vendor/ecutech-code/css/dropzone.min.css')}}" type="text/css" />
     
     {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" type="text/css" /> --}}
-    <link rel="stylesheet" href="{{ url('/css/datatables.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ url('vendor/ecutech-code/css/datatables.css') }}" type="text/css" />
 
     {{-- <script src="https://phpcoder.tech/multiselect/js/jquery.multiselect.js"></script> --}}
     {{-- <link rel="stylesheet" href="https://phpcoder.tech/multiselect/css/jquery.multiselect.css"> --}}
     
     {{-- <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script> --}}
-    <script src="{{url('/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{url('vendor/ecutech-code/js/jquery.dataTables.min.js')}}"></script>
     
     <style type="text/css">.tk-proxima-nova{font-family:"proxima-nova",sans-serif;}</style>
     {{-- <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
-    <script src="{{url('/js/sweetalert2.js')}}"></script>
+    <script src="{{url('vendor/ecutech-code/js/sweetalert2.js')}}"></script>
 
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script> --}}
-    <script src="{{url('/js/Chart.js')}}"></script>
+    <script src="{{url('vendor/ecutech-code/js/Chart.js')}}"></script>
 
     
 
@@ -236,10 +236,11 @@
     }
 </script>
 {{-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> --}}
-<script src="{{url('/js/bootstrap.min.js')}}"></script>
+<script src="{{url('vendor/ecutech-code/js/bootstrap.min.js')}}"></script>
 {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> --}}
 
 <script src="https://js.pusher.com/7.0.3/pusher.min.js"></script>
+{{--
 <script >
 // Enable pusher logging - don't include this in production
 Pusher.logToConsole = true;
@@ -263,6 +264,7 @@ const allowedFiles = {!! json_encode(config('chatify.attachments.allowed_files')
 const getAllowedExtensions = [...allowedImages, ...allowedFiles];
 const getMaxUploadSize = {{ Chatify::getMaxUploadSize() }};
 </script>
+--}}
 {{-- <div id="switch-language" class="modal bottom-sheet no-print hide" style="z-index: 1005; opacity: 1; display: block; bottom: 0px;">
     <div class="modal-content center no-print">
         <h2>Select your language</h2>
@@ -277,7 +279,7 @@ const getMaxUploadSize = {{ Chatify::getMaxUploadSize() }};
     </div>
 </div> --}}
 @yield('pagespecificscripts')
-<script src="{{ asset('js/chatify/code.js') }}"></script> 
+<script src="{{ asset('vendor/ecutech-codejs/chatify/code.js') }}"></script> 
 </body>
 
 </html>

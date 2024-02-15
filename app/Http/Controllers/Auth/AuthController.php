@@ -101,7 +101,9 @@ class AuthController extends Controller
     public function home()
     {
         if(Auth::check()){
-            return view('home');
+            
+            $user = User::findOrFail(Auth::user()->id);
+            return view('home', ['user' => $user]);
         }
   
         return redirect("login")->withSuccess('Opps! You do not have access');
