@@ -47,18 +47,18 @@ class AuthController extends Controller
      */
     public function postLogin(Request $request)
     {
+        
         $request->validate([
             'email' => 'required',
             'password' => 'required',
         ]);
-   
-        $credentials = $request->only('email', 'password');
-
-        $user = User::where('email', $request->email)->first();
-
+        
         $frontEndID = 2;
+        $user = User::where('email', $request->email)->where('front_end_id', $frontEndID)->first();
 
         if( $this->authMainObj->loginRule($frontEndID, $user) ){
+
+            $credentials = $request->only('email', 'password');
 
             if (Auth::attempt($credentials)) {
 

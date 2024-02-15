@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'DEV | Tuning-X | Performance Excellence') }}</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -16,10 +16,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-css/1.4.6/select2-bootstrap.min.css">
     
-    <link href="{{ url('/css/front.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/ecutech-code/css/front.css') }}" rel="stylesheet">
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
     {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> --}}
-    <link href="{{ url('/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/ecutech-code/css/bootstrap.min.css') }}" rel="stylesheet">
     
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
@@ -30,7 +30,7 @@
 
     <!-- Scripts -->
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
-    @vite(['resources/js/app.js'])
+    {{-- @vite(['resources/js/app.js']) --}}
     
     @yield('pagespecificstyles')
 
