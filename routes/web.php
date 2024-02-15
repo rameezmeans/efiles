@@ -21,7 +21,7 @@ Route::get('/', function () {
 
 Route::get('login', [AuthController::class, 'index'])->name('login');
 Route::post('post-login', [AuthController::class, 'postLogin'])->name('login.post'); 
-Route::get('registration', [AuthController::class, 'registration'])->name('register');
+Route::get('register', [AuthController::class, 'registration'])->name('register');
 Route::post('post-registration', [AuthController::class, 'postRegistration'])->name('register.post'); 
 Route::get('home', [AuthController::class, 'home'])->name('home'); 
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
@@ -36,3 +36,5 @@ Route::get('/shop-product', [App\Http\Controllers\PaymentController::class, 'sho
 Route::get('/price-list', [App\Http\Controllers\AccountController::class, 'priceList'])->name('price-list');
 Route::get('/invoices', [App\Http\Controllers\InvoicesController::class, 'index'])->name('invoices');
 Route::get('/cart', [App\Http\Controllers\PaymentController::class, 'cart'])->name('cart');
+
+Route::post('get_tool_icons', [App\Http\Controllers\AccountController::class, 'getToolsIcons'])->name('get-tool-icons');

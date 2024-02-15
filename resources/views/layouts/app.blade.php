@@ -6,7 +6,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="url" content="{{env('APP_URL')}}" data-user="{{Auth::user()->id}}">
+    <meta name="url" content="{{env('APP_URL')}}" data-user="{{$user->id}}">
     <meta name="id" content="{{env('LIVE_CHAT_ID')}}">
     <meta name="type" content="user">
 
@@ -279,7 +279,7 @@ const getMaxUploadSize = {{ Chatify::getMaxUploadSize() }};
     </div>
 </div> --}}
 @yield('pagespecificscripts')
-<script src="{{ asset('vendor/ecutech-codejs/chatify/code.js') }}"></script> 
+{{-- <script src="{{ asset('vendor/ecutech-codejs/chatify/code.js') }}"></script>  --}}
 </body>
 
 </html>

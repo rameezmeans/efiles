@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
   
 use App\Http\Controllers\Controller;
 use ECUApp\SharedCode\Controllers\AuthMainController;
+use ECUApp\SharedCode\Models\Tool;
 use ECUApp\SharedCode\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +38,9 @@ class AuthController extends Controller
      */
     public function registration()
     {
-        return view('auth.registration');
+        $masterTools = Tool::where('type', 'master')->get();
+        $slaveTools = Tool::where('type', 'slave')->get();
+        return view('auth.registration', ['masterTools' => $masterTools, 'slaveTools' => $slaveTools]);
     }
       
     /**
