@@ -27,6 +27,10 @@ Route::get('home', [AuthController::class, 'home'])->name('home');
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/account', [App\Http\Controllers\AccountController::class, 'index'])->name('account');
+Route::post('/edit_account', [App\Http\Controllers\AccountController::class, 'editAccount'])->name('edit-account');
+Route::post('/change-password', [App\Http\Controllers\AccountController::class, 'changePassword'])->name('change-password');
+Route::post('/update_tools', [App\Http\Controllers\AccountController::class, 'updateTools'])->name('update-tools');
+Route::post('get_tool_icons', [App\Http\Controllers\AccountController::class, 'getToolsIcons'])->name('get-tool-icons');
 
 Route::get('/file-upload', [App\Http\Controllers\FileController::class, 'index'])->name('file-upload');
 Route::get('/file-history', [App\Http\Controllers\FileController::class, 'fileHistory'])->name('file-history');

@@ -59,19 +59,22 @@ class AuthController extends Controller
         $frontEndID = 2;
         $user = User::where('email', $request->email)->where('front_end_id', $frontEndID)->first();
 
-        if( $this->authMainObj->loginRule($frontEndID, $user) ){
+        if($user){
 
-            $credentials = $request->only('email', 'password');
+            if( $this->authMainObj->loginRule($frontEndID, $user) ){
 
-            if (Auth::attempt($credentials)) {
+                $credentials = $request->only('email', 'password');
 
-                return redirect()->intended('home')
-                            ->withSuccess('You have Successfully loggedin!');
+                if (Auth::attempt($credentials)) {
+
+                    return redirect()->intended('home')
+                                ->withSuccess('You have Successfully loggedin!');
+                }
             }
-        }
-        else{
+            else{
 
-            return redirect("login")->withSuccess('You have entered invalid credentials!');
+                return redirect("login")->withSuccess('You have entered invalid credentials!');
+            }
         }
   
         return redirect("login")->withSuccess('You have entered invalid credentials!');
