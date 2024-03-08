@@ -34,7 +34,7 @@ body {
                     <p class="text-danger">{{ implode('', $errors->all(':message')) }}</p>
                     @endif
 
-                    <form method="POST" action="{{ route('register') }}" class="login-form">
+                    <form method="POST" action="{{ route('register.post') }}" class="login-form">
                         @csrf
 
                             <div class="form-group">

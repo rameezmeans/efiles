@@ -83,17 +83,31 @@ class AuthController extends Controller
      * @return response()
      */
     public function postRegistration(Request $request)
-    {  
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-        ]);
-           
+    {   
         $data = $request->all();
-        $check = $this->create($data);
+        $frontEndID = 2;
+        
+        $validationArray = $this->authMainObj->getValidationRules($data);
+        $request->validate($validationArray);
+
+        $user = $this->authMainObj->registration($data);
          
-        return redirect("home")->withSuccess('Great! You have Successfully loggedin');
+        if( $this->authMainObj->loginRule($frontEndID, $user) ){
+
+            $credentials = $request->only('email', 'password');
+
+            if (Auth::attempt($credentials)) {
+
+                return redirect()->intended('home')
+                            ->withSuccess('You have Successfully loggedin!');
+            }
+        }
+        else{
+
+            return redirect("login")->withSuccess('You have entered invalid credentials!');
+        }
+  
+        return redirect("login")->withSuccess('You have entered invalid credentials!');
     }
     
     /**
