@@ -37,8 +37,9 @@ Route::get('/file-history', [App\Http\Controllers\FileController::class, 'fileHi
 Route::get('/bosch-ecu', [App\Http\Controllers\AccountController::class, 'boschECU'])->name('bosch-ecu');
 Route::get('/evc_credit_shop', [App\Http\Controllers\EVCPackagesController::class, 'packages'])->name('evc-credits-shop');
 Route::get('/shop-product', [App\Http\Controllers\PaymentController::class, 'shopProduct'])->name('shop-product');
-Route::get('/price-list', [App\Http\Controllers\AccountController::class, 'priceList'])->name('price-list');
 Route::get('/invoices', [App\Http\Controllers\InvoicesController::class, 'index'])->name('invoices');
 Route::get('/cart', [App\Http\Controllers\PaymentController::class, 'cart'])->name('cart');
 
 Route::post('get_tool_icons', [App\Http\Controllers\AccountController::class, 'getToolsIcons'])->name('get-tool-icons');
+
+Route::get('/price-list', [App\Http\Controllers\PricelistController::class, 'index'])->name('price-list');
