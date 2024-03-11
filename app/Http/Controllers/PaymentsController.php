@@ -92,6 +92,10 @@ class PaymentsController extends Controller
 
     }
 
+    public function successStripePackage(Request $request){
+        dd($request->all());
+    }
+
     public function successStripe(Request $request){
 
         $user = User::findOrFail(Auth::user()->id);
@@ -181,6 +185,62 @@ class PaymentsController extends Controller
 
         return redirect()->route('shop-product')->with('success', 'Credits are added!');
         
+
+    }
+
+    public function buyPackage(Request $request){
+
+        $frontendID = 2;
+
+        $user = User::findOrFail(Auth::user()->id);
+
+        $price = $request->price;
+        $package = $request->package;
+        $credits = $request->credits;
+
+        $packages = $this->paymenttMainObj->getPackages($frontendID);
+
+        if($user->exclude_vat_check) {
+
+            if(!$user->group_id){
+                $vat0Group = Group::where('slug', 'VAT0')->first();
+                $user->group_id = $vat0Group->id;
+                $user->save();
+            }
+        }
+
+        else{
+
+            $this->authMainObj->VATCheckPolicy($user);
+
+        }
+        
+        $factor = 0;
+        $tax = 0;
+
+        if($user->group->tax > 0){
+            $tax = (float) $user->group->tax;
+        }
+
+        if($user->group->raise > 0){
+            $factor = (float)  ($user->group->raise / 100) * $price;
+        }
+
+        if($user->group->discount > 0){
+            $factor =  -1* (float) ($user->group->discount / 100) * $price;
+        }
+
+        
+        return view('cart_package', ['package' => $package,'credits' => $credits,'packages' => $packages, 'price' => $price, 'tax' => $tax, 'factor' => $factor, 'group' => $user->group, 'user' => $user] );
+
+    }
+
+    public function checkoutPackagesStripe(Request $request){
+
+        $user = User::findOrFail(Auth::user()->id);
+        $package =  Package::findOrFail($request->package);
+
+        return $this->paymenttMainObj->redirectStripe($user, $package->discounted_price, $package->credits, $package->id);
 
     }
 

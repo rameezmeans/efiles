@@ -155,6 +155,7 @@
                       <p class="m-t-20">{{$package->desc}}</p>
                       <form method="POST" action="{{route('buy.package')}}">
                         @csrf
+                        <input type="hidden" name="package" value="{{$package->id}}">
                         <input type="hidden" name="price" value="{{$package->discounted_price}}">
                         <input type="hidden" name="credits" value="{{$package->credits}}">
                         <button type="submit" class="btn btn-cart"><i class="fa fa-shopping-cart"></i> Buy</button>
