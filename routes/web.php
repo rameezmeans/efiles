@@ -36,10 +36,22 @@ Route::get('/file-upload', [App\Http\Controllers\FileController::class, 'index']
 Route::get('/file-history', [App\Http\Controllers\FileController::class, 'fileHistory'])->name('file-history');
 Route::get('/bosch-ecu', [App\Http\Controllers\AccountController::class, 'boschECU'])->name('bosch-ecu');
 Route::get('/evc_credit_shop', [App\Http\Controllers\EVCPackagesController::class, 'packages'])->name('evc-credits-shop');
-Route::get('/shop-product', [App\Http\Controllers\PaymentController::class, 'shopProduct'])->name('shop-product');
+
 Route::get('/invoices', [App\Http\Controllers\InvoicesController::class, 'index'])->name('invoices');
-Route::get('/cart', [App\Http\Controllers\PaymentController::class, 'cart'])->name('cart');
+
+Route::get('/shop-product', [App\Http\Controllers\PaymentsController::class, 'shopProduct'])->name('shop-product');
+Route::get('/cart', [App\Http\Controllers\PaymentsController::class, 'cart'])->name('cart');
+Route::post('/add_to_cart', [App\Http\Controllers\PaymentsController::class, 'addToCart'])->name('add-to-cart');
+Route::post('buy_package', [App\Http\Controllers\PaymentsController::class, 'buyPackage'])->name('buy.package');
+Route::post('/cart_quantity', [App\Http\Controllers\PaymentsController::class, 'getCartQuantity'])->name('get-cart');
+Route::get('/cart', [App\Http\Controllers\PaymentsController::class, 'cart'])->name('cart');
+
+Route::post('/checkout_stripe', [App\Http\Controllers\PaymentsController::class, 'stripeCheckout'])->name('checkout.stripe');
+Route::post('/checkout_paypal', [App\Http\Controllers\PaymentsController::class, 'paypalCheckout'])->name('checkout.paypal');
+Route::get('/success', [App\Http\Controllers\PaymentsController::class, 'successStripe'])->name('checkout.success.stripe');
+Route::get('/cancel', [App\Http\Controllers\PaymentsController::class, 'cancel'])->name('checkout.cancel');
 
 Route::post('get_tool_icons', [App\Http\Controllers\AccountController::class, 'getToolsIcons'])->name('get-tool-icons');
 
 Route::get('/price-list', [App\Http\Controllers\PricelistController::class, 'index'])->name('price-list');
+
