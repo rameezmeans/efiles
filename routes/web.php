@@ -34,8 +34,9 @@ Route::post('get_tool_icons', [App\Http\Controllers\AccountController::class, 'g
 
 Route::get('pdfview',array('as'=>'pdfview','uses'=>'App\Http\Controllers\InvoicesController@makePDF'));
 
-Route::get('/file-upload', [App\Http\Controllers\FileController::class, 'index'])->name('file-upload');
+Route::get('/file-upload', [App\Http\Controllers\FileController::class, 'upload'])->name('file-upload');
 Route::get('/file-history', [App\Http\Controllers\FileController::class, 'fileHistory'])->name('file-history');
+
 Route::get('/bosch-ecu', [App\Http\Controllers\AccountController::class, 'boschECU'])->name('bosch-ecu');
 Route::get('/evc_credit_shop', [App\Http\Controllers\EVCPackagesController::class, 'packages'])->name('evc-credits-shop');
 
@@ -52,8 +53,8 @@ Route::post('checkout_packages_paypal', [App\Http\Controllers\PaymentsController
 
 Route::post('/checkout_stripe', [App\Http\Controllers\PaymentsController::class, 'stripeCheckout'])->name('checkout.stripe');
 Route::post('/checkout_paypal', [App\Http\Controllers\PaymentsController::class, 'paypalCheckout'])->name('checkout.paypal');
-Route::get('/success', [App\Http\Controllers\PaymentsController::class, 'successStripe'])->name('checkout.success.stripe');
-Route::get('/success_package', [App\Http\Controllers\PaymentsController::class, 'successStripePackage'])->name('checkout.success.stripe.package');
+Route::get('/success', [App\Http\Controllers\PaymentsController::class, 'success'])->name('checkout.success');
+Route::get('/success_package', [App\Http\Controllers\PaymentsController::class, 'successPackage'])->name('checkout.success.package');
 Route::get('/cancel', [App\Http\Controllers\PaymentsController::class, 'cancel'])->name('checkout.cancel');
 
 Route::post('get_tool_icons', [App\Http\Controllers\AccountController::class, 'getToolsIcons'])->name('get-tool-icons');

@@ -5361,12 +5361,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:rameezmeans/ecutech-shared-code.git",
-                "reference": "aea3957fbb529b351f3efdc706cc1c7a0389878f"
+                "reference": "9412d42b5ff73b318ed8f21847250290eb31d023"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rameezmeans/ecutech-shared-code/zipball/aea3957fbb529b351f3efdc706cc1c7a0389878f",
-                "reference": "aea3957fbb529b351f3efdc706cc1c7a0389878f",
+                "url": "https://api.github.com/repos/rameezmeans/ecutech-shared-code/zipball/9412d42b5ff73b318ed8f21847250290eb31d023",
+                "reference": "9412d42b5ff73b318ed8f21847250290eb31d023",
                 "shasum": ""
             },
             "default-branch": true,
@@ -5390,7 +5390,7 @@
                 "source": "https://github.com/rameezmeans/ecutech-shared-code/tree/main",
                 "issues": "https://github.com/rameezmeans/ecutech-shared-code/issues"
             },
-            "time": "2024-03-11T14:32:08+00:00"
+            "time": "2024-03-12T14:56:02+00:00"
         },
         {
             "name": "ramsey/collection",
@@ -8599,7 +8599,7 @@
             "version": "6.44.4",
             "source": {
                 "type": "git",
-                "url": "git@github.com:twilio/twilio-php.git",
+                "url": "https://github.com/twilio/twilio-php.git",
                 "reference": "08aad5f377e2245b9cd7508e7762d95e7392fa4d"
             },
             "dist": {
@@ -8641,6 +8641,10 @@
                 "sms",
                 "twilio"
             ],
+            "support": {
+                "issues": "https://github.com/twilio/twilio-php/issues",
+                "source": "https://github.com/twilio/twilio-php/tree/6.44.4"
+            },
             "time": "2023-02-22T19:59:53+00:00"
         },
         {
@@ -9401,7 +9405,7 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.6.7",
+            "version": "1.6.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",

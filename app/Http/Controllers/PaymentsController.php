@@ -49,8 +49,8 @@ class PaymentsController extends Controller
         return view('shop_product', ['packages' => $packages, 'price' => $price, 'group' => $user->group, 'user' => $user]);
     }
 
-    public function cart()
-    {
+    public function cart(){
+        
         $frontendID = 2;
 
         $user = User::findOrFail(Auth::user()->id);
@@ -92,33 +92,46 @@ class PaymentsController extends Controller
 
     }
 
-    public function successStripePackage(Request $request){
-        dd($request->all());
-    }
+    public function success(Request $request){
 
-    public function successStripe(Request $request){
-
+        $packageID = $request->packageID;
         $user = User::findOrFail(Auth::user()->id);
+        $type = $request->type;
 
-        $sessionID = $request->get('session_id'); 
-        $credits = $request->credits;
-        $unitPrice = $this->paymenttMainObj->getPrice()->value;
-
-        $this->paymenttMainObj->addCredits($user, $sessionID, $unitPrice, $credits);
-        
-        if($user->exclude_vat_check) {
-
-            if(!$user->group_id){
-                $vat0Group = Group::where('slug', 'VAT0')->first();
-                $user->group_id = $vat0Group->id;
-                $user->save();
-            }
+        if($type == 'stripe'){
+            $sessionID = $request->get('session_id');
+        }
+        else{
+            $sessionID = $request->get('paymentId');
         }
 
+        if($request->packageID == 0){
+
+            $credits = $request->credits;
+            $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
+        }
         else{
 
-            $this->authMainObj->VATCheckPolicy($user);
+            $package = Package::findOrFail($packageID);
+
+            $this->paymenttMainObj->addCreditsPackage($user, $sessionID, $package, $type);
+            // dd($package);
+
         }
+        
+        // if($user->exclude_vat_check) {
+
+        //     if(!$user->group_id){
+        //         $vat0Group = Group::where('slug', 'VAT0')->first();
+        //         $user->group_id = $vat0Group->id;
+        //         $user->save();
+        //     }
+        // }
+
+        // else{
+
+        //     $this->authMainObj->VATCheckPolicy($user);
+        // }
 
         // $logInstance = new PaymentLog();
         // $logInstance->payment_id = $credit->id;
@@ -235,6 +248,14 @@ class PaymentsController extends Controller
 
     }
 
+    public function checkoutPackagesPaypal(Request $request){
+
+        $user = User::findOrFail(Auth::user()->id);
+        $package =  Package::findOrFail($request->package);
+
+        return $this->paymenttMainObj->redirectPaypal($user, $package->discounted_price, $package->credits, $package->id);        
+    }
+
     public function checkoutPackagesStripe(Request $request){
 
         $user = User::findOrFail(Auth::user()->id);
@@ -244,6 +265,15 @@ class PaymentsController extends Controller
 
     }
 
+    public function paypalCheckout(Request $request){
+
+        $user = User::findOrFail(Auth::user()->id);
+        $unitPrice =  $this->paymenttMainObj->getPrice()->value;
+        $credits = $request->credits_for_checkout;
+        return $this->paymenttMainObj->redirectPaypal($user, $unitPrice, $credits);
+
+    }
+    
     public function stripeCheckout(Request $request){
        
         $user = User::findOrFail(Auth::user()->id);
