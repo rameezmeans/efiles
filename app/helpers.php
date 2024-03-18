@@ -1,4 +1,66 @@
-<?php 
+<?php
+
+use App\Models\User;
+use ECUApp\SharedCode\Models\Role;
+use ECUApp\SharedCode\Models\Service;
+use ECUApp\SharedCode\Models\Tool;
+use ECUApp\SharedCode\Models\Vehicle;
+use Illuminate\Http\Client\ConnectionException;
+
+if(!function_exists('get_logo_for_stages_and_options')){
+
+    function get_logo_for_stages_and_options( $str ){
+
+        try{
+
+            // $responseStages = Http::get('http://backend.ecutech.gr/api/get_stages');
+            
+            // if($responseStages == NULL){
+            //     return view('505');      
+            // }
+
+            // $stages = json_decode($responseStages->body(), true)['stages'];
+            $stages = Service::orderBy('sorting', 'asc')
+            ->where('type', 'tunning')->where('tuningx_active', 1)->get();
+
+            // $responseOptions = Http::get('http://backend.ecutech.gr/api/get_options');
+
+            // if($responseOptions == NULL){
+            //     return view('505');      
+            // }
+
+            // $options = json_decode($responseOptions->body(), true)['options'];
+
+            $options = Service::orderBy('sorting', 'asc')
+            ->where('type', 'option')->where('tuningx_active', 1)->get();
+            
+        }
+        catch(ConnectionException $e){
+            return view('505');          
+        }
+       
+
+        foreach($stages as $stage){
+            if($stage['name'] == $str)
+                return 'https://backend.ecutech.gr/icons/'.$stage['icon'];
+        }
+
+        foreach($options as $option){
+            if($option['name'] == $str)
+                return 'https://backend.ecutech.gr/icons/'.$option['icon'];
+        }
+        
+    }
+}
+
+
+if(!function_exists('get_head')){
+
+    function get_head(){
+        $head = Role::where('name', 'head')->first();
+        return User::where('role_id', $head->id)->first();
+    }
+}
 
 if(!function_exists('country_to_continent')){
 
@@ -253,6 +315,30 @@ if(!function_exists('country_to_continent')){
             return $continent;
         }
     }
+
+    if(!function_exists('get_dropdown_image')){
+
+        function get_dropdown_image( $id ){
+    
+            $tool = Tool::findOrFail($id);
+            if($tool){
+                return env('BACKEND_LOCAL_URL')."icons/".$tool->icon;
+                // return "https://backend.ecutech.gr/icons/".$tool->icon;
+            }
+        }
+    }
+
+if(!function_exists('get_image_from_brand')){
+
+    function get_image_from_brand( $brand ){
+        if(Vehicle::where('make', '=', $brand)->whereNotNull('Brand_image_URL')->first()){
+            return Vehicle::where('make', '=', $brand)->whereNotNull('Brand_image_URL')->first()->Brand_image_URL;
+        }
+        else {
+            return env('BACKEND_URL').'/icons/logos/logo_white.png';
+        }
+    }
+}
 
 if(!function_exists('code_to_country')){
 

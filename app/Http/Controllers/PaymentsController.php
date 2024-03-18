@@ -113,10 +113,8 @@ class PaymentsController extends Controller
         else{
 
             $package = Package::findOrFail($packageID);
-
             $this->paymenttMainObj->addCreditsPackage($user, $sessionID, $package, $type);
-            // dd($package);
-
+            
         }
         
         // if($user->exclude_vat_check) {

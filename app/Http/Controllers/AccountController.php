@@ -24,6 +24,13 @@ class AccountController extends Controller
         $this->middleware('auth');
     }
 
+    public function boschECU(){
+        
+        $user = User::findOrFail(Auth::user()->id);
+
+        return view('bosch', ['user' => $user]);
+    }
+
     /**
      * Show the application dashboard.
      *

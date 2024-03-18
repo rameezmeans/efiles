@@ -73,11 +73,11 @@ class AuthController extends Controller
             }
             else{
 
-                return redirect("login")->withSuccess('You have entered invalid credentials!');
+                return redirect("login")->with('danger','You have entered invalid credentials!');
             }
         }
   
-        return redirect("login")->withSuccess('You have entered invalid credentials!');
+        return redirect("login")->with('danger','You have entered invalid credentials!');
     }
       
     /**

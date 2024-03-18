@@ -25,7 +25,7 @@
     </div>
     <ul class="nav navbar-nav">
       <li class="m-r-8">
-          <button data-redirect="{{route('file-upload')}}" class="btn btn-info redirect-click"><i class="fa fa-cloud-upload"></i> <span>File Uplaod</span></button>
+          <button data-redirect="{{route('upload')}}" class="btn btn-info redirect-click"><i class="fa fa-cloud-upload"></i> <span>File Uplaod</span></button>
       </li>
       <li class="m-r-8">
             <button data-redirect="{{route('shop-product')}}" class="btn btn-success redirect-click"><i class="fa fa-cart-shopping"></i> <span>Buy Credits</span></button>     
@@ -36,7 +36,7 @@
               <span class="m-l-26" ><b style="font-size:16px">{{$user->credits->sum('credits')}} Credits</b></span>
           </span>
           @if($user->is_evc_customer())
-            <div style="display: inline-grid; position: relative; width:220px; left: 100px; bottom: 7px;">
+            <div style="display: inline-grid; position: relative; width:220px; left: 110px;">
               <span class="m-l-26 text-red" style="">EVC Credit Balance</span>
               <span class="m-l-26 text-red" ><b>{{$user->evc_credits()}} Credits</b></span>
             </div>
@@ -53,7 +53,7 @@
             <span><b style="font-size:16px">{{$user->credits->sum('credits')}} Credits</b></span>
         </span>
         @if($user->is_evc_customer())
-          <div style="display: inline-grid; position: relative; width:220px; left: 100px; bottom: 7px;">
+          <div style="display: inline-grid; position: relative; width:220px; left: 110px;">
             <span class="m-l-26 text-red" style="">EVC Credit Balance</span>
             <span class="m-l-26 text-red" ><b>{{$user->evc_credits()}} Credits</b></span>
           </div>

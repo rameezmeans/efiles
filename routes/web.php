@@ -34,11 +34,33 @@ Route::post('get_tool_icons', [App\Http\Controllers\AccountController::class, 'g
 
 Route::get('pdfview',array('as'=>'pdfview','uses'=>'App\Http\Controllers\InvoicesController@makePDF'));
 
-Route::get('/file-upload', [App\Http\Controllers\FileController::class, 'upload'])->name('file-upload');
-Route::get('/file-history', [App\Http\Controllers\FileController::class, 'fileHistory'])->name('file-history');
+Route::get('/upload', [App\Http\Controllers\FileController::class, 'step1'])->name('upload');
+Route::get('/history', [App\Http\Controllers\FileController::class, 'fileHistory'])->name('history');
+Route::post('/step2', [App\Http\Controllers\FileController::class, 'step2'])->name('step2');
+Route::get('/terms_and_conditions', [App\Http\Controllers\FileController::class, 'termsAndConditions'])->name('terms-and-conditions');
+Route::get('/norefund_policy', [App\Http\Controllers\FileController::class, 'norefundPolicy'])->name('norefund-policy');
+Route::post('/create-temp-file', [App\Http\Controllers\FileController::class, 'createTempFile'])->name('create-temp-file');
+Route::post('/get_models', [App\Http\Controllers\FileController::class, 'getModels'])->name('get-models');
+Route::post('/get_versions', [App\Http\Controllers\FileController::class, 'getVersions'])->name('get-versions');
+Route::post('/get_engines', [App\Http\Controllers\FileController::class, 'getEngines'])->name('get-engines');
+Route::post('/get_ecus', [App\Http\Controllers\FileController::class, 'getECUs'])->name('get-ecus');
+Route::get('/stages', [App\Http\Controllers\FileController::class, 'step3'])->name('step3');
+Route::post('/post_stages', [App\Http\Controllers\FileController::class, 'postStages'])->name('post-stages');
+Route::post('get_upload_comments', [App\Http\Controllers\FileController::class, 'getUploadComments'])->name('get-upload-comments');
+Route::post('/get_options_for_stage', [App\Http\Controllers\FileController::class, 'getOptionsForStage'])->name('get-options-for-stage');
+Route::post('/add_credits_to_file', [App\Http\Controllers\FileController::class, 'addCredits'])->name('add-credits-to-file');
+Route::get('/file/{id}', [App\Http\Controllers\FileController::class, 'showFile'])->name('file');
+Route::get('auto_download', [App\Http\Controllers\FileController::class, 'autoDownload'])->name('auto-download');
 
 Route::get('/bosch-ecu', [App\Http\Controllers\AccountController::class, 'boschECU'])->name('bosch-ecu');
 Route::get('/evc_credit_shop', [App\Http\Controllers\EVCPackagesController::class, 'packages'])->name('evc-credits-shop');
+Route::post('buy_evc_package', [App\Http\Controllers\EVCPackagesController::class, 'buyEVCPackage'])->name('buy.evc.package');
+Route::get('/evc_history', [App\Http\Controllers\EVCPackagesController::class, 'history'])->name('evc-history');
+Route::post('checkout_evc_packages', [App\Http\Controllers\EVCPackagesController::class, 'checkoutEVCPackages'])->name('checkout.evc.packages');
+Route::post('checkout_evc_packages_paypal', [App\Http\Controllers\EVCPackagesController::class, 'checkoutEVCPackages'])->name('checkout.evc.packages.paypal');
+Route::get('cancel_evc_packages', [App\Http\Controllers\EVCPackagesController::class, 'cancelEVCPackages'])->name('checkout.evc.cancel');
+Route::get('success_evc_packages', [App\Http\Controllers\EVCPackagesController::class, 'successEVC'])->name('checkout.evc.success');
+// Route::get('success_evc_packages_paypal', [App\Http\Controllers\EVCPackagesController::class, 'successEVC'])->name('checkout.evc.success');
 
 Route::get('/invoices', [App\Http\Controllers\InvoicesController::class, 'index'])->name('invoices');
 

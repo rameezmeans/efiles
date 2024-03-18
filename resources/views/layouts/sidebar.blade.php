@@ -58,7 +58,7 @@
 			</a>
 		</li> --}}
 		  <li class="">
-			<a href="{{route('file-upload')}}">
+			<a href="{{route('upload')}}">
 			  <i><svg xmlns="http://www.w3.org/2000/svg" width="19.5" height="19.499" viewBox="0 0 19.5 19.499">
                   <path id="Path_3" data-name="Path 3" d="M11.47,2.47a.75.75,0,0,1,1.06,0l4.5,4.5a.75.75,0,0,1-1.06,1.06L12.75,4.81V16.5a.75.75,0,1,1-1.5,0V4.81L8.03,8.03A.75.75,0,0,1,6.97,6.97l4.5-4.5ZM3,15.75a.75.75,0,0,1,.75.75v2.25a1.5,1.5,0,0,0,1.5,1.5h13.5a1.5,1.5,0,0,0,1.5-1.5V16.5a.75.75,0,0,1,1.5,0v2.25a3,3,0,0,1-3,3H5.25a3,3,0,0,1-3-3V16.5A.75.75,0,0,1,3,15.75Z" transform="translate(-2.25 -2.251)" fill="#94a3b8" fill-rule="evenodd"/>
                 </svg>
@@ -67,7 +67,7 @@
 			</a>
 		  </li>
 		  <li class="">
-			<a href="{{route('file-history')}}">
+			<a href="{{route('history')}}">
 			  <i><svg xmlns="http://www.w3.org/2000/svg" width="18" height="21" viewBox="0 0 18 21">
                   <g id="Group_78" data-name="Group 78" transform="translate(-3 -1.5)">
                     <path id="Path_4" data-name="Path 4" d="M7.5,6H14.63A3.375,3.375,0,0,1,18,9.375V18.75a3,3,0,0,0,3-3V6.108a2.929,2.929,0,0,0-2.664-2.94q-.336-.027-.673-.05A3,3,0,0,0,15,1.5H13.5a3,3,0,0,0-2.663,1.618c-.225.015-.45.032-.673.05A2.928,2.928,0,0,0,7.5,6Zm6-3A1.5,1.5,0,0,0,12,4.5h4.5A1.5,1.5,0,0,0,15,3Z" fill="#94a3b8" fill-rule="evenodd"/>
