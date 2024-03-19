@@ -203,13 +203,17 @@ class FileController extends Controller
 
     public function termsAndConditions() {
 
-        return view('files.terms_and_conditions');
+        $user = User::findOrFail(Auth::user()->id);
+
+        return view('files.terms_and_conditions', ['user' => $user]);
 
     }
 
     public function norefundPolicy() {
 
-        return view('files.norefund_policy');
+        $user = User::findOrFail(Auth::user()->id);
+
+        return view('files.norefund_policy', ['user' => $user]);
 
     }
 
