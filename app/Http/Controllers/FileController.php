@@ -47,6 +47,106 @@ class FileController extends Controller
         return view('files.auto_download', [ 'user' => $user, 'file' => $file ]);
     }
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function showFile($id)
+    {
+
+        $user = User::findOrFail(Auth::user()->id);
+
+        $file = File::where('id',$id)
+        ->where('user_id', Auth::user()->id)
+        ->whereNull('original_file_id')
+        ->where('is_credited', 1)
+        ->first();
+
+        $kess3Label = Tool::where('label', 'Kess_V3')->where('type', 'slave')->first();
+
+        if(!$file){
+            abort(404);
+        }
+
+        $vehicle = Vehicle::where('Make', $file->brand)
+        ->where('Model', $file->model)
+        ->where('Generation', $file->version)
+        ->where('Engine', $file->engine)
+        ->first();
+        
+         if($file->checked_by == 'engineer'){
+            $file->checked_by = 'seen';
+            $file->save();
+        }
+
+        $slaveTools =  $user->tools_slave;
+        $masterTools =  $user->tools_master;
+
+        $comments = $this->getCommentsOnFileShowing($file);
+
+        $showComments = false;
+
+        $selectedOptions = [];
+
+        foreach($file->options_services as $selected){
+            $selectedOptions []= $selected->service_id;
+        }
+
+        if($comments){
+            foreach($comments as $comment){
+                if( in_array( $comment->service_id, $selectedOptions) ){
+                    $showComments = true;
+                }
+            }
+        }
+        
+        return view('files.show_file', ['user' => $user, 'showComments' => $showComments, 'comments' => $comments,'kess3Label' => $kess3Label,  'file' => $file, 'masterTools' => $masterTools,  'slaveTools' => $slaveTools, 'vehicle' => $vehicle ]);
+    }
+
+    public function getCommentsOnFileShowing($file){
+
+        if($file->automatic){
+            return null;
+        }
+
+        if($file->ecu){
+
+            // $commentObj = Comment::where('engine', $file->engine)
+            // ->whereNull('subdealer_group_id');
+
+            $commentObj = Comment::where('comment_type', 'download')
+            ->whereNull('subdealer_group_id');
+
+            // $commentObj = $commentObj->where('comment_type', 'download');
+
+            if($file->make){
+                $commentObj->where('make',$file->make);
+            }
+
+            // if($file->model){
+            //     $commentObj->where('model', $file->model);
+            // }
+
+            if($file->ecu){
+                $commentObj->where('ecu',$file->ecu);
+            }
+
+            // if($file->generation){
+            //     $commentObj->where('generation', $file->generation);
+            // }
+
+            $comments = $commentObj->get();
+        }
+        else{
+
+            $comments = null;
+        }
+         
+        return $comments;
+
+    }
+
     public function saveFile(Request $request) {
 
         $fileID = $request->file_id;

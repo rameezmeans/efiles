@@ -7,6 +7,35 @@ use ECUApp\SharedCode\Models\Tool;
 use ECUApp\SharedCode\Models\Vehicle;
 use Illuminate\Http\Client\ConnectionException;
 
+if(!function_exists('get_tool_name')){
+
+    function get_tool_name( $id ){
+
+        return Tool::FindOrFail($id)->name;
+       
+    }
+}
+
+if(!function_exists('get_dropdown_image')){
+
+    function get_dropdown_image( $id ){
+
+        $tool = Tool::findOrFail($id);
+        if($tool){
+            return env('BACKEND_LOCAL_URL')."icons/".$tool->icon;
+            // return "https://backend.ecutech.gr/icons/".$tool->icon;
+        }
+    }
+}
+
+if(!function_exists('trim_str')){
+
+    function trim_str( $str ){
+
+        return trim($str);
+    }
+}
+
 if(!function_exists('get_logo_for_stages_and_options')){
 
     function get_logo_for_stages_and_options( $str ){

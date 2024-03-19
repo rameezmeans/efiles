@@ -56,6 +56,11 @@ Route::post('/checkout_file', [App\Http\Controllers\PaymentsController::class, '
 // Route::post('/checkout_offer_redirect', [App\Http\Controllers\FileController::class, 'checkoutOfferRedirect'])->name('checkout.stripe.offer');
 // Route::post('/checkout_offer_paypal_redirect', [App\Http\Controllers\FileController::class, 'checkoutOfferPaypalRedirect'])->name('checkout.paypal.offer');
 Route::post('/checkout_file_paypal', [App\Http\Controllers\FileController::class, 'checkoutFile'])->name('checkout.paypal.file');
+Route::post('/request-file', [App\Http\Controllers\FileController::class, 'requestFile'])->name('request-file');
+Route::post('/file-url', [App\Http\Controllers\FileController::class, 'fileURL'])->name('file-url');
+Route::get('/download/{id}/{file}', [App\Http\Controllers\FileController::class,'download'])->name('download');
+Route::post('/edit-milage', [App\Http\Controllers\FileController::class, 'EditMilage'])->name('edit-milage');
+Route::post('/add-customer-note', [App\Http\Controllers\FileController::class, 'addCustomerNote'])->name('add-customer-note');
 
 Route::get('/bosch-ecu', [App\Http\Controllers\AccountController::class, 'boschECU'])->name('bosch-ecu');
 Route::get('/evc_credit_shop', [App\Http\Controllers\EVCPackagesController::class, 'packages'])->name('evc-credits-shop');
