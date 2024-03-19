@@ -1094,7 +1094,7 @@ select {
                                 @if(!$credit->file_id)
                                     <td style="width: 40%;">{{$credit->message_to_credit}}</td>
                                 @else
-                                    @php $file = \App\Models\File::where('id', $credit->file_id)->first(); @endphp
+                                    @php $file = ECUApp\SharedCode\Models\File::where('id', $credit->file_id)->first(); @endphp
                                     @if($file)
                                         <td style="width: 40%;">
                                             <img alt="" class="img-circle-car-history" src="{{ get_image_from_brand($file->brand) }}">

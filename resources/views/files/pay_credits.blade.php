@@ -105,12 +105,12 @@
                             <div class="card-footer text-center">
                                 <form method="POST" action="{{route('checkout-file')}}" >
                                     @csrf
-                                    <input type="hidden" name="price_per_unit" id="price_per_unit" value="{{$price->value}}" />
-                                    <input type="hidden" name="factor" id="factor" value="{{$factor}}" />
+                                    {{-- <input type="hidden" name="price_per_unit" id="price_per_unit" value="{{$price->value}}" /> --}}
+                                    {{-- <input type="hidden" name="factor" id="factor" value="{{$factor}}" /> --}}
                                     <input type="hidden" name="file_id"  value="{{$file->id}}" />
-                                    <input type="hidden" name="tax" id="tax" value="{{$tax}}" />
+                                    {{-- <input type="hidden" name="tax" id="tax" value="{{$tax}}" /> --}}
                                     <input type="hidden" name="credits_to_buy" value="{{$credits - $user->credits->sum('credits')}}" />
-                                    <input type="hidden" name="credits_for_checkout" value="{{$credits}}" />
+                                    <input type="hidden" name="credits_for_file" value="{{$credits}}" />
                                     <button type="submit" class="btn btn-red waves-effect waves-light m-sm">
                                         {{__('Buy')}}
                                     </button>

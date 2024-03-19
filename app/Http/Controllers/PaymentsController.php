@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use ECUApp\SharedCode\Controllers\AuthMainController;
+use ECUApp\SharedCode\Controllers\FilesMainController;
 use ECUApp\SharedCode\Controllers\PaymentsMainController;
 use ECUApp\SharedCode\Models\Credit;
 use ECUApp\SharedCode\Models\Group;
@@ -21,6 +22,7 @@ class PaymentsController extends Controller
 {
     private $paymenttMainObj;
     private $authMainObj;
+    private $filesMainObj;
     /**
      * Create a new controller instance.
      *
@@ -31,6 +33,54 @@ class PaymentsController extends Controller
         $this->middleware('auth');
         $this->paymenttMainObj = new PaymentsMainController();
         $this->authMainObj = new AuthMainController();
+        $this->filesMainObj = new FilesMainController();
+    }
+
+    public function fileCart(Request $request){
+
+        $frontendID = 2;
+        $creditsToBuy = $request->credits_to_buy;
+        $creditsForFile = $request->credits_for_file;
+
+        $fileID = $request->file_id;
+
+        $user = User::findOrFail(Auth::user()->id);
+
+        $price = $this->paymenttMainObj->getPrice();
+        $packages = $this->paymenttMainObj->getPackages($frontendID);
+
+        if($user->exclude_vat_check) {
+
+            if(!$user->group_id){
+                $vat0Group = Group::where('slug', 'VAT0')->first();
+                $user->group_id = $vat0Group->id;
+                $user->save();
+            }
+        }
+
+        else{
+
+            $this->authMainObj->VATCheckPolicy($user);
+            
+        }
+        
+        $factor = 0;
+        $tax = 0;
+
+        if($user->group->tax > 0){
+            $tax = (float) $user->group->tax;
+        }
+
+        if($user->group->raise > 0){
+            $factor = (float)  ($user->group->raise / 100) * $price->value;
+        }
+
+        if($user->group->discount > 0){
+            $factor =  -1* (float) ($user->group->discount / 100) * $price->value;
+        }
+
+        return view('files.file_cart', ['user' => $user, 'file_id' => $fileID,'creditsToBuy' => $creditsToBuy, 'creditsForFile' => $creditsForFile, 'packages' => $packages, 'price' => $price, 'tax' => $tax, 'factor' => $factor, 'group' => $user->group] );
+
     }
 
     /**
@@ -93,6 +143,13 @@ class PaymentsController extends Controller
     }
 
     public function success(Request $request){
+        
+        $fileFlag = false;
+
+        if(isset($request->file_id)){
+            $fileFlag = true;
+            $fileID = $request->file_id;
+        }
 
         $packageID = $request->packageID;
         $user = User::findOrFail(Auth::user()->id);
@@ -105,16 +162,28 @@ class PaymentsController extends Controller
             $sessionID = $request->get('paymentId');
         }
 
-        if($request->packageID == 0){
+        if($fileFlag){
 
-            $credits = $request->credits;
-            $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
+            $creditsForFile = $request->creditsForFile;
+            $creditsToBuy = $request->creditsToBuy;
+            $this->paymenttMainObj->addCredits($user, $sessionID, $creditsToBuy, $type);
+            $file = $this->filesMainObj->saveFile($user, $fileID, $creditsForFile);
+
         }
+
         else{
 
-            $package = Package::findOrFail($packageID);
-            $this->paymenttMainObj->addCreditsPackage($user, $sessionID, $package, $type);
-            
+            if($request->packageID == 0){
+
+                $credits = $request->credits;
+                $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
+            }
+            else{
+
+                $package = Package::findOrFail($packageID);
+                $this->paymenttMainObj->addCreditsPackage($user, $sessionID, $package, $type);
+                
+            }
         }
         
         // if($user->exclude_vat_check) {
@@ -194,6 +263,10 @@ class PaymentsController extends Controller
 
         \Cart::remove(101);
 
+        if($fileFlag){
+            return redirect()->route('history')->with('success', 'Task is created!');
+        }
+
         return redirect()->route('shop-product')->with('success', 'Credits are added!');
         
 
@@ -272,6 +345,25 @@ class PaymentsController extends Controller
 
     }
     
+    public function checkoutFile(Request $request){
+
+        $creditsToBuy = $request->creditsToBuy;
+        $creditsForFile = $request->creditsForFile;
+        $fileID = $request->file_id;
+
+        $type = $request->type;
+        $user = User::findOrFail(Auth::user()->id);
+        $unitPrice =  $this->paymenttMainObj->getPrice()->value;
+        
+        if($type == 'stripe'){
+            return $this->paymenttMainObj->redirectStripeFile($user, $unitPrice, $creditsToBuy, $creditsForFile, $fileID);
+        }
+        else{
+            return $this->paymenttMainObj->redirectPaypalFile($user, $unitPrice, $creditsToBuy, $creditsForFile, $fileID);
+        }
+
+    }
+
     public function stripeCheckout(Request $request){
        
         $user = User::findOrFail(Auth::user()->id);

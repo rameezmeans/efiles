@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use ECUApp\SharedCode\Controllers\FilesMainController;
 use ECUApp\SharedCode\Controllers\PaymentsMainController;
+use ECUApp\SharedCode\Models\Comment;
 use ECUApp\SharedCode\Models\Credit;
 use ECUApp\SharedCode\Models\File;
 use ECUApp\SharedCode\Models\FileService;
@@ -46,110 +47,14 @@ class FileController extends Controller
         return view('files.auto_download', [ 'user' => $user, 'file' => $file ]);
     }
 
-    public function addCredits(Request $request) {
+    public function saveFile(Request $request) {
 
+        $fileID = $request->file_id;
+        $credits = $request->credits;
+        
         $user = User::findOrFail(Auth::user()->id);
 
-        $account = $user->stripe_payment_account();
-
-        $credits = $request->credits;
-        $head =  get_head();
-
-        $kess3Label = Tool::where('label', 'Kess_V3')->where('type', 'slave')->first();
-        
-        $creditsInAccount = $user->credits->sum('credits');
-
-        if($creditsInAccount >= $request->credits){
-            
-            $tempFile = TemporaryFile::findOrFail($request->file_id)->toArray();
-
-            $credit = new Credit();
-
-            $credit->credits = -$credits;
-            $credit->price_payed = 0;
-            $credit->front_end_id = 2;
-            $credit->invoice_id = 'INV-'.$account->prefix.mt_rand(100,999);
-            $credit->user_id = $user->id;
-            $credit->save();
-
-            $tempFile['credit_id'] = $credit->id;
-            $tempFile['checked_by'] = "customer";
-            
-            $tempFile['user_id'] = $user->id;
-            $tempFile['username'] =  $user->name;
-            $tempFile['assigned_to'] =  $head->id; // assigned to Nick
-
-            if(File::where('credit_id', $credit->id)->first() === NULL){
-
-                $file = File::create($tempFile);
-                if($file->tool_type == 'slave' && $file->tool_id == $kess3Label->id){
-                    $file->checking_status = 'undecided';
-                }
-
-                $file->credits = $credits;
-                $file->credit_id = $credit->id;
-                $file->front_end_id = $user->front_end_id;
-                
-                $file->assignment_time = Carbon::now();
-                
-                $modelToAdd = str_replace( '/', '', $file->model );
-                $directoryToMake = public_path('uploads'.'/'.$file->brand.'/'.$modelToAdd.'/'.$file->id.'/');
-                
-                if($file->original_file_id == NULL){
-                
-                    if (!file_exists($directoryToMake)) {
-                        $oldmask = umask(000);
-                        mkdir( $directoryToMake , 0777, true);
-                        umask($oldmask);        
-                    }
-                }
-
-                if(file_exists(public_path('uploads').'/'.$file->file_attached)){
-                    copy(public_path('uploads').'/'.$file->file_attached, $directoryToMake.$file->file_attached);
-                    unlink(public_path('uploads').'/'.$file->file_attached);
-                }
-
-                if($file->original_file_id){
-                    $file->file_path = '/uploads/'.$file->brand.'/'.$modelToAdd.'/'.$file->original_file_id.'/';
-                }
-                else{
-                    $file->file_path = '/uploads/'.$file->brand.'/'.$modelToAdd.'/'.$file->id.'/';
-                }
-
-                $file->save();
-
-                $logs = Log::where('temporary_file_id', $request->file_id)->update( ['file_id' => $file->id, 'temporary_file_id' => 0 ]);
-                $services = FileService::where('temporary_file_id', $request->file_id)->update( ['file_id' => $file->id, 'temporary_file_id' => 0 ]);
-                // $alientechFileFlag = AlientechFile::where('temporary_file_id', $request->file_id)->update( ['file_id' => $file->id, 'temporary_file_id' => 0 ]);
-                
-                $temporaryFileDelete = TemporaryFile::findOrFail($request->file_id)->delete();
-
-                //download decoded files
-                
-                // if($file->tool_type == 'slave' && $file->tool_id == $kess3Label->id){
-
-                //     if( $alientechFileFlag ){
-                //         $alientechFile = AlientechFile::where('file_id', $file->id)->first();
-                //         $fileName = $this->alientechObj->process( $alientechFile->guid );
-                //         if($fileName){
-                //             $file->checking_status = 'unchecked';
-                //         }
-                //     }
-                    
-                // }
-                
-                $credit->file_id = $file->id;
-                $credit->save();
-                
-            }
-            else{
-                return view('505');   
-            }
-
-            $file->stage = Service::findOrFail($file->stages_services->service_id)->name;
-            $file->is_credited = 1; // finally is_credited now ... 
-            $file->save();
-        }
+        $file = $this->filesMainObj->saveFile($user, $fileID, $credits);
 
         return redirect()->route('auto-download',['id' => $file->id]);
         
@@ -215,6 +120,16 @@ class FileController extends Controller
 
         return json_encode($optionsArray);
 
+    }
+
+    public function getUploadComments(Request $request){
+        
+        $tempFileID = $request->file_id;
+        $serviceID = $request->service_id;
+
+        $comment = $this->filesMainObj->getStagePageComments($tempFileID, $serviceID);
+
+        return response()->json(['comment'=> $comment]);
     }
 
     /**

@@ -48,9 +48,14 @@ Route::get('/stages', [App\Http\Controllers\FileController::class, 'step3'])->na
 Route::post('/post_stages', [App\Http\Controllers\FileController::class, 'postStages'])->name('post-stages');
 Route::post('get_upload_comments', [App\Http\Controllers\FileController::class, 'getUploadComments'])->name('get-upload-comments');
 Route::post('/get_options_for_stage', [App\Http\Controllers\FileController::class, 'getOptionsForStage'])->name('get-options-for-stage');
-Route::post('/add_credits_to_file', [App\Http\Controllers\FileController::class, 'addCredits'])->name('add-credits-to-file');
+Route::post('/add_credits_to_file', [App\Http\Controllers\FileController::class, 'saveFile'])->name('add-credits-to-file');
 Route::get('/file/{id}', [App\Http\Controllers\FileController::class, 'showFile'])->name('file');
 Route::get('auto_download', [App\Http\Controllers\FileController::class, 'autoDownload'])->name('auto-download');
+Route::post('/file_checkout', [App\Http\Controllers\PaymentsController::class, 'fileCart'])->name('checkout-file');
+Route::post('/checkout_file', [App\Http\Controllers\PaymentsController::class, 'checkoutFile'])->name('checkout.stripe.file');
+// Route::post('/checkout_offer_redirect', [App\Http\Controllers\FileController::class, 'checkoutOfferRedirect'])->name('checkout.stripe.offer');
+// Route::post('/checkout_offer_paypal_redirect', [App\Http\Controllers\FileController::class, 'checkoutOfferPaypalRedirect'])->name('checkout.paypal.offer');
+Route::post('/checkout_file_paypal', [App\Http\Controllers\FileController::class, 'checkoutFile'])->name('checkout.paypal.file');
 
 Route::get('/bosch-ecu', [App\Http\Controllers\AccountController::class, 'boschECU'])->name('bosch-ecu');
 Route::get('/evc_credit_shop', [App\Http\Controllers\EVCPackagesController::class, 'packages'])->name('evc-credits-shop');
