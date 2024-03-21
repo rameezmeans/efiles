@@ -7,8 +7,10 @@ use ECUApp\SharedCode\Controllers\FilesMainController;
 use ECUApp\SharedCode\Controllers\PaymentsMainController;
 use ECUApp\SharedCode\Models\Comment;
 use ECUApp\SharedCode\Models\Credit;
+use ECUApp\SharedCode\Models\EngineerFileNote;
 use ECUApp\SharedCode\Models\File;
 use ECUApp\SharedCode\Models\FileService;
+use ECUApp\SharedCode\Models\FileUrl;
 use ECUApp\SharedCode\Models\Log;
 use ECUApp\SharedCode\Models\Price;
 use ECUApp\SharedCode\Models\Service;
@@ -39,6 +41,185 @@ class FileController extends Controller
 
     }
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+
+    public function fileURL(Request $request)
+    {
+
+        $validated = $request->validate([
+            'file_url' => 'required'
+        ]);
+
+        $file = File::findOrFail($request->file_id);
+        $message = new FileUrl();
+        $message->file_url = $request->file_url;
+       
+        if($request->file('file_url_attachment')){
+            $attachment = $request->file('file_url_attachment');
+            $fileName = $attachment->getClientOriginalName();
+            $attachment->move(public_path($file->file_path),$fileName);
+            $message->file_url_attachment = $fileName;
+        }
+
+        $message->file_id = $request->file_id;
+        $message->save();
+        return redirect()->back()->with('success', 'Personal Note successfully Added!');
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function addCustomerNote(Request $request)
+    {
+        $file = File::findOrFail($request->id);
+        $file->name = $request->name;
+        $file->phone = $request->phone;
+        $file->email = $request->email;
+        $file->customer_internal_notes = $request->customer_internal_notes;
+        $file->save();
+        return redirect()->back()->with('success', 'File successfully Edited!');
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function fileEngineersNotes(Request $request)
+    {
+
+        $validated = $request->validate([
+            'egnineers_internal_notes' => 'required|max:1024'
+        ]);
+
+        $file = File::findOrFail($request->file_id);
+
+        $noteItSelf = $request->egnineers_internal_notes;
+
+        $reply = new EngineerFileNote();
+        $reply->egnineers_internal_notes = $request->egnineers_internal_notes;
+
+        if($request->file('engineers_attachement')){
+            $attachment = $request->file('engineers_attachement');
+            $fileName = $attachment->getClientOriginalName();
+            $attachment->move(public_path($file->file_path),$fileName);
+            $reply->engineers_attachement = $fileName;
+        }
+
+        $reply->file_id = $request->file_id;
+        $reply->request_file_id = $request->request_file_id;
+        $reply->sent_by = 'engineer';
+        $reply->save();
+
+        $file->support_status = "open";
+        $file->save();
+
+        return redirect()->back()->with('success', 'Engineer note successfully Added!');
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function EditMilage(Request $request)
+    {
+        
+        $file = File::findOrFail($request->id);
+        $file->vin_number = $request->vin_number;
+        $file->license_plate = $request->license_plate;
+        $file->first_registration = $request->first_registration;
+        $file->kilometrage = $request->kilometrage;
+        $file->vehicle_internal_notes = $request->vehicle_internal_notes;
+        $file->save();
+        return redirect()->back()->with('success', 'File successfully Edited!');
+
+    }
+
+    public function download($id,$fileName) {
+
+        $file = File::findOrFail($id); 
+        $filePath = public_path($file->file_path).$fileName;
+        return response()->download($filePath);
+
+    // if($engFileID){
+    //     $engFile = RequestFile::findOrFail($engFileID);
+    // }
+        
+    //     $file = File::findOrFail($id); 
+
+    //     $kess3Label = Tool::where('label', 'Kess_V3')->where('type', 'slave')->first();
+        
+    //     if($file->tool_type == 'slave' && $file->tool_id == $kess3Label->id){
+
+    //         if($file->original_file_id == NULL){
+
+    //         $engFile = RequestFile::where('request_file', $fileName)->where('file_id', $file->id)->first();
+
+    //         if($engFile && $engFile->uploaded_successfully){
+
+    //         $notProcessedAlientechFile = AlientechFile::where('file_id', $file->id)
+    //         ->where('purpose', 'decoded')
+    //         ->where('type', 'download')
+    //         ->where('processed', 0)
+    //         ->first();
+
+    //         if($notProcessedAlientechFile){
+               
+    //             $fileNameEncoded = $this->alientechObj->downloadEncodedFile($id, $notProcessedAlientechFile, $fileName);
+    //             $notProcessedAlientechFile->processed = 1;
+    //             $notProcessedAlientechFile->save();
+                
+    //             $file_path = public_path($file->file_path).$fileNameEncoded;
+    //             return response()->download($file_path);
+    //         }
+    //         else{
+    //             $encodedFileNameToBe = $fileName.'_encoded_api';
+    //             $processedFile = ProcessedFile::where('name', $encodedFileNameToBe)->first();
+
+    //             if($processedFile){
+
+    //             // if($processedFile->extension != ''){
+    //             //     $finalFileName = $processedFile->name.'.'.$processedFile->extension;
+    //             // }
+    //             // else{
+    //                 $finalFileName = $processedFile->name;
+    //             // }
+
+    //         }else{
+    //             $finalFileName = $fileName;
+    //         }
+
+    //             $file_path = public_path($file->file_path).$finalFileName;
+    //             return response()->download($file_path);
+
+    //         }
+    //     }
+    //     else{
+    //         $file_path = public_path($file->file_path).$fileName;
+    //         return response()->download($file_path);
+    //     }
+    // }
+
+    // else{
+    //     $file_path = public_path($file->file_path).$fileName;
+    //     return response()->download($file_path);
+    // }
+
+    //     }
+    //     else{
+    //         $file_path = public_path($file->file_path).$fileName;
+    //         return response()->download($file_path);
+    //     }
+
+    }
+
     public function autoDownload(Request $request){
 
         $file = File::findOrFail($request->id);
@@ -54,97 +235,22 @@ class FileController extends Controller
      */
     public function showFile($id)
     {
-
         $user = User::findOrFail(Auth::user()->id);
-
-        $file = File::where('id',$id)
-        ->where('user_id', Auth::user()->id)
-        ->whereNull('original_file_id')
-        ->where('is_credited', 1)
-        ->first();
-
         $kess3Label = Tool::where('label', 'Kess_V3')->where('type', 'slave')->first();
 
-        if(!$file){
-            abort(404);
-        }
-
-        $vehicle = Vehicle::where('Make', $file->brand)
-        ->where('Model', $file->model)
-        ->where('Generation', $file->version)
-        ->where('Engine', $file->engine)
-        ->first();
+        $file = $this->filesMainObj->getFile($id, $user);
+        $vehicle = $this->filesMainObj->getVehicle($file);
         
-         if($file->checked_by == 'engineer'){
-            $file->checked_by = 'seen';
-            $file->save();
-        }
-
         $slaveTools =  $user->tools_slave;
         $masterTools =  $user->tools_master;
 
-        $comments = $this->getCommentsOnFileShowing($file);
+        $comments = $this->filesMainObj->getCommentsOnFileShowing($file);
 
-        $showComments = false;
+        $selectedOptions = $this->filesMainObj->getSelectedOptions($file);
 
-        $selectedOptions = [];
-
-        foreach($file->options_services as $selected){
-            $selectedOptions []= $selected->service_id;
-        }
-
-        if($comments){
-            foreach($comments as $comment){
-                if( in_array( $comment->service_id, $selectedOptions) ){
-                    $showComments = true;
-                }
-            }
-        }
+        $showComments = $this->filesMainObj->getShowComments($selectedOptions, $comments);
         
         return view('files.show_file', ['user' => $user, 'showComments' => $showComments, 'comments' => $comments,'kess3Label' => $kess3Label,  'file' => $file, 'masterTools' => $masterTools,  'slaveTools' => $slaveTools, 'vehicle' => $vehicle ]);
-    }
-
-    public function getCommentsOnFileShowing($file){
-
-        if($file->automatic){
-            return null;
-        }
-
-        if($file->ecu){
-
-            // $commentObj = Comment::where('engine', $file->engine)
-            // ->whereNull('subdealer_group_id');
-
-            $commentObj = Comment::where('comment_type', 'download')
-            ->whereNull('subdealer_group_id');
-
-            // $commentObj = $commentObj->where('comment_type', 'download');
-
-            if($file->make){
-                $commentObj->where('make',$file->make);
-            }
-
-            // if($file->model){
-            //     $commentObj->where('model', $file->model);
-            // }
-
-            if($file->ecu){
-                $commentObj->where('ecu',$file->ecu);
-            }
-
-            // if($file->generation){
-            //     $commentObj->where('generation', $file->generation);
-            // }
-
-            $comments = $commentObj->get();
-        }
-        else{
-
-            $comments = null;
-        }
-         
-        return $comments;
-
     }
 
     public function saveFile(Request $request) {
