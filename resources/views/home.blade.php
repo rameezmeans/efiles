@@ -56,9 +56,8 @@
         <div class="dashboard-header-block fix-header">
             <h1>Welcome, {{$user->name}}</h1>
         </div>  
-        @if($user->is_admin())
-
-        {{-- <div class="dashboard-content-box">
+        @if(!$user->is_admin())
+        <div class="dashboard-content-box">
          
             <div class="row">
               <div class="col-md-6">
@@ -85,7 +84,7 @@
                   </div>
                   <hr>
                   <div class="card-footer">
-                    <a href="{{route('file-history')}}"><i class="fa-solid fa-arrow-up-right-from-square"></i> View File History</a>
+                    <a href="{{route('history')}}"><i class="fa-solid fa-arrow-up-right-from-square"></i> View File History</a>
                   </div>
                 </div>
     
@@ -160,18 +159,17 @@
                   </div>
                   <hr>
                   <div class="card-footer">
-                    <a href="{{route('file-history')}}"><i class="fa-solid fa-arrow-up-right-from-square"></i> View File History</a>
+                    <a href="{{route('history')}}"><i class="fa-solid fa-arrow-up-right-from-square"></i> View File History</a>
                   </div>
     
                 </div>
     
               </div>
             </div>
-        </div>  --}}
-
+        </div>  
         @else
         
-        {{-- <div class="i-content-block price-level">
+        <div class="i-content-block price-level">
           <table class="table table-hover datatable">
             <thead>
               <tr>
@@ -202,7 +200,7 @@
               @endforeach
             </tbody>
           </table>
-        </div> --}}
+        </div>
         
         @endif
 
@@ -219,20 +217,20 @@
 
     $( document ).ready(function(event) {
 
-        // $(document).on('click', '.close-feed', function(e){
+        $(document).on('click', '.close-feed', function(e){
 
-        //     $(this).parent().parent().hide();
+            $(this).parent().parent().hide();
 
-        //     $.ajax({
-        //         url: "/clear_feed",
-        //         type: "POST",
-        //         headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
-        //         success: function(response) {
+            $.ajax({
+                url: "/clear_feed",
+                type: "POST",
+                headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
+                success: function(response) {
                     
-        //         }
-        //     }); 
+                }
+            }); 
 
-        // });
+        });
 
         // $(document).on('change', '.graph-select', function(e){
         //     let value = $(this).val();
@@ -255,80 +253,80 @@
 
         // });
 
-    //     var xValuesYears = ['January','Fabrury','March','April','May',
-    //     'June','July','August','September','October', 'November', 'December'];
+        var xValuesYears = ['January','Fabrury','March','April','May',
+        'June','July','August','September','October', 'November', 'December'];
 
-    //     let yearObj = @php //echo $countYear @endphp;
-    //     let dataYear = Object.values(yearObj);
+        let yearObj = @php echo $countYear @endphp;
+        let dataYear = Object.values(yearObj);
 
-    //     new Chart("year-charts", {
-    //     type: "line",
-    //     data: {
-    //             labels: xValuesYears,
-    //             datasets: [{
-    //             label: 'Uploaded Files',
-    //             data: dataYear,
-    //             borderColor: "#F9D3D6",
-    //             fill: true
-    //             },
-    //         ]
-    //     },
-    //     options: {
-    //         legend: {display: true}
-    //     }
-    //     });
+        new Chart("year-charts", {
+        type: "line",
+        data: {
+                labels: xValuesYears,
+                datasets: [{
+                label: 'Uploaded Files',
+                data: dataYear,
+                borderColor: "#F9D3D6",
+                fill: true
+                },
+            ]
+        },
+        options: {
+            legend: {display: true}
+        }
+        });
 
-    //     let objMonths= @php // echo $datesMonth @endphp;
-    //     let xValuesMonths = Object.values(objMonths);
+        let objMonths= @php echo $datesMonth @endphp;
+        let xValuesMonths = Object.values(objMonths);
 
-    //     let objMonthsCount = @php // echo $datesMonthCount @endphp;
-    //     let yMonthsCount = Object.values(objMonthsCount);
+        let objMonthsCount = @php echo $datesMonthCount @endphp;
+        let yMonthsCount = Object.values(objMonthsCount);
 
-    //     console.log(yMonthsCount);
+        console.log(yMonthsCount);
 
-    //     new Chart("month-charts", {
-    //     type: "line",
-    //     data: {  
-    //             labels: xValuesMonths,
-    //             datasets: [{
-    //             label: 'Uploaded Files',
-    //             data: yMonthsCount,
-    //             borderColor: "#F9D3D6",
-    //             fill: true
-    //             },
-    //         ]
-    //     },
-    //     options: {
-    //         legend: {display: true}
-    //     }
-    //     });
+        new Chart("month-charts", {
+        type: "line",
+        data: {  
+                labels: xValuesMonths,
+                datasets: [{
+                label: 'Uploaded Files',
+                data: yMonthsCount,
+                borderColor: "#F9D3D6",
+                fill: true
+                },
+            ]
+        },
+        options: {
+            legend: {display: true}
+        }
+        });
 
-    //     let weekRangeObj = @php // echo $weekRange @endphp;
-    //     let xValuesWeek = Object.values(weekRangeObj);
+        let weekRangeObj = @php echo $weekRange @endphp;
+        let xValuesWeek = Object.values(weekRangeObj);
 
-    //     let objWeekCount = @php // echo $weekCount @endphp;
-    //     let yWeeksCount = Object.values(objWeekCount);
+        let objWeekCount = @php echo $weekCount @endphp;
+        let yWeeksCount = Object.values(objWeekCount);
 
-    //     // console.log(yMonthsCount);
+        // console.log(yMonthsCount);
 
-    //     var chartEl = new Chart("week-charts", {
-    //     type: "line",
-    //     data: {
-    //             labels: xValuesWeek,
-    //             datasets: [{
-    //             label: 'Uploaded Files',
-    //             data: yWeeksCount,
-    //             borderColor: "#F9D3D6",
-    //             fill: true
-    //             },
-    //         ]
-    //     },
-    //     options: {
-    //         legend: {display: true}
-    //     }
-    //     });
+        var chartEl = new Chart("week-charts", {
+        type: "line",
+        data: {
+                labels: xValuesWeek,
+                datasets: [{
+                label: 'Uploaded Files',
+                data: yWeeksCount,
+                borderColor: "#F9D3D6",
+                fill: true
+                },
+            ]
+        },
+        options: {
+            legend: {display: true}
+        }
+        });
 
-    //     chartEl.height = 500;
+        chartEl.height = 500;
     });
 
 </script>
