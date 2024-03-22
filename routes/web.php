@@ -52,17 +52,24 @@ Route::post('/add_credits_to_file', [App\Http\Controllers\FileController::class,
 Route::get('/file/{id}', [App\Http\Controllers\FileController::class, 'showFile'])->name('file');
 Route::get('auto_download', [App\Http\Controllers\FileController::class, 'autoDownload'])->name('auto-download');
 Route::post('/file_checkout', [App\Http\Controllers\PaymentsController::class, 'fileCart'])->name('checkout-file');
-Route::post('/checkout_file', [App\Http\Controllers\PaymentsController::class, 'checkoutFile'])->name('checkout.stripe.file');
+Route::post('/checkout_file', [App\Http\Controllers\PaymentsController::class, 'checkoutFile'])->name('checkout.file');
 // Route::post('/checkout_offer_redirect', [App\Http\Controllers\FileController::class, 'checkoutOfferRedirect'])->name('checkout.stripe.offer');
 // Route::post('/checkout_offer_paypal_redirect', [App\Http\Controllers\FileController::class, 'checkoutOfferPaypalRedirect'])->name('checkout.paypal.offer');
-Route::post('/checkout_file_paypal', [App\Http\Controllers\FileController::class, 'checkoutFile'])->name('checkout.paypal.file');
-Route::post('/request-file', [App\Http\Controllers\FileController::class, 'requestFile'])->name('request-file');
+// Route::post('/checkout_file_paypal', [App\Http\Controllers\PaymentsController::class, 'checkoutFile'])->name('checkout.paypal.file');
+Route::post('/new_request', [App\Http\Controllers\FileController::class, 'createNewrequest'])->name('request-file');
 Route::post('/file-url', [App\Http\Controllers\FileController::class, 'fileURL'])->name('file-url');
 Route::get('/download/{id}/{file}', [App\Http\Controllers\FileController::class,'download'])->name('download');
 Route::post('/edit-milage', [App\Http\Controllers\FileController::class, 'EditMilage'])->name('edit-milage');
 Route::post('/add-customer-note', [App\Http\Controllers\FileController::class, 'addCustomerNote'])->name('add-customer-note');
 Route::post('/file-engineers-notes', [App\Http\Controllers\FileController::class, 'fileEngineersNotes'])->name('file-engineers-notes');
 Route::post('/file-events-notes', [App\Http\Controllers\FileController::class, 'fileEventsNotes'])->name('file-events-notes');
+Route::post('/file_feedback', [App\Http\Controllers\FileController::class, 'fileFeedback'])->name('file-feedback');
+Route::post('accept_offer', [App\Http\Controllers\FileController::class, 'acceptOffer'])->name('accept-offer');
+Route::post('reject_offer', [App\Http\Controllers\FileController::class, 'rejectOffer'])->name('reject-offer');
+Route::get('pay_offer_credits/{id}', [App\Http\Controllers\FileController::class, 'payCreditsOffer'])->name('pay-credits-offer');
+Route::post('add_offer_file', [App\Http\Controllers\FileController::class, 'addOfferToFile'])->name('add-offer-to-file');
+Route::post('offer_checkout', [App\Http\Controllers\PaymentsController::class, 'offerCheckout'])->name('offer-checkout');
+Route::post('buy_offer', [App\Http\Controllers\PaymentsController::class, 'buyOffer'])->name('buy.offer');
 
 Route::get('/bosch-ecu', [App\Http\Controllers\AccountController::class, 'boschECU'])->name('bosch-ecu');
 Route::get('/evc_credit_shop', [App\Http\Controllers\EVCPackagesController::class, 'packages'])->name('evc-credits-shop');

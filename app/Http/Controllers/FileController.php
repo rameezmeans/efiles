@@ -7,8 +7,10 @@ use ECUApp\SharedCode\Controllers\FilesMainController;
 use ECUApp\SharedCode\Controllers\PaymentsMainController;
 use ECUApp\SharedCode\Models\Comment;
 use ECUApp\SharedCode\Models\Credit;
+use ECUApp\SharedCode\Models\EmailReminder;
 use ECUApp\SharedCode\Models\EngineerFileNote;
 use ECUApp\SharedCode\Models\File;
+use ECUApp\SharedCode\Models\FileFeedback;
 use ECUApp\SharedCode\Models\FileService;
 use ECUApp\SharedCode\Models\FileUrl;
 use ECUApp\SharedCode\Models\Log;
@@ -121,6 +123,99 @@ class FileController extends Controller
         $file->save();
 
         return redirect()->back()->with('success', 'Engineer note successfully Added!');
+    }
+
+    public function rejectOffer(Request $request) {
+
+        $fileID = $request->file_id;
+        $file = File::findOrFail($fileID);
+        $user = Auth::user();
+
+        $this->filesMainObj->rejectOffer($file, $user);
+
+        // Alert: reject email will go here. 
+    }   
+
+    public function payCreditsOffer($id) {
+
+        $file = File::findOrfail($id);
+ 
+        $proposedCredits = $this->filesMainObj->getOfferedCredits($file);
+        $differece = $proposedCredits - $file->credits;
+        
+        $price = Price::where('label', 'credit_price')->first();
+ 
+        $user = User::findOrFail(Auth::user()->id);
+ 
+        $factor = 0;
+        $tax = 0;
+ 
+        if($user->group){
+            if($user->group->tax > 0){
+                $tax = (float) $user->group->tax;
+            }
+
+            if($user->group->raise > 0){
+                $factor = (float)  ($user->group->raise / 100) * $price->value;
+            }
+
+            if($user->group->discount > 0){
+                $factor =  -1* (float) ($user->group->discount / 100) * $price->value;
+            }
+         }
+ 
+        return view( 'files.pay_credits_offer', [ 
+         'file_id' => $file->id, 
+         'file' => $file, 
+         'credits' => $differece, 
+         'price' => $price,
+         'factor' => $factor,
+         'tax' => $tax,
+         'group' =>  $user->group,
+         'user' =>  $user
+         ] );
+ 
+     }
+ 
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function fileFeedback(Request $request)
+    {
+        FileFeedback::where('request_file_id','=', $request->request_file_id)->delete();
+
+        $reminder = EmailReminder::where('file_id', $request->file_id)->where('request_file_id', $request->request_file_id)->where('user_id', Auth::user()->id)->first();
+       
+        if($reminder){
+            $reminder->delete();
+        }
+
+        $requestFile = new FileFeedback();
+        $requestFile->file_id = $request->file_id;
+        $requestFile->request_file_id = $request->request_file_id;
+        $requestFile->type = $request->type;
+        $requestFile->save();
+
+        return response()->json($requestFile);
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function createNewrequest(Request $request)
+    {
+        $rules = $this->filesMainObj->getNewReqValidationRules();
+        $request->validate($rules);
+        $data = $request->all();
+        $file = $request->file('request_file');
+
+        return $this->filesMainObj->createNewRequest($data, $file);
+
     }
 
     /**
@@ -251,6 +346,26 @@ class FileController extends Controller
         $showComments = $this->filesMainObj->getShowComments($selectedOptions, $comments);
         
         return view('files.show_file', ['user' => $user, 'showComments' => $showComments, 'comments' => $comments,'kess3Label' => $kess3Label,  'file' => $file, 'masterTools' => $masterTools,  'slaveTools' => $slaveTools, 'vehicle' => $vehicle ]);
+    }
+
+    public function addOfferToFile(Request $request) {
+        
+            $fileID = $request->file_id;
+            $creditsToBuy = $request->credits;
+    
+            $user = User::findOrFail(Auth::user()->id);
+    
+            $file = $this->filesMainObj->acceptOfferFinalise($user, $fileID, $creditsToBuy);
+
+            if($file->original_file_id){
+                return redirect(route('file', $file->original_file_id))->with(['success' => 'Engineer offer accepted!']);
+            }
+    
+            else{
+                return redirect(route('file', $fileID))->with(['success' => 'Engineer offer accepted!']);
+            }
+    
+            // Alert: email will be added here. 
     }
 
     public function saveFile(Request $request) {
