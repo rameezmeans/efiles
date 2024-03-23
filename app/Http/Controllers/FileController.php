@@ -24,6 +24,8 @@ use ECUApp\SharedCode\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use Pusher\Pusher;
+
 class FileController extends Controller
 {
     /**
@@ -32,6 +34,7 @@ class FileController extends Controller
      * @return void
      */
 
+    private $pusher;
     private $filesMainObj;
     private $paymentMainObj;
 
@@ -41,6 +44,19 @@ class FileController extends Controller
         $this->filesMainObj = new FilesMainController();
         $this->paymentMainObj = new PaymentsMainController();
 
+        $this->pusher = new Pusher(
+            env('PUSHER_APP_KEY'),
+            env('PUSHER_APP_SECRET'),
+            env('PUSHER_APP_ID'),
+            [
+                'cluster' => env('PUSHER_APP_CLUSTER', 'mt1'),
+                'host' => env('PUSHER_HOST') ?: 'api-'.env('PUSHER_APP_CLUSTER', 'mt1').'.pusher.com',
+                'port' => env('PUSHER_PORT', 443),
+                'scheme' => env('PUSHER_SCHEME', 'https'),
+                'encrypted' => true,
+                'useTLS' => env('PUSHER_SCHEME', 'https') === 'https',
+            ],
+        );
     }
 
     /**
@@ -376,6 +392,12 @@ class FileController extends Controller
         $user = User::findOrFail(Auth::user()->id);
 
         $file = $this->filesMainObj->saveFile($user, $fileID, $credits);
+
+        $count = File::where('checked_by', 'customer')->where('is_credited', 1)->count();
+
+        $this->pusher->trigger("private-chatify.".env('LIVE_CHAT_ID'), 'file-uploaded', [
+            'count' => $count
+        ]);
 
         return redirect()->route('auto-download',['id' => $file->id]);
         
