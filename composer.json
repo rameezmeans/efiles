@@ -23,20 +23,21 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
+        "laravel/ui": "^4.0",
         "laraveldaily/laravel-invoices": "^3.1",
         "league/omnipay": "^3.2",
         "mailchimp/marketing": "^3.0",
         "nategood/httpful": "^0.3.2",
         "omnipay/paypal": "^3.0",
         "ph-7/eu-vat-validator": "^3.1",
+        "pusher/pusher-php-server": "^7.2",
         "rameezmeans/ecutech-code": "dev-main",
         "rmccue/requests": "^2.0",
         "sevenspan/laravel-whatsapp": "^1.3",
         "spatie/laravel-ignition": "^1.6",
         "stripe/stripe-php": "^10.3",
         "twilio/sdk": "^6.44",
-        "webleit/zohobooksapi": "^5.5",
-        "laravel/ui": "^4.0"
+        "webleit/zohobooksapi": "^5.5"
     },
     "repositories": [
         {

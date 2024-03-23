@@ -27,6 +27,7 @@ Route::get('home', [AuthController::class, 'home'])->name('home');
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/login_as/{id}', [App\Http\Controllers\HomeController::class, 'loginAs'])->name('loginAs');
 Route::post('/clear_feed', [App\Http\Controllers\HomeController::class, 'clearFeed'])->name('clear-feed');
+Route::post('/pusher/auth', [MessagesController::class, 'pusherAuth'])->name('pusher.auth');
 
 Route::get('/account', [App\Http\Controllers\AccountController::class, 'index'])->name('account');
 Route::post('/edit_account', [App\Http\Controllers\AccountController::class, 'editAccount'])->name('edit-account');
