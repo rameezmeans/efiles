@@ -125,7 +125,7 @@ class AuthController extends Controller
     {
         if(Auth::check()){
 
-            $user = User::findOrFail(Auth::user()->id);
+            $user = Auth::user();
             $users = User::whereNull('subdealer_group_id')->where('role_id', 4)->where('front_end_id', 2)->get();
             $todaysFilesCount = File::where('created_at', '>=', Carbon::today())->where('user_id', $user->id)->count();
             $yesterdaysFilesCount = File::whereDate('created_at', Carbon::yesterday())->where('user_id', $user->id)->count();

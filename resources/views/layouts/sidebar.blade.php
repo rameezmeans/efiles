@@ -5,7 +5,7 @@
         <svg class="logo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="142" height="50" viewBox="0 0 142 50"><defs><clipPath id="a"><rect width="142" height="50" fill="none"/></clipPath></defs><path d="M2.888,218.286,0,222.08H5.957v10.834h4.493V222.08h4.332l2.908-3.794Z" transform="translate(0 -183.015)" fill="#fff"/><g clip-path="url(#a)"><path d="M136.013,226.259q0,6.654-9.025,6.655h-.943q-9.025,0-9.025-6.655v-7.973h4.473v7.973a2.413,2.413,0,0,0,1.725,2.556,13.816,13.816,0,0,0,3.771.324,7.7,7.7,0,0,0,3.229-.487,2.4,2.4,0,0,0,1.3-2.394v-7.973h4.493Z" transform="translate(-98.328 -183.015)" fill="#fff"/><path d="M266.171,231.028q0,1.989-1.785,1.988a3.763,3.763,0,0,1-2.447-.974l-8.464-7.162v8.034h-4.492v-12.74a1.846,1.846,0,0,1,.511-1.339,1.932,1.932,0,0,1,1.454-.528,3.464,3.464,0,0,1,2.266.873l8.464,7.162v-8.054h4.493Z" transform="translate(-209.212 -183.016)" fill="#fff"/><rect width="4.473" height="14.628" transform="translate(59.265 35.271)" fill="#fff"/><path d="M430.149,231.028q0,1.989-1.785,1.988a3.763,3.763,0,0,1-2.447-.974l-8.464-7.162v8.034h-4.492v-12.74a1.846,1.846,0,0,1,.511-1.339,1.932,1.932,0,0,1,1.454-.528,3.464,3.464,0,0,1,2.266.873l8.464,7.162v-8.054h4.492Z" transform="translate(-346.997 -183.016)" fill="#fff"/><path d="M548.1,218.287l-2.888,3.793h-7.261a4.636,4.636,0,0,0-3.058,1,3.183,3.183,0,0,0-1.214,2.566,3.08,3.08,0,0,0,1.2,2.526,4.754,4.754,0,0,0,3.068.964h5.215v-1.359H537.55L534.6,224.17h13.056v8.744h-9.707a9.267,9.267,0,0,1-6.247-2.12,6.716,6.716,0,0,1-2.477-5.326,6.373,6.373,0,0,1,2.447-5.194,9.636,9.636,0,0,1,6.277-1.988Z" transform="translate(-444.691 -183.016)" fill="#fff"/><path d="M664.033,255.228h-7.922l-2.707-3.794h7.922Z" transform="translate(-549.032 -210.807)" fill="#fff"/><path d="M623.116,49.9H602.9L587.52,28.087l-4.38,5.374H572.96l9.894-12.126-10.277-14.7,7.3-.062,7.768,8.269L599.56,0h14.493L594.3,20.788Z" transform="translate(-481.116 0.001)" fill="#b01321"/></g></svg>
       </a>
     </header>
-	@if(!$user->is_admin())
+	@if(!Auth::user()->is_admin())
     @php 
       $feed = Illuminate\Support\Facades\Session::get('feed');  
     @endphp
@@ -96,7 +96,7 @@
 		  <li class="">
 			<a href="{{route('evc-credits-shop')}}">
 			  <i class="fa-solid fa-cart-plus"></i> {{__('EVC Credits Shop')}}
-			  @if(!$user->is_evc_customer())
+			  @if(!Auth::user()->is_evc_customer())
 				<span style="border-radius: 4px; display: inline-block; border: 1px solid #b01321; margin-left: 3px; background:#b01321; padding: 0px 2px 0px 2px; font-size: 10px;">New</span>
 			  @endif
 			</a>

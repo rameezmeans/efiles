@@ -1,5 +1,5 @@
 <nav class="navbar navbar-default top-header">
-  @if(!$user->is_admin())
+  @if(!Auth::user()->is_admin())
   <div class="navbar-left mb-top-header">
     
     <div class="mb-header-ctrl desktop-hide">
@@ -33,12 +33,12 @@
       <li class="mobile-hide">    
           <span style="display: inline-grid; position: absolute; width:200px;">
               <span class="m-l-26" style="">Credit Balance</span>
-              <span class="m-l-26" ><b style="font-size:16px">{{$user->credits->sum('credits')}} Credits</b></span>
+              <span class="m-l-26" ><b style="font-size:16px">{{Auth::user()->credits->sum('credits')}} Credits</b></span>
           </span>
-          @if($user->is_evc_customer())
+          @if(Auth::user()->is_evc_customer())
             <div style="display: inline-grid; position: relative; width:220px; left: 110px;">
               <span class="m-l-26 text-red" style="">EVC Credit Balance</span>
-              <span class="m-l-26 text-red" ><b>{{$user->evc_credits()}} Credits</b></span>
+              <span class="m-l-26 text-red" ><b>{{Auth::user()->evc_credits()}} Credits</b></span>
             </div>
           @endif
         
@@ -50,18 +50,18 @@
     <div class="desktop-hide">    
         <span style="display: inline-grid; width:200px;">
             <span>Credit Balance</span>
-            <span><b style="font-size:16px">{{$user->credits->sum('credits')}} Credits</b></span>
+            <span><b style="font-size:16px">{{Auth::user()->credits->sum('credits')}} Credits</b></span>
         </span>
-        @if($user->is_evc_customer())
+        @if(Auth::user()->is_evc_customer())
           <div style="display: inline-grid; position: relative; width:220px; left: 110px;">
             <span class="m-l-26 text-red" style="">EVC Credit Balance</span>
-            <span class="m-l-26 text-red" ><b>{{$user->evc_credits()}} Credits</b></span>
+            <span class="m-l-26 text-red" ><b>{{Auth::user()->evc_credits()}} Credits</b></span>
           </div>
         @endif
     </div>
 
     <ul class="nav navbar-nav">
-      @if(!$user->is_admin())
+      @if(!Auth::user()->is_admin())
         <li class="m-r-8">
             <button class="btn btn-warning redirect-click" data-redirect="{{route('cart')}}"> <span style="background: #4cae4c; color: white; padding: 2px 0px 2px 5px; border-radius: 5px; margin-right: 5px;"> {{\Cart::getTotalQuantity()}} </span> <i class="fa fa-cart-shopping"></i> Cart</button>
         </li>
