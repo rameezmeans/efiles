@@ -24,6 +24,8 @@ use ECUApp\SharedCode\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use Pusher\Pusher;
+
 class FileController extends Controller
 {
     /**
@@ -32,6 +34,7 @@ class FileController extends Controller
      * @return void
      */
 
+    private $pusher;
     private $filesMainObj;
     private $paymentMainObj;
 
@@ -41,6 +44,19 @@ class FileController extends Controller
         $this->filesMainObj = new FilesMainController();
         $this->paymentMainObj = new PaymentsMainController();
 
+        $this->pusher = new Pusher(
+            env('PUSHER_APP_KEY'),
+            env('PUSHER_APP_SECRET'),
+            env('PUSHER_APP_ID'),
+            [
+                'cluster' => env('PUSHER_APP_CLUSTER', 'mt1'),
+                'host' => env('PUSHER_HOST') ?: 'api-'.env('PUSHER_APP_CLUSTER', 'mt1').'.pusher.com',
+                'port' => env('PUSHER_PORT', 443),
+                'scheme' => env('PUSHER_SCHEME', 'https'),
+                'encrypted' => true,
+                'useTLS' => env('PUSHER_SCHEME', 'https') === 'https',
+            ],
+        );
     }
 
     /**
@@ -145,7 +161,7 @@ class FileController extends Controller
         
         $price = Price::where('label', 'credit_price')->first();
  
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
  
         $factor = 0;
         $tax = 0;
@@ -318,7 +334,7 @@ class FileController extends Controller
     public function autoDownload(Request $request){
 
         $file = File::findOrFail($request->id);
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
 
         return view('files.auto_download', [ 'user' => $user, 'file' => $file ]);
     }
@@ -330,7 +346,7 @@ class FileController extends Controller
      */
     public function showFile($id)
     {
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
         $kess3Label = Tool::where('label', 'Kess_V3')->where('type', 'slave')->first();
 
         $file = $this->filesMainObj->getFile($id, $user);
@@ -349,13 +365,15 @@ class FileController extends Controller
     }
 
     public function addOfferToFile(Request $request) {
+
+            $frontendID = 2;
         
             $fileID = $request->file_id;
             $creditsToBuy = $request->credits;
     
-            $user = User::findOrFail(Auth::user()->id);
+            $user = Auth::user();
     
-            $file = $this->filesMainObj->acceptOfferFinalise($user, $fileID, $creditsToBuy);
+            $file = $this->filesMainObj->acceptOfferFinalise($user, $fileID, $creditsToBuy, $frontendID);
 
             if($file->original_file_id){
                 return redirect(route('file', $file->original_file_id))->with(['success' => 'Engineer offer accepted!']);
@@ -373,9 +391,15 @@ class FileController extends Controller
         $fileID = $request->file_id;
         $credits = $request->credits;
         
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
 
         $file = $this->filesMainObj->saveFile($user, $fileID, $credits);
+
+        $count = File::where('checked_by', 'customer')->where('is_credited', 1)->count();
+
+        $this->pusher->trigger("private-chatify.".env('LIVE_CHAT_ID'), 'file-uploaded', [
+            'count' => $count
+        ]);
 
         return redirect()->route('auto-download',['id' => $file->id]);
         
@@ -408,7 +432,7 @@ class FileController extends Controller
 
         $price = $this->paymentMainObj->getPrice();
 
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
 
         return view( 'files.pay_credits', [ 
         'file' => $file, 
@@ -424,7 +448,7 @@ class FileController extends Controller
 
     public function termsAndConditions() {
 
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
 
         return view('files.terms_and_conditions', ['user' => $user]);
 
@@ -432,7 +456,7 @@ class FileController extends Controller
 
     public function norefundPolicy() {
 
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
 
         return view('files.norefund_policy', ['user' => $user]);
 
@@ -464,7 +488,7 @@ class FileController extends Controller
      */
     public function step1(){
 
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
 
         $masterTools = $this->filesMainObj->getMasterTools($user);
         $slaveTools = $this->filesMainObj->getSlaveTools($user);
@@ -543,7 +567,7 @@ class FileController extends Controller
      */
     public function step3(Request $request) {
 
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
 
         $frontendID = 2;
 
@@ -582,7 +606,7 @@ class FileController extends Controller
      */
     public function createTempFile(Request $request) {
 
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
         $frontendID = 2;
         $file = $request->file('file');
 
@@ -604,7 +628,7 @@ class FileController extends Controller
     public function fileHistory()
     {
         $frontendID = 2;
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
         $files = $this->filesMainObj->getFiles($user, $frontendID);
 
         return view('files.file_history', [ 'files' => $files, 'user' => $user ]);

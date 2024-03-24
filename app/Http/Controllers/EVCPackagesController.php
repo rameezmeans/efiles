@@ -31,7 +31,7 @@ class EVCPackagesController extends Controller
 
     public function history(){
 
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
 
         $records = null;
 
@@ -62,7 +62,7 @@ class EVCPackagesController extends Controller
 
     public function buyEVCPackage(Request $request){
 
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
 
         $price = $request->price;
         $credits = $request->credits;
@@ -105,17 +105,18 @@ class EVCPackagesController extends Controller
 
     public function packages(){
 
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
         $evcPackages = $this->paymenttMainObj->getEVCPackages();
 
         return view('evc_packages', ['evcPackages' => $evcPackages, 'user' => $user]);
     }
     
     public function successEVC(Request $request){
-
-        $packageID = $request->package;
-        $user = User::findOrFail(Auth::user()->id);
+        
+        $packageID = $request->packageID;
+        $user = Auth::user();
         $type = $request->type;
+
         $package = Package::findOrFail($packageID);
 
         $frontendID = 2;
@@ -126,7 +127,7 @@ class EVCPackagesController extends Controller
         else{
             $sessionID = $request->get('paymentId');
         }
-
+        
         $flag = $this->paymenttMainObj->addCreditsEVC($user, $sessionID, $package, $type, $frontendID);
 
         if($flag){
@@ -140,7 +141,7 @@ class EVCPackagesController extends Controller
     public function checkoutEVCPackages(Request $request){
 
         $type = $request->type;
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
         $package = Package::findOrFail($request->packageID);
 
         if($type == 'stripe'){

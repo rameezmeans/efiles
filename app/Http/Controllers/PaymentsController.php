@@ -44,7 +44,7 @@ class PaymentsController extends Controller
         $creditsForCheckout = $request->credits_for_checkout;
         $fileID = $request->file_id;
 
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
 
         $price = $this->paymenttMainObj->getPrice();
 
@@ -101,7 +101,7 @@ class PaymentsController extends Controller
         $fileID = $request->file_id;
 
         $type = $request->type;
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
         $unitPrice =  $this->paymenttMainObj->getPrice()->value;
         
         if($type == 'stripe'){
@@ -121,7 +121,7 @@ class PaymentsController extends Controller
 
         $fileID = $request->file_id;
 
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
 
         $price = $this->paymenttMainObj->getPrice();
         $packages = $this->paymenttMainObj->getPackages($frontendID);
@@ -168,7 +168,7 @@ class PaymentsController extends Controller
     public function shopProduct(){
 
         $frontendID = 2;
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
         
         $price = $this->paymenttMainObj->getPrice();
         $packages = $this->paymenttMainObj->getPackages($frontendID);
@@ -180,7 +180,7 @@ class PaymentsController extends Controller
         
         $frontendID = 2;
 
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
         $price = $this->paymenttMainObj->getPrice();
         $packages = $this->paymenttMainObj->getPackages($frontendID);
 
@@ -240,7 +240,7 @@ class PaymentsController extends Controller
 
         }
 
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
         $type = $request->type;
 
         if($type == 'stripe'){
@@ -376,7 +376,7 @@ class PaymentsController extends Controller
 
         $frontendID = 2;
 
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
 
         $price = $request->price;
         $package = $request->package;
@@ -421,7 +421,7 @@ class PaymentsController extends Controller
 
     public function checkoutPackagesPaypal(Request $request){
 
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
         $package =  Package::findOrFail($request->package);
 
         return $this->paymenttMainObj->redirectPaypal($user, $package->discounted_price, $package->credits, $package->id);        
@@ -429,7 +429,7 @@ class PaymentsController extends Controller
 
     public function checkoutPackagesStripe(Request $request){
 
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
         $package =  Package::findOrFail($request->package);
 
         return $this->paymenttMainObj->redirectStripe($user, $package->discounted_price, $package->credits, $package->id);
@@ -438,7 +438,7 @@ class PaymentsController extends Controller
 
     public function paypalCheckout(Request $request){
 
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
         $unitPrice =  $this->paymenttMainObj->getPrice()->value;
         $credits = $request->credits_for_checkout;
         return $this->paymenttMainObj->redirectPaypal($user, $unitPrice, $credits);
@@ -452,7 +452,7 @@ class PaymentsController extends Controller
         $fileID = $request->file_id;
 
         $type = $request->type;
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
         $unitPrice =  $this->paymenttMainObj->getPrice()->value;
         
         if($type == 'stripe'){
@@ -466,7 +466,7 @@ class PaymentsController extends Controller
 
     public function stripeCheckout(Request $request){
        
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
         $unitPrice =  $this->paymenttMainObj->getPrice()->value;
         $credits = $request->credits_for_checkout;
         return $this->paymenttMainObj->redirectStripe($user, $unitPrice, $credits);

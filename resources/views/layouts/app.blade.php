@@ -6,7 +6,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="url" content="{{env('APP_URL')}}" data-user="{{$user->id}}">
+    <meta name="url" content="{{env('APP_URL')}}" data-user="{{Auth::user()->id}}">
     <meta name="id" content="{{env('LIVE_CHAT_ID')}}">
     <meta name="type" content="user">
 
@@ -239,15 +239,31 @@
 <script src="{{url('vendor/ecutech-code/js/bootstrap.min.js')}}"></script>
 {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> --}}
 
-<script src="https://js.pusher.com/7.0.3/pusher.min.js"></script>
-{{--
+{{-- <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+  <script>
+
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('a3a059d4aeb714a56210', {
+      cluster: 'ap2'
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+      alert(JSON.stringify(data));
+    });
+  </script> --}}
+
+  <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+
 <script >
 // Enable pusher logging - don't include this in production
 Pusher.logToConsole = true;
 
 var pusher = new Pusher("{{ config('chatify.pusher.key') }}", {
 encrypted: true,
-cluster: "{{ config('chatify.pusher.options.cluster') }}",
+cluster: "ap2",
 authEndpoint: '{{route("pusher.auth")}}',
 auth: {
     headers: {
@@ -258,13 +274,9 @@ auth: {
 
 console.log(pusher);
 
-// Bellow are all the methods/variables that using php to assign globally.
-const allowedImages = {!! json_encode(config('chatify.attachments.allowed_images')) !!} || [];
-const allowedFiles = {!! json_encode(config('chatify.attachments.allowed_files')) !!} || [];
-const getAllowedExtensions = [...allowedImages, ...allowedFiles];
-const getMaxUploadSize = {{ Chatify::getMaxUploadSize() }};
+
 </script>
---}}
+
 {{-- <div id="switch-language" class="modal bottom-sheet no-print hide" style="z-index: 1005; opacity: 1; display: block; bottom: 0px;">
     <div class="modal-content center no-print">
         <h2>Select your language</h2>

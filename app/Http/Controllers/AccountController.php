@@ -26,9 +26,9 @@ class AccountController extends Controller
 
     public function boschECU(){
         
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
 
-        return view('bosch', ['user' => $user]);
+        return view('bosch');
     }
 
     /**
@@ -39,7 +39,7 @@ class AccountController extends Controller
     public function index()
     {
 
-        $user = User::findOrFail( Auth::user()->id );
+        $user = Auth::user();
 
         $languages = Language::where('user_id', $user->id)->get();
         $credits = Credit::orderBy('created_at', 'desc')->where('is_evc', 0)->where('user_id', $user->id)->get();
