@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use ECUApp\SharedCode\Models\User;
 use ECUApp\SharedCode\Models\Role;
 use ECUApp\SharedCode\Models\Service;
 use ECUApp\SharedCode\Models\Tool;

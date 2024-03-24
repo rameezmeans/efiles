@@ -31,7 +31,7 @@ class InvoicesController extends Controller
      */
     public function index()
     {
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
         $invoices = Credit::orderBy('created_at', 'desc')->where('user_id', $user->id)->whereNotNull('stripe_id')->get();
         return view('invoices', ['invoices' => $invoices, 'user' => $user]);
     }
