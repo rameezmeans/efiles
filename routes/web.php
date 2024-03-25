@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use ECUApp\SharedCode\Models\User;
 use Illuminate\Support\Facades\Route;
+use Twilio\Rest\Client;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,39 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/test', function () {
+
+    abort(404);
+
+    // \Mail::to('xrkalix@gmail.com')->send(new \App\Mail\AllMails(['html' => "testing email", 'subject' => 'test email']));
+    // dd('email sent');
+
+    // try {
+    //     $accountSid = env("TWILIO_SID");
+    //     $authToken = env("TWILIO_AUTH_TOKEN");
+    //     $twilioNumber = env("TWILIO_NUMBER"); 
+
+    //     // dd($authToken);
+
+    //     $client = new Client($accountSid, $authToken);
+
+    //     // dd($client);
+
+    //     $message = $client->messages
+    //         ->create("+923218612198", 
+    //             ["body" => 'test message', "from" => "Tuning-X"]
+    //     );
+
+    //     dd($message);
+
+    //     \Log::info('message sent to:'.'+923218612198');
+
+    // } catch (\Exception $e) {
+    //     dd($e->getMessage());
+    // }
+
 });
 
 Route::get('login', [AuthController::class, 'index'])->name('login');

@@ -172,7 +172,7 @@ class AccountController extends Controller
 
         foreach($tools as $tool){
            
-            $toolsArray[$tool->id] = "https://backend.ecutech.gr/icons/".$tool->icon;
+            $toolsArray[$tool->id] = "https://devbackend.ecutech.gr/icons/".$tool->icon;
            
         }
 
