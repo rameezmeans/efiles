@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use ECUApp\SharedCode\Controllers\FilesMainController;
+use ECUApp\SharedCode\Controllers\NotificationsMainController;
 use ECUApp\SharedCode\Controllers\PaymentsMainController;
 use ECUApp\SharedCode\Models\Comment;
 use ECUApp\SharedCode\Models\Credit;
@@ -37,12 +38,14 @@ class FileController extends Controller
     private $pusher;
     private $filesMainObj;
     private $paymentMainObj;
+    private $notificationsMainObj;
 
     public function __construct(){
 
         $this->middleware('auth', [ 'except' => [ 'feedbackLink' ] ]);
         $this->filesMainObj = new FilesMainController();
         $this->paymentMainObj = new PaymentsMainController();
+        $this->notificationsMainObj = new NotificationsMainController();
 
         $this->pusher = new Pusher(
             env('PUSHER_APP_KEY'),
@@ -388,12 +391,22 @@ class FileController extends Controller
 
     public function saveFile(Request $request) {
 
+        $headPermission = array(
+            0 => 'eng_assign_eng_email',
+            1 => 'eng_assign_eng_sms',
+            2 => 'eng_assign_eng_whatsapp',
+        );
+
         $fileID = $request->file_id;
         $credits = $request->credits;
         
         $user = Auth::user();
 
         $file = $this->filesMainObj->saveFile($user, $fileID, $credits);
+
+        $head = get_head();
+
+        $this->notificationsMainObj->sendNotification($head, $file, $user, 2, 'file-up-cus', 'admin_assign', $headPermission);
 
         $count = File::where('checked_by', 'customer')->where('is_credited', 1)->count();
 
