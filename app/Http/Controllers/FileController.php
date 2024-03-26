@@ -141,6 +141,28 @@ class FileController extends Controller
         $file->support_status = "open";
         $file->save();
 
+        $engPermissions = array(
+            0 => 'msg_cus_eng_email',
+            1 => 'msg_cus_eng_sms',
+            2 => 'msg_cus_eng_whatsapp'
+        );
+
+        $uploader = User::findOrFail($file->user_id);
+        $engineer = User::FindOrFail($file->assigned_to);
+        $subject = "TuningX: Client support message!";
+        $this->notificationsMainObj->sendNotification($engineer, $file, $uploader, 2, $subject, 'mess-to-eng', 'message_to_engineer', $engPermissions);
+
+        $adminPermissions = array(
+            0 => 'msg_cus_admin_email',
+            1 => 'msg_cus_admin_sms',
+            2 => 'msg_cus_admin_whatsapp'
+        );
+
+        $uploader = User::findOrFail($file->user_id);
+        $admin = get_admin();
+        $subject = "TuningX: Client support message!";
+        $this->notificationsMainObj->sendNotification($admin, $file, $uploader, 2, $subject, 'mess-to-eng', 'message_to_engineer', $adminPermissions);
+
         return redirect()->back()->with('success', 'Engineer note successfully Added!');
     }
 
@@ -152,7 +174,27 @@ class FileController extends Controller
 
         $this->filesMainObj->rejectOffer($file, $user);
 
-        // Alert: reject email will go here. 
+        $customerPermission = array(
+            0 => 'status_change_cus_email',
+            1 => 'status_change_cus_sms',
+            2 => 'status_change_cus_whatsapp'
+        );
+
+        $customer = Auth::user();
+        $subject = "TuningX: File Status Changed!";
+        $this->notificationsMainObj->sendNotification($customer, $file, $customer, 2, $subject, 'sta-cha', 'status_change', $customerPermission);
+
+        $adminPermission = array(
+            0 => 'status_change_admin_email',
+            1 => 'status_change_cus_sms',
+            2 => 'status_change_cus_whatsapp'
+        );
+
+        $admin = get_admin();
+        $customer = Auth::user();
+        $subject = "TuningX: File Status Changed!";
+        $this->notificationsMainObj->sendNotification($admin, $file, $customer, 2, $subject, 'sta-cha', 'status_change', $adminPermission);
+
     }   
 
     public function payCreditsOffer($id) {
@@ -369,33 +411,47 @@ class FileController extends Controller
 
     public function addOfferToFile(Request $request) {
 
-            $frontendID = 2;
-        
-            $fileID = $request->file_id;
-            $creditsToBuy = $request->credits;
+        $frontendID = 2;
     
-            $user = Auth::user();
-    
-            $file = $this->filesMainObj->acceptOfferFinalise($user, $fileID, $creditsToBuy, $frontendID);
+        $fileID = $request->file_id;
+        $creditsToBuy = $request->credits;
 
-            if($file->original_file_id){
-                return redirect(route('file', $file->original_file_id))->with(['success' => 'Engineer offer accepted!']);
-            }
+        $user = Auth::user();
+
+        $file = $this->filesMainObj->acceptOfferFinalise($user, $fileID, $creditsToBuy, $frontendID);
+
+        $customerPermission = array(
+            0 => 'status_change_cus_email',
+            1 => 'status_change_cus_sms',
+            2 => 'status_change_cus_whatsapp',
+        );
+
+        $customer = Auth::user();
+        $subject = "TuningX: File Status Changed!";
+        $this->notificationsMainObj->sendNotification($customer, $file, $customer, 2, $subject, 'sta-cha', 'status_change', $customerPermission);
+
+        $adminPermission = array(
+            0 => 'status_change_admin_email',
+            1 => 'status_change_cus_sms',
+            2 => 'status_change_cus_whatsapp',
+        );
+
+        $admin = get_admin();
+        $customer = Auth::user();
+        $subject = "TuningX: File Status Changed!";
+        $this->notificationsMainObj->sendNotification($admin, $file, $customer, 2, $subject, 'sta-cha', 'status_change', $adminPermission);
+
+        if($file->original_file_id){
+            return redirect(route('file', $file->original_file_id))->with(['success' => 'Engineer offer accepted!']);
+        }
+
+        else{
+            return redirect(route('file', $fileID))->with(['success' => 'Engineer offer accepted!']);
+        }
     
-            else{
-                return redirect(route('file', $fileID))->with(['success' => 'Engineer offer accepted!']);
-            }
-    
-            // Alert: email will be added here. 
     }
 
     public function saveFile(Request $request) {
-
-        $headPermission = array(
-            0 => 'eng_assign_eng_email',
-            1 => 'eng_assign_eng_sms',
-            2 => 'eng_assign_eng_whatsapp',
-        );
 
         $fileID = $request->file_id;
         $credits = $request->credits;
@@ -404,9 +460,27 @@ class FileController extends Controller
 
         $file = $this->filesMainObj->saveFile($user, $fileID, $credits);
 
-        $head = get_head();
+        $headPermission = array(
+            0 => 'eng_assign_eng_email',
+            1 => 'eng_assign_eng_sms',
+            2 => 'eng_assign_eng_whatsapp',
+        );
 
-        $this->notificationsMainObj->sendNotification($head, $file, $user, 2, 'file-up-cus', 'admin_assign', $headPermission);
+        $head = get_head();
+        $customer = User::findOrFail($file->user_id);
+        $subject = "TuningX: File Uploaded!";
+        $this->notificationsMainObj->sendNotification($head, $file, $customer, 2,$subject , 'file-up-cus', 'admin_assign', $headPermission);
+        
+        $adminPermission = array(
+            0 => 'file_upload_admin_email',
+            1 => 'file_upload_admin_sms',
+            2 => 'file_upload_admin_whatsapp',
+        );
+
+        $uploader = User::findOrFail($file->user_id);
+        $admin = get_admin();
+        $subject = "TuningX: File Uploaded!";
+        $this->notificationsMainObj->sendNotification($admin, $file, $uploader, 2, $subject, 'file-up-cus', 'fresh_file_upload', $adminPermission);
 
         $count = File::where('checked_by', 'customer')->where('is_credited', 1)->count();
 

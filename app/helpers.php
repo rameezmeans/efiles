@@ -82,6 +82,13 @@ if(!function_exists('get_logo_for_stages_and_options')){
     }
 }
 
+if(!function_exists('get_admin')){
+
+    function get_admin(){
+        $admin = Role::where('name', 'admin')->first();
+        return User::where('role_id', $admin->id)->first();
+    }
+}
 
 if(!function_exists('get_head')){
 
