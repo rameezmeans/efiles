@@ -5,24 +5,22 @@ namespace App\Http\Controllers;
 use ECUApp\SharedCode\Controllers\AuthMainController;
 use ECUApp\SharedCode\Controllers\FilesMainController;
 use ECUApp\SharedCode\Controllers\PaymentsMainController;
-use ECUApp\SharedCode\Models\Credit;
+use ECUApp\SharedCode\Controllers\ZohoMainController;
 use ECUApp\SharedCode\Models\Group;
-use ECUApp\SharedCode\Models\IntegerMeta;
 use ECUApp\SharedCode\Models\Package;
-use ECUApp\SharedCode\Models\PaymentLog;
-use ECUApp\SharedCode\Models\Price;
 use ECUApp\SharedCode\Models\Product;
-use ECUApp\SharedCode\Models\User;
 use Exception;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Support\Facades\Log;
 
 class PaymentsController extends Controller
 {
     private $paymenttMainObj;
     private $authMainObj;
     private $filesMainObj;
+    private $zohoMainObj;
     /**
      * Create a new controller instance.
      *
@@ -34,6 +32,7 @@ class PaymentsController extends Controller
         $this->paymenttMainObj = new PaymentsMainController();
         $this->authMainObj = new AuthMainController();
         $this->filesMainObj = new FilesMainController();
+        $this->zohoMainObj = new ZohoMainController();
     }
 
     public function offerCheckout(Request $request) {
@@ -223,6 +222,7 @@ class PaymentsController extends Controller
 
         $frontendID =  2;
 
+        $package = false;
         $offer = false;
         $fileFlag = false;
 
@@ -252,16 +252,16 @@ class PaymentsController extends Controller
 
         if($offer){ 
             $creditsForFile = $request->creditsForFile;
-            $creditsToBuy = $request->creditsToBuy;
-            $this->paymenttMainObj->addCredits($user, $sessionID, $creditsToBuy, $type);
+            $credits = $request->creditsToBuy;
+            $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
             $file = $this->filesMainObj->acceptOfferFinalise($user, $fileID, $creditsForFile, $frontendID);
         }
 
         if($fileFlag){
 
             $creditsForFile = $request->creditsForFile;
-            $creditsToBuy = $request->creditsToBuy;
-            $this->paymenttMainObj->addCredits($user, $sessionID, $creditsToBuy, $type);
+            $credits = $request->creditsToBuy;
+            $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
             $file = $this->filesMainObj->saveFile($user, $fileID, $creditsForFile);
 
         }
@@ -271,91 +271,28 @@ class PaymentsController extends Controller
             if($request->packageID == 0){
 
                 $credits = $request->credits;
-                $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
+                $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
             }
             else{
 
+                $package = true;
                 $packageID = $request->packageID;
                 $package = Package::findOrFail($packageID);
-                $this->paymenttMainObj->addCreditsPackage($user, $sessionID, $package, $type);
+                $credits = $package->credits;
+                $invoice = $this->paymenttMainObj->addCreditsPackage($user, $sessionID, $package, $type);
                 
             }
         }
-        
-        // if($user->exclude_vat_check) {
 
-        //     if(!$user->group_id){
-        //         $vat0Group = Group::where('slug', 'VAT0')->first();
-        //         $user->group_id = $vat0Group->id;
-        //         $user->save();
-        //     }
-        // }
+        if($user->zohobooks_id == NULL){
 
-        // else{
+            $this->zohoMainObj->createZohoAccount($user);
+        }
 
-        //     $this->authMainObj->VATCheckPolicy($user);
-        // }
+        if($user->zohobooks_id){
+            $this->zohoMainObj->createZohobooksInvoice($user, $invoice, $package, $type, $request->packageID);
+        }
 
-        // $logInstance = new PaymentLog();
-        // $logInstance->payment_id = $credit->id;
-        // $logInstance->user_id = $credit->user_id;
-        // $logInstance->save();
-
-        // $account = $user->stripe_payment_account();
-
-        // if($user->zohobooks_id == NULL){
-                    
-        //     $clientArr = $this->createZohobooksCustomer($user);
-
-        //     if(!$clientArr['success']){
-        //         $logInstance->reason_to_skip_zohobooks_id = $clientArr['reason'];
-        //         $logInstance->save();
-        //     }
-        // }
-
-        // $invoiceArr = $this->createZohobooksInvoice( $user, $credit, false, 'stripe',  $logInstance );
-
-        // if($invoiceArr['success_invoice']){
-        //     $logInstance->zohobooks_id = $credit->zohobooks_id;
-        //     $logInstance->save();
-        // }
-        // else{
-        //     $logInstance->reason_to_skip_zohobooks_id = $invoiceArr['reason_invoice'];
-        //     $logInstance->save();
-        // }
-
-        // if($invoiceArr['success_payment']){
-        //     $logInstance->zohobooks_payment = true;
-        //     $logInstance->save();
-        // }
-        // else{
-        //     $logInstance->zohobooks_payment = false;
-        //     $logInstance->reason_to_skip_zohobooks_payment_id = $invoiceArr['reason_payment'];
-        //     $logInstance->save();
-        // }
-
-        // $userGroup = Group::where('id', $user->group_id)->first();
-        // $taxRate = $userGroup->tax;
-        
-        // if($account->elorus){
-
-        //     $clientID = null;
-
-        //     if($user->elorus_id){
-        //         $clientID = $user->elorus_id;
-        //     }
-        //     else{
-        //         $clientID = $this->createElorusCustomer($user);
-        //     }
-
-        //     if(country_to_continent($user->country) == 'Europe'){
-
-        //         $code = elorus_policy($user);
-        //         $this->createElorusInvoice($credit, $clientID, $user, $taxRate, $code, $invoiceSequence );
-
-        //     }
-
-        // }
 
         \Cart::remove(101);
 
