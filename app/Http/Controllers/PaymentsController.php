@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use ECUApp\SharedCode\Controllers\AuthMainController;
+use ECUApp\SharedCode\Controllers\ElorusMainController;
 use ECUApp\SharedCode\Controllers\FilesMainController;
 use ECUApp\SharedCode\Controllers\PaymentsMainController;
 use ECUApp\SharedCode\Controllers\ZohoMainController;
@@ -21,6 +22,7 @@ class PaymentsController extends Controller
     private $authMainObj;
     private $filesMainObj;
     private $zohoMainObj;
+    private $elorusMainObj;
     /**
      * Create a new controller instance.
      *
@@ -33,6 +35,7 @@ class PaymentsController extends Controller
         $this->authMainObj = new AuthMainController();
         $this->filesMainObj = new FilesMainController();
         $this->zohoMainObj = new ZohoMainController();
+        $this->elorusMainObj = new ElorusMainController();
     }
 
     public function offerCheckout(Request $request) {
@@ -293,6 +296,36 @@ class PaymentsController extends Controller
             $this->zohoMainObj->createZohobooksInvoice($user, $invoice, $package, $type, $request->packageID);
         }
 
+        if($user->zohobooks_id == NULL){
+
+            $this->zohoMainObj->createZohoAccount($user);
+        }
+
+        if($type == 'stripe'){
+            $account = $user->stripe_payment_account();
+            
+        }
+        else{
+            $account = $user->paypal_payment_account();
+        }
+
+        if($account->elorus){
+
+                    $clientID = null;
+
+                    if($user->elorus_id){
+                        $clientID = $user->elorus_id;
+                    }
+                    else{
+                        $clientID = $this->elorusMainObj->createElorusCustomer($user);
+                    }
+                    
+                    if(country_to_continent($user->country) == 'Europe'){
+
+                        $this->elorusMainObj->createElorusInvoice($invoice, $clientID, $user, $package);
+
+                    }
+        }
 
         \Cart::remove(101);
 
