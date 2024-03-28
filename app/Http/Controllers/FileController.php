@@ -46,6 +46,7 @@ class FileController extends Controller
         $this->filesMainObj = new FilesMainController();
         $this->paymentMainObj = new PaymentsMainController();
         $this->notificationsMainObj = new NotificationsMainController();
+        $this->alientechMainObj = new NotificationsMainController();
 
         $this->pusher = new Pusher(
             env('PUSHER_APP_KEY'),
@@ -114,7 +115,7 @@ class FileController extends Controller
      */
     public function fileEngineersNotes(Request $request)
     {
-
+        $frontendID = 2;
         $validated = $request->validate([
             'egnineers_internal_notes' => 'required|max:1024'
         ]);
@@ -150,7 +151,7 @@ class FileController extends Controller
         $uploader = User::findOrFail($file->user_id);
         $engineer = User::FindOrFail($file->assigned_to);
         $subject = "TuningX: Client support message!";
-        $this->notificationsMainObj->sendNotification($engineer, $file, $uploader, 2, $subject, 'mess-to-eng', 'message_to_engineer', $engPermissions);
+        $this->notificationsMainObj->sendNotification($engineer, $file, $uploader, $frontendID, $subject, 'mess-to-eng', 'message_to_engineer', $engPermissions);
 
         $adminPermissions = array(
             0 => 'msg_cus_admin_email',
@@ -161,13 +162,15 @@ class FileController extends Controller
         $uploader = User::findOrFail($file->user_id);
         $admin = get_admin();
         $subject = "TuningX: Client support message!";
-        $this->notificationsMainObj->sendNotification($admin, $file, $uploader, 2, $subject, 'mess-to-eng', 'message_to_engineer', $adminPermissions);
+        $this->notificationsMainObj->sendNotification($admin, $file, $uploader, $frontendID, $subject, 'mess-to-eng', 'message_to_engineer', $adminPermissions);
 
         return redirect()->back()->with('success', 'Engineer note successfully Added!');
     }
 
     public function rejectOffer(Request $request) {
 
+        $frontendID = 2;
+        
         $fileID = $request->file_id;
         $file = File::findOrFail($fileID);
         $user = Auth::user();
@@ -182,7 +185,7 @@ class FileController extends Controller
 
         $customer = Auth::user();
         $subject = "TuningX: File Status Changed!";
-        $this->notificationsMainObj->sendNotification($customer, $file, $customer, 2, $subject, 'sta-cha', 'status_change', $customerPermission);
+        $this->notificationsMainObj->sendNotification($customer, $file, $customer, $frontendID, $subject, 'sta-cha', 'status_change', $customerPermission);
 
         $adminPermission = array(
             0 => 'status_change_admin_email',
@@ -193,7 +196,7 @@ class FileController extends Controller
         $admin = get_admin();
         $customer = Auth::user();
         $subject = "TuningX: File Status Changed!";
-        $this->notificationsMainObj->sendNotification($admin, $file, $customer, 2, $subject, 'sta-cha', 'status_change', $adminPermission);
+        $this->notificationsMainObj->sendNotification($admin, $file, $customer, $frontendID, $subject, 'sta-cha', 'status_change', $adminPermission);
 
     }   
 
@@ -428,7 +431,7 @@ class FileController extends Controller
 
         $customer = Auth::user();
         $subject = "TuningX: File Status Changed!";
-        $this->notificationsMainObj->sendNotification($customer, $file, $customer, 2, $subject, 'sta-cha', 'status_change', $customerPermission);
+        $this->notificationsMainObj->sendNotification($customer, $file, $customer, $frontendID, $subject, 'sta-cha', 'status_change', $customerPermission);
 
         $adminPermission = array(
             0 => 'status_change_admin_email',
@@ -439,7 +442,7 @@ class FileController extends Controller
         $admin = get_admin();
         $customer = Auth::user();
         $subject = "TuningX: File Status Changed!";
-        $this->notificationsMainObj->sendNotification($admin, $file, $customer, 2, $subject, 'sta-cha', 'status_change', $adminPermission);
+        $this->notificationsMainObj->sendNotification($admin, $file, $customer, $frontendID, $subject, 'sta-cha', 'status_change', $adminPermission);
 
         if($file->original_file_id){
             return redirect(route('file', $file->original_file_id))->with(['success' => 'Engineer offer accepted!']);
@@ -453,6 +456,7 @@ class FileController extends Controller
 
     public function saveFile(Request $request) {
 
+        $frontendID = 2;
         $fileID = $request->file_id;
         $credits = $request->credits;
         
@@ -469,7 +473,7 @@ class FileController extends Controller
         $head = get_head();
         $customer = User::findOrFail($file->user_id);
         $subject = "TuningX: File Uploaded!";
-        $this->notificationsMainObj->sendNotification($head, $file, $customer, 2,$subject , 'file-up-cus', 'admin_assign', $headPermission);
+        $this->notificationsMainObj->sendNotification($head, $file, $customer, $frontendID, $subject , 'file-up-cus', 'admin_assign', $headPermission);
         
         $adminPermission = array(
             0 => 'file_upload_admin_email',
@@ -480,7 +484,7 @@ class FileController extends Controller
         $uploader = User::findOrFail($file->user_id);
         $admin = get_admin();
         $subject = "TuningX: File Uploaded!";
-        $this->notificationsMainObj->sendNotification($admin, $file, $uploader, 2, $subject, 'file-up-cus', 'fresh_file_upload', $adminPermission);
+        $this->notificationsMainObj->sendNotification($admin, $file, $uploader, $frontendID, $subject, 'file-up-cus', 'fresh_file_upload', $adminPermission);
 
         $count = File::where('checked_by', 'customer')->where('is_credited', 1)->count();
 
@@ -700,9 +704,17 @@ class FileController extends Controller
         $toolType = $request->tool_type_for_dropzone;
         $toolID = $request->tool_for_dropzone;
 
-        $tempFile = $this->filesMainObj->createTemporaryFile($user, $file, $toolType, $toolID, $frontendID);
+        $returnArray = $this->filesMainObj->createTemporaryFile($user, $file, $toolType, $toolID, $frontendID);
 
-        return response()->json(['tempFileID' => $tempFile->id]);
+        $kess3Label = Tool::where('label', 'Kess_V3')->where('type', 'slave')->first();
+
+        if($toolType == 'slave' && $returnArray['tempFile']->tool_id == $kess3Label->id){
+
+            $this->alientechMainObj->saveGUIDandSlotIDToDownloadLater( $returnArray['path'] , $returnArray['tempFile'] );
+            
+        }
+
+        return response()->json(['tempFileID' => $returnArray['tempFile']->id]);
 
 
     }
