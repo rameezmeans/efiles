@@ -19,9 +19,11 @@ class AuthController extends Controller
 {
 
     private $authMainObj;
+    private $frontEndID;
 
     public function __construct()
     {   
+        $this->frontEndID = 2;
         $this->authMainObj = new AuthMainController();
     }
 
@@ -60,11 +62,10 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
         
-        $frontEndID = 2;
         $user = User::where('email', $request->email)->first();
         if($user){
 
-            if( $this->authMainObj->loginRule($frontEndID, $user) ){
+            if( $this->authMainObj->loginRule($this->frontEndID, $user) ){
 
                 $credentials = $request->only('email', 'password');
 
@@ -91,14 +92,13 @@ class AuthController extends Controller
     public function postRegistration(Request $request)
     {   
         $data = $request->all();
-        $frontEndID = 2;
         
         $validationArray = $this->authMainObj->getValidationRules($data);
         $request->validate($validationArray);
 
         $user = $this->authMainObj->registration($data);
          
-        if( $this->authMainObj->loginRule($frontEndID, $user) ){
+        if( $this->authMainObj->loginRule($this->frontEndID, $user) ){
 
             $credentials = $request->only('email', 'password');
 

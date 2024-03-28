@@ -23,6 +23,7 @@ class PaymentsController extends Controller
     private $filesMainObj;
     private $zohoMainObj;
     private $elorusMainObj;
+    private $frontendID;
     /**
      * Create a new controller instance.
      *
@@ -30,6 +31,8 @@ class PaymentsController extends Controller
      */
     public function __construct()
     {
+
+        $this->frontendID = 2;
         $this->middleware('auth');
         $this->paymenttMainObj = new PaymentsMainController();
         $this->authMainObj = new AuthMainController();
@@ -40,8 +43,6 @@ class PaymentsController extends Controller
 
     public function offerCheckout(Request $request) {
 
-        $frontendID = 2;
-
         $creditsToBuy = $request->credits_to_buy;
         $creditsForCheckout = $request->credits_for_checkout;
         $fileID = $request->file_id;
@@ -50,7 +51,7 @@ class PaymentsController extends Controller
 
         $price = $this->paymenttMainObj->getPrice();
 
-        $packages =  $this->paymenttMainObj->getPackages($frontendID);
+        $packages =  $this->paymenttMainObj->getPackages($this->frontendID);
 
         if($user->exclude_vat_check) {
 
@@ -117,7 +118,6 @@ class PaymentsController extends Controller
 
     public function fileCart(Request $request){
 
-        $frontendID = 2;
         $creditsToBuy = $request->credits_to_buy;
         $creditsForFile = $request->credits_for_file;
 
@@ -126,7 +126,7 @@ class PaymentsController extends Controller
         $user = Auth::user();
 
         $price = $this->paymenttMainObj->getPrice();
-        $packages = $this->paymenttMainObj->getPackages($frontendID);
+        $packages = $this->paymenttMainObj->getPackages($this->frontendID);
 
         if($user->exclude_vat_check) {
 
@@ -169,22 +169,19 @@ class PaymentsController extends Controller
      */
     public function shopProduct(){
 
-        $frontendID = 2;
         $user = Auth::user();
         
         $price = $this->paymenttMainObj->getPrice();
-        $packages = $this->paymenttMainObj->getPackages($frontendID);
+        $packages = $this->paymenttMainObj->getPackages($this->frontendID);
 
         return view('shop_product', ['packages' => $packages, 'price' => $price, 'group' => $user->group, 'user' => $user]);
     }
 
     public function cart(){
         
-        $frontendID = 2;
-
         $user = Auth::user();
         $price = $this->paymenttMainObj->getPrice();
-        $packages = $this->paymenttMainObj->getPackages($frontendID);
+        $packages = $this->paymenttMainObj->getPackages($this->frontendID);
 
         if($user->exclude_vat_check) {
 
@@ -344,15 +341,13 @@ class PaymentsController extends Controller
 
     public function buyPackage(Request $request){
 
-        $frontendID = 2;
-
         $user = Auth::user();
 
         $price = $request->price;
         $package = $request->package;
         $credits = $request->credits;
 
-        $packages = $this->paymenttMainObj->getPackages($frontendID);
+        $packages = $this->paymenttMainObj->getPackages($this->frontendID);
 
         if($user->exclude_vat_check) {
 

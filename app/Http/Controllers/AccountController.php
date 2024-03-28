@@ -14,6 +14,7 @@ use Illuminate\Http\Client\ConnectionException;
 
 class AccountController extends Controller
 {
+    private $frontendID;
     /**
      * Create a new controller instance.
      *
@@ -21,6 +22,7 @@ class AccountController extends Controller
      */
     public function __construct()
     {
+        $this->frontendID = 2;
         $this->middleware('auth');
     }
 
