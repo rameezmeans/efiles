@@ -36,7 +36,7 @@ class PricelistController extends Controller
         $type = $request->type;
         $vehicleType = $request->vehicle_type;
         
-        $servicies = $this->pricelistMainObj->getPrices($vehicleType);
+        $servicies = $this->pricelistMainObj->getPrices($vehicleType, 2);
         
         return view('price_list', ['vehicleType' => $vehicleType, 'type' => $type, 'stages' => $servicies['stages'], 'options' => $servicies['options'], 'user' => $user]);
     }
