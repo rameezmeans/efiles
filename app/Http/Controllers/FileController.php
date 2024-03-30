@@ -512,11 +512,11 @@ class FileController extends Controller
         
         $servieCredits = 0;
 
-        $servieCredits += $this->filesMainObj->saveFileStages($file, $stage);
+        $servieCredits += $this->filesMainObj->saveFileStages($file, $stage, $this->frontendID);
 
         $options = $request->options;
 
-        $servieCredits += $this->filesMainObj->saveFileOptions($file, $stage, $options);
+        $servieCredits += $this->filesMainObj->saveFileOptions($file, $stage, $options, $this->frontendID);
 
         $price = $this->paymentMainObj->getPrice();
 
@@ -698,7 +698,7 @@ class FileController extends Controller
         $toolType = $request->tool_type_for_dropzone;
         $toolID = $request->tool_for_dropzone;
 
-        $returnArray = $this->filesMainObj->createTemporaryFile($user, $file, $toolType, $toolID, $this->frontendID);
+        $tempFileID = $this->filesMainObj->createTemporaryFile($user, $file, $toolType, $toolID, $this->frontendID);
 
         $kess3Label = Tool::where('label', 'Kess_V3')->where('type', 'slave')->first();
 
@@ -708,7 +708,7 @@ class FileController extends Controller
             
         // }
 
-        return response()->json(['tempFileID' => $returnArray['tempFile']->id]);
+        return response()->json(['tempFileID' => $tempFileID->id]);
 
 
     }
