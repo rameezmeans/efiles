@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use ECUApp\SharedCode\Controllers\AlientechMainController;
 use ECUApp\SharedCode\Controllers\FilesMainController;
 use ECUApp\SharedCode\Controllers\NotificationsMainController;
 use ECUApp\SharedCode\Controllers\PaymentsMainController;
+use ECUApp\SharedCode\Models\AlientechFile;
 use ECUApp\SharedCode\Models\Comment;
 use ECUApp\SharedCode\Models\Credit;
 use ECUApp\SharedCode\Models\EmailReminder;
@@ -40,6 +42,7 @@ class FileController extends Controller
     private $paymentMainObj;
     private $notificationsMainObj;
     private $frontendID;
+    private $alientechMainObj;
 
     public function __construct(){
 
@@ -49,7 +52,7 @@ class FileController extends Controller
         $this->filesMainObj = new FilesMainController();
         $this->paymentMainObj = new PaymentsMainController();
         $this->notificationsMainObj = new NotificationsMainController();
-        // $this->alientechMainObj = new NotificationsMainController();
+        $this->alientechMainObj = new AlientechMainController();
 
         $this->pusher = new Pusher(
             env('PUSHER_APP_KEY'),
@@ -454,12 +457,26 @@ class FileController extends Controller
 
     public function saveFile(Request $request) {
 
-        $fileID = $request->file_id;
+        $tempFileID = $request->file_id;
         $credits = $request->credits;
         
         $user = Auth::user();
 
-        $file = $this->filesMainObj->saveFile($user, $fileID, $credits);
+        $file = $this->filesMainObj->saveFile($user, $tempFileID, $credits);
+
+        $kess3Label = Tool::where('label', 'Kess_V3')->where('type', 'slave')->first();
+        if($file->tool_type == 'slave' && $file->tool_id == $kess3Label->id){
+            
+            $alientechFileFlag = AlientechFile::where('temporary_file_id', $tempFileID)->update( ['file_id' => $file->id, 'temporary_file_id' => 0 ]);
+
+            if( $alientechFileFlag ){
+                $alientechFile = AlientechFile::where('file_id', $file->id)->first();
+                $fileName = $this->alientechMainObj->process( $alientechFile->guid );
+                if($fileName){
+                    $file->checking_status = 'unchecked';
+                }
+            }
+        }
 
         $headPermission = array(
             0 => 'eng_assign_eng_email',
@@ -698,17 +715,18 @@ class FileController extends Controller
         $toolType = $request->tool_type_for_dropzone;
         $toolID = $request->tool_for_dropzone;
 
-        $tempFileID = $this->filesMainObj->createTemporaryFile($user, $file, $toolType, $toolID, $this->frontendID);
+        $tempFile = $this->filesMainObj->createTemporaryFile($user, $file, $toolType, $toolID, $this->frontendID);
 
         $kess3Label = Tool::where('label', 'Kess_V3')->where('type', 'slave')->first();
 
-        // if($toolType == 'slave' && $returnArray['tempFile']->tool_id == $kess3Label->id){
+        if($toolType == 'slave' && $tempFile->tool_id == $kess3Label->id){
 
-        //     $this->alientechMainObj->saveGUIDandSlotIDToDownloadLater( $returnArray['path'] , $returnArray['tempFile'] );
+            $path = $this->filesMainObj->getPath($file);
+            $this->alientechMainObj->saveGUIDandSlotIDToDownloadLater($path , $tempFile->id);
             
-        // }
+        }
 
-        return response()->json(['tempFileID' => $tempFileID->id]);
+        return response()->json(['tempFileID' => $tempFile->id]);
 
 
     }
