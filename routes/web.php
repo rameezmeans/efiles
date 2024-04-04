@@ -139,3 +139,7 @@ Route::post('get_tool_icons', [App\Http\Controllers\AccountController::class, 'g
 
 Route::get('/price-list', [App\Http\Controllers\PricelistController::class, 'index'])->name('price-list');
 
+Route::get('/create_test_customer/{id}', [App\Http\Controllers\PaymentsController::class, 'createTestElorusCustomer'])->name('price-list');
+
+
+

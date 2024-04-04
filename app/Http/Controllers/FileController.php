@@ -18,6 +18,8 @@ use ECUApp\SharedCode\Models\FileService;
 use ECUApp\SharedCode\Models\FileUrl;
 use ECUApp\SharedCode\Models\Log;
 use ECUApp\SharedCode\Models\Price;
+use ECUApp\SharedCode\Models\ProcessedFile;
+use ECUApp\SharedCode\Models\RequestFile;
 use ECUApp\SharedCode\Models\Service;
 use ECUApp\SharedCode\Models\StagesOptionsCredit;
 use ECUApp\SharedCode\Models\TemporaryFile;
@@ -304,11 +306,11 @@ class FileController extends Controller
 
     }
 
-    public function download($id,$fileName) {
+    // public function download($id,$fileName) {
 
-        $file = File::findOrFail($id); 
-        $filePath = public_path($file->file_path).$fileName;
-        return response()->download($filePath);
+    //     $file = File::findOrFail($id); 
+    //     $filePath = public_path($file->file_path).$fileName;
+    //     return response()->download($filePath);
 
     // if($engFileID){
     //     $engFile = RequestFile::findOrFail($engFileID);
@@ -380,6 +382,79 @@ class FileController extends Controller
     //         return response()->download($file_path);
     //     }
 
+    // }
+
+    public function download($id,$fileName) {
+
+        // if($engFileID){
+        //     $engFile = RequestFile::findOrFail($engFileID);
+        // }
+        
+        $file = File::findOrFail($id); 
+
+        $kess3Label = Tool::where('label', 'Kess_V3')->where('type', 'slave')->first();
+        
+        if($file->tool_type == 'slave' && $file->tool_id == $kess3Label->id){
+
+            if($file->original_file_id == NULL){
+
+            $engFile = RequestFile::where('request_file', $fileName)->where('file_id', $file->id)->first();
+
+            if($engFile && $engFile->uploaded_successfully){
+
+            $notProcessedAlientechFile = AlientechFile::where('file_id', $file->id)
+            ->where('purpose', 'decoded')
+            ->where('type', 'download')
+            ->where('processed', 0)
+            ->first();
+
+            if($notProcessedAlientechFile){
+               
+                $fileNameEncoded = $this->alientechMainObj->downloadEncodedFile($id, $notProcessedAlientechFile, $fileName);
+                $notProcessedAlientechFile->processed = 1;
+                $notProcessedAlientechFile->save();
+                
+                $file_path = public_path($file->file_path).$fileNameEncoded;
+                return response()->download($file_path);
+            }
+            else{
+                $encodedFileNameToBe = $fileName.'_encoded_api';
+                $processedFile = ProcessedFile::where('name', $encodedFileNameToBe)->first();
+
+                if($processedFile){
+
+                // if($processedFile->extension != ''){
+                //     $finalFileName = $processedFile->name.'.'.$processedFile->extension;
+                // }
+                // else{
+                    $finalFileName = $processedFile->name;
+                // }
+
+            }else{
+                $finalFileName = $fileName;
+            }
+
+                $file_path = public_path($file->file_path).$finalFileName;
+                return response()->download($file_path);
+
+            }
+        }
+        else{
+            $file_path = public_path($file->file_path).$fileName;
+            return response()->download($file_path);
+        }
+    }
+
+    else{
+        $file_path = public_path($file->file_path).$fileName;
+        return response()->download($file_path);
+    }
+
+        }
+        else{
+            $file_path = public_path($file->file_path).$fileName;
+            return response()->download($file_path);
+        }
     }
 
     public function autoDownload(Request $request){
