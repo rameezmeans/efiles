@@ -10,6 +10,7 @@ use ECUApp\SharedCode\Controllers\ZohoMainController;
 use ECUApp\SharedCode\Models\Group;
 use ECUApp\SharedCode\Models\Package;
 use ECUApp\SharedCode\Models\Product;
+use ECUApp\SharedCode\Models\User;
 use Exception;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
@@ -215,6 +216,13 @@ class PaymentsController extends Controller
 
         
         return view('cart', ['packages' => $packages, 'price' => $price, 'tax' => $tax, 'factor' => $factor, 'group' => $user->group, 'user' => $user] );
+
+    }
+
+    public function createTestElorusCustomer($userID){
+
+        $user = User::findOrFail($userID);
+        $this->elorusMainObj->createTestElorusCustomer($user);
 
     }
 
