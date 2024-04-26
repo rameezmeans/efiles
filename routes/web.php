@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use ECUApp\SharedCode\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Twilio\Rest\Client;
 
@@ -53,13 +54,18 @@ Route::get('/test', function () {
 
 });
 
-Route::get('login', [AuthController::class, 'index'])->name('login');
-Route::post('post-login', [AuthController::class, 'postLogin'])->name('login.post'); 
-Route::get('register', [AuthController::class, 'registration'])->name('register');
-Route::post('post-registration', [AuthController::class, 'postRegistration'])->name('register.post'); 
-Route::get('home', [AuthController::class, 'home'])->name('home'); 
-Route::get('logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/login_as/{id}', [App\Http\Controllers\HomeController::class, 'loginAs'])->name('loginAs');
+Auth::routes();
+
+// Route::get('login', [AuthController::class, 'index'])->name('login');
+// Route::post('post-login', [AuthController::class, 'postLogin'])->name('login.post'); 
+// Route::get('register', [AuthController::class, 'registration'])->name('register');
+// Route::post('post-registration', [AuthController::class, 'postRegistration'])->name('register.post'); 
+
+// Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+// Route::get('/login_as/{id}', [App\Http\Controllers\HomeController::class, 'loginAs'])->name('loginAs');
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 Route::post('/clear_feed', [App\Http\Controllers\HomeController::class, 'clearFeed'])->name('clear-feed');
 Route::post('/pusher/auth', [MessagesController::class, 'pusherAuth'])->name('pusher.auth');
 
@@ -139,7 +145,7 @@ Route::post('get_tool_icons', [App\Http\Controllers\AccountController::class, 'g
 
 Route::get('/price-list', [App\Http\Controllers\PricelistController::class, 'index'])->name('price-list');
 
-Route::get('/create_test_customer/{id}', [App\Http\Controllers\PaymentsController::class, 'createTestElorusCustomer'])->name('price-list');
+Route::get('/create_test_customer/{id}', [App\Http\Controllers\PaymentsController::class, 'createTestElorusCustomer'])->name('create-customer-elorus');
 
 
 

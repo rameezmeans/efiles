@@ -26,7 +26,7 @@
 						<a class="black" href="#"><p><i class="fa fa-angle-left p-r-5"></i>Back to Homepage</p></a>
 						<h2>Welcome Back!</h2>
 						<p>Start managing your ECU files faster and better.</p>
-						<form action="{{ route('login.post') }}" method="POST" style="margin-top: 5%;">
+						<form action="{{ route('login') }}" method="POST" style="margin-top: 5%;">
 							@csrf
 							<div class="form-group">
 							  <label for="exampleInputEmail1">Email</label>
