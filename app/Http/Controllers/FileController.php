@@ -769,12 +769,13 @@ class FileController extends Controller
      */
     public function step2(Request $request) {
 
+        $fileUploaded = $request->file('acm_file');
         $rules = $this->filesMainObj->getStep1ValidationTempfile();
         $file = $request->validate($rules);
 
         $data = $request->all();
         
-        return $this->filesMainObj->addStep1InforIntoTempFile($data);
+        return $this->filesMainObj->addStep1InforIntoTempFile($data, $fileUploaded);
     }
 
     /**
