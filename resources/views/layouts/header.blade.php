@@ -67,8 +67,7 @@
         </li>
         @endif
         <li>
-            <button class="btn btn-warning"><a href="{{ route('logout'); }}" ><i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out</a></button>
-            <form id="logout-form" action="{{ route('logout'); }}" method="POST" class="d-none">@csrf</form>
+            <form id="logout-form" action="{{ route('logout'); }}" method="POST" class="d-none">@csrf  <button class="btn btn-warning" type='submit'><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</button></form>
         </li>
     </ul>
   </div>
