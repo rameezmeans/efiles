@@ -161,7 +161,7 @@
           </div>
 
           <div id="posting-file" class="@if($errors->any()) show @else hide @endif">
-            <form method="POST" action="{{ route('step2') }}">
+            <form method="POST" action="{{ route('step2') }}" enctype="multipart/form-data">
                 <input type="hidden" name="temporary_file_id" id="temporary_file_id" value="{{ old('temporary_file_id') }}">
                 @csrf
 
@@ -213,6 +213,28 @@
                         </div>
                         </div>
                 </div>
+
+                <div class="row post-row">
+
+                  <div class="col-xl-3 col-lg-3 col-md-3 heading-column">
+                      <div class="heading-column-box">
+                          <h3>Upload ACM MCM/ECM File</h3>
+                          <p>Please upload ACM MCM/ECM file here. In Case of Form Failed, Please upload it again.</p>
+                      </div>
+                  </div>
+
+                  <div class="col-xl-6 col-lg-6 col-md-8 type-column">
+                      <div class="row">
+                          <div class="col-xl-12 col-lg-12 col-md-12 ">
+                              
+                            <input type="file" name="acm_file" id="acm_file" value="{{ old('acm_file') }}">
+                             
+                          </div>
+                      </div>
+                      
+                  </div>
+
+              </div>
 
                 <div class="row post-row">
 
