@@ -1038,6 +1038,23 @@ div.file-type-buttons label > input + img {
                   @endif
 
                 </span>
+
+                @if($file->acm_file)
+              @foreach($file->acm_files as $acm)
+                <div class="bt m-t-20 p-t-10">
+                  
+                  
+                  <span style="display: inline-grid;margin-bottom: 20px;" >
+                    <strong>ACM File Name:</strong>
+                    <span class="f-name">{{$acm->acm_file}}</span>
+                  </span>
+                      <a class="btn btn-info" href="{{route('download', [$file->id,$acm->acm_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
+                    
+                  
+                </div>
+              @endforeach
+              @endif
+                
                 <div class="bt m-t-10 p-t-10">
                   <span><strong>Stages and Options:</strong></span>
                 </div>
@@ -1331,6 +1348,23 @@ div.file-type-buttons label > input + img {
                 @endif
 
               </span>
+
+              @if($file->acm_file)
+              @foreach($file->acm_files as $acm)
+                <div class="bt m-t-20 p-t-10">
+                  
+                  
+                  <span style="display: inline-grid;margin-bottom: 20px;" >
+                    <strong>ACM File Name:</strong>
+                    <span class="f-name">{{$acm->acm_file}}</span>
+                  </span>
+                      <a class="btn btn-info" href="{{route('download', [$file->id,$acm->acm_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
+                    
+                  
+                </div>
+              @endforeach
+              @endif
+
               <div class="bt m-t-10 p-t-10">
                 <span><strong>Stages and Options:</strong></span>
               </div>
@@ -1835,6 +1869,23 @@ div.file-type-buttons label > input + img {
                   @endif
 
                 </span>
+
+                @if($file->acm_file)
+              @foreach($file->acm_files as $acm)
+                <div class="bt m-t-20 p-t-10">
+                  
+                  
+                  <span style="display: inline-grid;margin-bottom: 20px;" >
+                    <strong>ACM File Name:</strong>
+                    <span class="f-name">{{$acm->acm_file}}</span>
+                  </span>
+                      <a class="btn btn-info" href="{{route('download', [$file->id,$acm->acm_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
+                    
+                  
+                </div>
+              @endforeach
+              @endif
+
                 <div class="bt m-t-10 p-t-10">
                   <span><strong>Stages and Options:</strong></span>
                 </div>
