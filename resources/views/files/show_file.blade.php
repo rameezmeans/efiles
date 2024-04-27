@@ -1040,6 +1040,7 @@ div.file-type-buttons label > input + img {
                 </span>
 
                 @if($file->acm_file)
+                @if($file->acm_files)
               @foreach($file->acm_files as $acm)
                 <div class="bt m-t-20 p-t-10">
                   
@@ -1053,6 +1054,7 @@ div.file-type-buttons label > input + img {
                   
                 </div>
               @endforeach
+              @endif
               @endif
                 
                 <div class="bt m-t-10 p-t-10">
@@ -1350,6 +1352,7 @@ div.file-type-buttons label > input + img {
               </span>
 
               @if($file->acm_file)
+                @if($file->acm_files)
               @foreach($file->acm_files as $acm)
                 <div class="bt m-t-20 p-t-10">
                   
@@ -1363,6 +1366,7 @@ div.file-type-buttons label > input + img {
                   
                 </div>
               @endforeach
+              @endif
               @endif
 
               <div class="bt m-t-10 p-t-10">
@@ -1871,6 +1875,7 @@ div.file-type-buttons label > input + img {
                 </span>
 
                 @if($file->acm_file)
+                @if($file->acm_files)
               @foreach($file->acm_files as $acm)
                 <div class="bt m-t-20 p-t-10">
                   
@@ -1884,6 +1889,7 @@ div.file-type-buttons label > input + img {
                   
                 </div>
               @endforeach
+              @endif
               @endif
 
                 <div class="bt m-t-10 p-t-10">
