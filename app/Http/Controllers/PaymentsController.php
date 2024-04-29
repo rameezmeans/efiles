@@ -414,7 +414,8 @@ class PaymentsController extends Controller
             $creditsForFile = $request->creditsForFile;
             $credits = $request->creditsToBuy;
             $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
-            $file = $this->filesMainObj->saveFile($user, $fileID, $creditsForFile);
+            $file = $this->filesMainObj->saveFile($user, $fileID, $creditsForFile, $type);
+            $this->filesMainObj->notifications($file);
 
         }
 
@@ -457,7 +458,8 @@ class PaymentsController extends Controller
                         $credits = $merchantTrns->credits_to_buy;
 
                         $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
-                        $file = $this->filesMainObj->saveFile($user, $fileID, $creditsForFile);
+                        $file = $this->filesMainObj->saveFile($user, $fileID, $creditsForFile, $type);
+                        $this->filesMainObj->notifications($file);
                     }
 
                 }
@@ -547,7 +549,7 @@ class PaymentsController extends Controller
         }
 
         if($fileFlag){
-            return redirect()->route('history')->with('success', 'Task is created!');
+            return redirect()->route('auto-download',['id' => $file->id]);
         }
 
         return redirect()->route('shop-product')->with('success', 'Credits are added!');
