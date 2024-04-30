@@ -1654,6 +1654,17 @@ div.file-type-buttons label > input + img {
                     </span>
                   <a href="{{route('download', [$file->id,$file->file_attached])}}" class="btn btn-info" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
                   </span>
+
+                  @if($file->acm_file)
+                    <div class="bt m-t-20 p-t-10">
+                      <span style="display: inline-grid;margin-bottom: 20px;" >
+                        <strong>ACM File Name:</strong>
+                        <span class="f-name">{{$file->acm_file}}</span>
+                      </span>
+                          <a class="btn btn-info" href="{{route('download', [$file->id,$file->acm_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
+                    </div>
+                    @endif
+                    
                   <div class="bt m-t-10 p-t-10">
                     <span><strong>Stages and Options:</strong></span>
                   </div>
