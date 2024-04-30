@@ -192,6 +192,7 @@ input.qty-input {
                     </tbody>
                   </table>
 
+                  
                   @if(Auth::user()->group->stripe_active == 1)
                   <form action="{{route('checkout.stripe')}}" method="POST">
                     @csrf
