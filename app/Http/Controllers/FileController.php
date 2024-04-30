@@ -38,8 +38,7 @@ class FileController extends Controller
      *
      * @return void
      */
-
-    private $pusher;
+    
     private $filesMainObj;
     private $paymentMainObj;
     private $notificationsMainObj;
@@ -55,20 +54,6 @@ class FileController extends Controller
         $this->paymentMainObj = new PaymentsMainController();
         $this->notificationsMainObj = new NotificationsMainController();
         $this->alientechMainObj = new AlientechMainController();
-
-        $this->pusher = new Pusher(
-            env('PUSHER_APP_KEY'),
-            env('PUSHER_APP_SECRET'),
-            env('PUSHER_APP_ID'),
-            [
-                'cluster' => env('PUSHER_APP_CLUSTER', 'mt1'),
-                'host' => env('PUSHER_HOST') ?: 'api-'.env('PUSHER_APP_CLUSTER', 'mt1').'.pusher.com',
-                'port' => env('PUSHER_PORT', 443),
-                'scheme' => env('PUSHER_SCHEME', 'https'),
-                'encrypted' => true,
-                'useTLS' => env('PUSHER_SCHEME', 'https') === 'https',
-            ],
-        );
     }
 
     /**
@@ -536,51 +521,10 @@ class FileController extends Controller
         $credits = $request->credits;
         
         $user = Auth::user();
-
         $file = $this->filesMainObj->saveFile($user, $tempFileID, $credits);
-
-        $kess3Label = Tool::where('label', 'Kess_V3')->where('type', 'slave')->first();
-        if($file->tool_type == 'slave' && $file->tool_id == $kess3Label->id){
-            
-            $alientechFileFlag = AlientechFile::where('temporary_file_id', $tempFileID)->update( ['file_id' => $file->id, 'temporary_file_id' => 0 ]);
-
-            if( $alientechFileFlag ){
-                $alientechFile = AlientechFile::where('file_id', $file->id)->first();
-                $fileName = $this->alientechMainObj->process( $alientechFile->guid );
-                if($fileName){
-                    $file->checking_status = 'unchecked';
-                }
-            }
-        }
-
-        $headPermission = array(
-            0 => 'eng_assign_eng_email',
-            1 => 'eng_assign_eng_sms',
-            2 => 'eng_assign_eng_whatsapp',
-        );
-
-        $head = get_head();
-        $customer = User::findOrFail($file->user_id);
-        $subject = "TuningX: File Uploaded!";
-        $this->notificationsMainObj->sendNotification($head, $file, $customer, $this->frontendID, $subject , 'file-up-cus', 'admin_assign', $headPermission);
         
-        $adminPermission = array(
-            0 => 'file_upload_admin_email',
-            1 => 'file_upload_admin_sms',
-            2 => 'file_upload_admin_whatsapp',
-        );
-
-        $uploader = User::findOrFail($file->user_id);
-        $admin = get_admin();
-        $subject = "TuningX: File Uploaded!";
-        $this->notificationsMainObj->sendNotification($admin, $file, $uploader, $this->frontendID, $subject, 'file-up-cus', 'fresh_file_upload', $adminPermission);
-
-        $count = File::where('checked_by', 'customer')->where('is_credited', 1)->count();
-
-        $this->pusher->trigger("private-chatify.".env('LIVE_CHAT_ID'), 'file-uploaded', [
-            'count' => $count
-        ]);
-
+        $this->filesMainObj->notifications($file);
+        
         return redirect()->route('auto-download',['id' => $file->id]);
         
     }
