@@ -107,7 +107,7 @@ Route::post('/add-customer-note', [App\Http\Controllers\FileController::class, '
 Route::post('/file-engineers-notes', [App\Http\Controllers\FileController::class, 'fileEngineersNotes'])->name('file-engineers-notes');
 Route::post('/file-events-notes', [App\Http\Controllers\FileController::class, 'fileEventsNotes'])->name('file-events-notes');
 Route::post('/file_feedback', [App\Http\Controllers\FileController::class, 'fileFeedback'])->name('file-feedback');
-Route::post('accept_offer', [App\Http\Controllers\FileController::class, 'acceptOffer'])->name('accept-offer');
+Route::post('accept_offer', [App\Http\Controllers\FileController::class, 'acceptOfferFinalise'])->name('accept-offer');
 Route::post('reject_offer', [App\Http\Controllers\FileController::class, 'rejectOffer'])->name('reject-offer');
 Route::get('pay_offer_credits/{id}', [App\Http\Controllers\FileController::class, 'payCreditsOffer'])->name('pay-credits-offer');
 Route::post('add_offer_file', [App\Http\Controllers\FileController::class, 'addOfferToFile'])->name('add-offer-to-file');
