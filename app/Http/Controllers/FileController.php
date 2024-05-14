@@ -159,6 +159,37 @@ class FileController extends Controller
         return redirect()->back()->with('success', 'Engineer note successfully Added!');
     }
 
+    public function acceptOffer(Request $request) {
+
+        $fileID = $request->file_id;
+        $file = File::findOrFail($fileID);
+        $user = Auth::user();
+
+        $this->filesMainObj->acceptOfferWithoutPayingCredits($file, $user);
+
+        $customerPermission = array(
+            0 => 'status_change_cus_email',
+            1 => 'status_change_cus_sms',
+            2 => 'status_change_cus_whatsapp'
+        );
+
+        $customer = Auth::user();
+        $subject = "ECUTech: File Status Changed!";
+        $this->notificationsMainObj->sendNotification($customer, $file, $customer, $this->frontendID, $subject, 'sta-cha', 'status_change', $customerPermission);
+
+        $adminPermission = array(
+            0 => 'status_change_admin_email',
+            1 => 'status_change_cus_sms',
+            2 => 'status_change_cus_whatsapp'
+        );
+
+        $admin = get_admin();
+        $customer = Auth::user();
+        $subject = "ECUTech: File Status Changed!";
+        $this->notificationsMainObj->sendNotification($admin, $file, $customer, $this->frontendID, $subject, 'sta-cha', 'status_change', $adminPermission);
+
+    }
+
     public function rejectOffer(Request $request) {
 
         $fileID = $request->file_id;
