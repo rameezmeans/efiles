@@ -562,6 +562,8 @@ class FileController extends Controller
 
     public function postStages(Request $request) {
 
+        // dd($request->all());
+
         $stage = Service::FindOrFail($request->stage);
         $stageName = $stage->name;
 
@@ -570,10 +572,12 @@ class FileController extends Controller
         $request->validate($rules);
         
         $fileID = $request->file_id;
-        $DTCComments = $request->dtc_off_comments;
-        $vmaxComments = $request->vmax_off_comments;
+        // $DTCComments = $request->dtc_off_comments;
+        // $vmaxComments = $request->vmax_off_comments;
 
-        $file = $this->filesMainObj->saveStagesInfo($fileID, $DTCComments, $vmaxComments);
+        $optionComments = $request->option_comments;
+
+        $file = $this->filesMainObj->saveStagesInfo($fileID, $optionComments);
         
         FileService::where('service_id', $stage->id)->where('temporary_file_id', $file->id)->delete();
         
