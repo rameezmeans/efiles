@@ -61,8 +61,8 @@ Auth::routes();
 // Route::get('register', [AuthController::class, 'registration'])->name('register');
 // Route::post('post-registration', [AuthController::class, 'postRegistration'])->name('register.post'); 
 
-// Route::get('logout', [AuthController::class, 'logout'])->name('logout');
-// Route::get('/login_as/{id}', [App\Http\Controllers\HomeController::class, 'loginAs'])->name('loginAs');
+Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/login_as/{id}', [App\Http\Controllers\HomeController::class, 'loginAs'])->name('loginAs');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
