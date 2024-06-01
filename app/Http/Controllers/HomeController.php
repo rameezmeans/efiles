@@ -23,6 +23,11 @@ class HomeController extends Controller {
         $this->authMainObj = new AuthMainController;
     }
 
+    public function loginAs($id) {
+        Auth::loginUsingId($id, true);
+        return redirect()->route('home', ['success' => 'Login successful!']);
+    }
+
     public function index() {
 
         $user = Auth::user();
