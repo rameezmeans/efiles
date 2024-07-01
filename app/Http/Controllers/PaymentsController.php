@@ -36,7 +36,7 @@ class PaymentsController extends Controller
     public function __construct()
     {
 
-        $this->frontendID = 2;
+        $this->frontendID = 3;
         $this->middleware('auth');
         $this->paymenttMainObj = new PaymentsMainController();
         $this->authMainObj = new AuthMainController();

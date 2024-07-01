@@ -19,7 +19,7 @@ class HomeController extends Controller {
     
     public function __construct(){
         $this->middleware('auth');
-        $this->frontendID = 2;
+        $this->frontendID = 3;
         $this->authMainObj = new AuthMainController;
     }
 

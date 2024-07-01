@@ -56,7 +56,7 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
-        $this->frontEndID = 2;
+        $this->frontEndID = 3;
         $this->authMainObj = new AuthMainController();
     }
 
@@ -158,7 +158,7 @@ class RegisterController extends Controller
 
         $feeds = NewsFeed::where('active', 1)
         ->whereNull('subdealer_group_id')
-        ->where('front_end_id', 2)
+        ->where('front_end_id', 3)
         ->get();
 
         foreach($feeds as $feed){
@@ -177,7 +177,7 @@ class RegisterController extends Controller
             'status' => $data['status'],
             'company_name' => $data['company_name'],
             'company_id' => $data['company_id'],
-            'front_end_id' => 2,
+            'front_end_id' => 3,
             'evc_customer_id' => $data['evc_customer_id'],
             'slave_tools_flag' => $slaveToolsFlag,
             'password' => Hash::make($data['password']),

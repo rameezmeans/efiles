@@ -56,7 +56,7 @@ class LoginController extends Controller
 
         $feeds = NewsFeed::where('active', 1)
         ->whereNull('subdealer_group_id')
-        ->where('front_end_id', 2)
+        ->where('front_end_id', 3)
         ->get();
 
         foreach($feeds as $feed){
@@ -78,7 +78,7 @@ class LoginController extends Controller
         if ($this->attemptLogin($request)) {
             //check user is admin or not  
             
-            if (Auth::user()->front_end_id == 2 && Auth::user()->subdealer_group_id == NULL && Auth::user()->is_admin() == false && Auth::user()->is_engineer() == false) {
+            if (Auth::user()->front_end_id == 3 && Auth::user()->subdealer_group_id == NULL && Auth::user()->is_admin() == false && Auth::user()->is_engineer() == false) {
                 return $this->sendLoginResponse($request);
             }
             else if (Auth::user()->is_admin() == true) {

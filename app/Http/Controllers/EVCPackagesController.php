@@ -119,7 +119,7 @@ class EVCPackagesController extends Controller
 
         $package = Package::findOrFail($packageID);
 
-        $frontendID = 2;
+        $frontendID = 3;
 
         if($type == 'stripe'){
             $sessionID = $request->get('session_id');
