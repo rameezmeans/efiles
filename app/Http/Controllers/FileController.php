@@ -310,7 +310,7 @@ class FileController extends Controller
 
         $uploader = User::findOrFail($file->user_id);
         $engineer = User::FindOrFail($file->assigned_to);
-        $subject = "TuningX: Client support message!";
+        $subject = "E-files: Client support message!";
         $this->notificationsMainObj->sendNotification($engineer, $file, $uploader, $this->frontendID, $subject, 'mess-to-eng', 'message_to_engineer', $engPermissions);
 
         $adminPermissions = array(
@@ -321,7 +321,7 @@ class FileController extends Controller
 
         $uploader = User::findOrFail($file->user_id);
         $admin = get_admin();
-        $subject = "TuningX: Client support message!";
+        $subject = "E-files: Client support message!";
         $this->notificationsMainObj->sendNotification($admin, $file, $uploader, $this->frontendID, $subject, 'mess-to-eng', 'message_to_engineer', $adminPermissions);
 
         return redirect()->back()->with('success', 'Engineer note successfully Added!');
@@ -373,7 +373,7 @@ class FileController extends Controller
         );
 
         $customer = Auth::user();
-        $subject = "TuningX: File Status Changed!";
+        $subject = "E-files: File Status Changed!";
         $this->notificationsMainObj->sendNotification($customer, $file, $customer, $this->frontendID, $subject, 'sta-cha', 'status_change', $customerPermission);
 
         $adminPermission = array(
@@ -384,7 +384,7 @@ class FileController extends Controller
 
         $admin = get_admin();
         $customer = Auth::user();
-        $subject = "TuningX: File Status Changed!";
+        $subject = "E-files: File Status Changed!";
         $this->notificationsMainObj->sendNotification($admin, $file, $customer, $this->frontendID, $subject, 'sta-cha', 'status_change', $adminPermission);
 
     }   
@@ -690,7 +690,7 @@ class FileController extends Controller
         );
 
         $customer = Auth::user();
-        $subject = "TuningX: File Status Changed!";
+        $subject = "E-files: File Status Changed!";
         $this->notificationsMainObj->sendNotification($customer, $file, $customer, $this->frontendID, $subject, 'sta-cha', 'status_change', $customerPermission);
 
         $adminPermission = array(
@@ -701,7 +701,7 @@ class FileController extends Controller
 
         $admin = get_admin();
         $customer = Auth::user();
-        $subject = "TuningX: File Status Changed!";
+        $subject = "E-files: File Status Changed!";
         $this->notificationsMainObj->sendNotification($admin, $file, $customer, $this->frontendID, $subject, 'sta-cha', 'status_change', $adminPermission);
 
         if($file->original_file_id){
