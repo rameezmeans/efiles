@@ -931,7 +931,12 @@ div.file-type-buttons label > input + img {
                         
                         $stage = \ECUApp\SharedCode\Models\Service::FindOrFail( $file->stage_offer->service_id);
 
-                        $creditsProposed += $stage->credits;
+                        if($file->tool_type == 'master'){
+                              $creditsProposed += $stage->tuningx_credits;
+                            }
+                            else{
+                              $creditsProposed += $stage->tuningx_slave_credits;
+                            }
 
                       @endphp
                       @if($stage)
@@ -945,11 +950,14 @@ div.file-type-buttons label > input + img {
                     @if(!$file->options_offer->isEmpty())
                       @foreach($file->options_offer as $option)
                         @php 
-                            $op = \ECUApp\SharedCode\Models\Service::FindOrFail( $option->service_id ); 
+                            $record = \ECUApp\SharedCode\Models\Service::findOrFail($option['service_id'])->optios_stage($stage->id)->first(); 
 
-                            dd($op);
-
-                              $creditsProposed += $op->credits;
+                            if($file->tool_type == 'master'){
+                              $creditsProposed += $record->master_credits;
+                            }
+                            else{
+                              $creditsProposed += $record->slave_credits;
+                            }
                             
                         @endphp
                         @if($op)
