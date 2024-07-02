@@ -931,7 +931,7 @@ div.file-type-buttons label > input + img {
                         
                         $stage = \ECUApp\SharedCode\Models\Service::FindOrFail( $file->stage_offer->service_id);
 
-                          $creditsProposed += $stage->credits;
+                        $creditsProposed += $stage->credits;
 
                       @endphp
                       @if($stage)
@@ -946,6 +946,8 @@ div.file-type-buttons label > input + img {
                       @foreach($file->options_offer as $option)
                         @php 
                             $op = \ECUApp\SharedCode\Models\Service::FindOrFail( $option->service_id ); 
+
+                            dd($op);
 
                               $creditsProposed += $op->credits;
                             
