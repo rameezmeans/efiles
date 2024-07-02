@@ -940,7 +940,7 @@ body  {
 
 @section('pagespecificscripts')
 <script src="https://js.pusher.com/7.0.3/pusher.min.js"></script>
-{{-- <script>
+<script>
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true;
 
@@ -955,13 +955,13 @@ body  {
         }
     });
 
-</script> --}}
-{{-- <script type="text/javascript">
+</script>
+<script type="text/javascript">
 
     $(document).ready(function(event) {
 
         let chat_id = '{{env("LIVE_CHAT_ID")}}';
-        const channelName = "private-chatify-download-tuningx-"+chat_id;
+        const channelName = "private-chatify-download-efiles-"+chat_id;
         var channel = pusher.subscribe(`${channelName}`);
 
         console.log(channel);
@@ -1106,5 +1106,5 @@ body  {
         });
     });
 
-</script> --}}
+</script>
 @endsection
