@@ -960,9 +960,9 @@ div.file-type-buttons label > input + img {
                             }
                             
                         @endphp
-                        @if($op)
-                        <span class="show-stage"><img style="width: 20px;" src="{{ get_logo_for_stages_and_options( $op->name ) }}" alt="{{$op->name}}">
-                          {{ $op->name }}</span>
+                        @if($record)
+                        <span class="show-stage"><img style="width: 20px;" src="{{ get_logo_for_stages_and_options( $record->name ) }}" alt="{{$record->name}}">
+                          {{ $record->name }}</span>
                         @endif
                       @endforeach
                     @endif
