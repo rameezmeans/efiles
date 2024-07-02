@@ -342,7 +342,7 @@ class FileController extends Controller
         );
 
         $customer = Auth::user();
-        $subject = "ECUTech: File Status Changed!";
+        $subject = "E-files: File Status Changed!";
         $this->notificationsMainObj->sendNotification($customer, $file, $customer, $this->frontendID, $subject, 'sta-cha', 'status_change', $customerPermission);
 
         $adminPermission = array(
@@ -353,7 +353,7 @@ class FileController extends Controller
 
         $admin = get_admin();
         $customer = Auth::user();
-        $subject = "ECUTech: File Status Changed!";
+        $subject = "E-files: File Status Changed!";
         $this->notificationsMainObj->sendNotification($admin, $file, $customer, $this->frontendID, $subject, 'sta-cha', 'status_change', $adminPermission);
 
     }
