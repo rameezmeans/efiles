@@ -360,7 +360,7 @@ p.tuning-resume {
                     <div class="col-xl-12 col-lg-12 col-md-12">
                       <div class="stage-option-container">
                         <span class="bl stage-img-box">
-                            <input @if($count == 1) checked @endif name="stage" class="with-gap" type="radio" id="tuning-{{$stage['id']}}" value="{{$stage['id']}}" data-name="{{$stage['name']}}" data-price="@if($file->tool_type == 'master'){{$stage['tuningx_credits']}}@else{{$stage['tuningx_slave_credits']}}@endif">
+                            <input @if($count == 1) checked @endif name="stage" class="with-gap" type="radio" id="tuning-{{$stage['id']}}" value="{{$stage['id']}}" data-name="{{$stage['name']}}" data-price="@if($file->tool_type == 'master'){{$stage['efiles_credits']}}@else{{$stage['efiles_slave_credits']}}@endif">
                             <img width="50%" src="{{'https://devback.ecutech.gr/icons/'.$stage['icon']}}" alt="{{$stage['name']}}">
                         </span>
                         <span class="text-stage">
@@ -368,9 +368,9 @@ p.tuning-resume {
                           <span style="display: inline-grid;">
                             <strong>{{$stage['name']}}</strong>
                             @if($file->tool_type == 'master')
-                              <span class="text-danger"> {{$stage['tuningx_credits']}} Credits </span>
+                              <span class="text-danger"> {{$stage['efiles_credits']}} Credits </span>
                             @else
-                              <span class="text-danger"> {{$stage['tuningx_slave_credits']}} Credits </span>
+                              <span class="text-danger"> {{$stage['efiles_slave_credits']}} Credits </span>
                             @endif
                           </span>
 
@@ -400,13 +400,13 @@ p.tuning-resume {
                         <small>
                             <span id="without-discount-total-credits" class="hide" style="color: gray;text-decoration: line-through;"></span>
                             
-                            <span id="total-credits">@if($file->tool_type == 'master'){{$firstStage->tuningx_credits}}@else{{$firstStage->tuningx_slave_credits}}@endif
+                            <span id="total-credits">@if($file->tool_type == 'master'){{$firstStage->efiles_credits}}@else{{$firstStage->efiles_slave_credits}}@endif
                             </span> credits
                         </small>
                     </span>
                     
                 </div>
-                <input type="hidden" id="total_credits_to_submit" name="total_credits_to_submit" value="@if($file->tool_type == 'master'){{$firstStage->tuningx_credits}}@else{{$firstStage->tuningx_slave_credits}}@endif">
+                <input type="hidden" id="total_credits_to_submit" name="total_credits_to_submit" value="@if($file->tool_type == 'master'){{$firstStage->efiles_credits}}@else{{$firstStage->efiles_slave_credits}}@endif">
                 <div class="text-center">
                     <button class="btn btn-red m-t-10" type="submit" id="btn-final-submit">
                       <i class="fa fa-arrow-right"></i> Go to Checkout
@@ -601,10 +601,10 @@ p.tuning-resume {
         let value = 0;
 
         if(file_type == 'master'){
-          value = parseInt('{{$firstStage->tuningx_credits}}');
+          value = parseInt('{{$firstStage->efiles_credits}}');
         }
         else if(file_type == 'slave'){
-          value = '{{$firstStage->tuningx_slave_credits}}';
+          value = '{{$firstStage->efiles_slave_credits}}';
         }
 
         let checkbox_credits_count = 0;
@@ -612,10 +612,10 @@ p.tuning-resume {
         let stage_0_credits = 0;
 
         if(file_type == 'master'){
-          stage_0_credits = '{{$firstStage->tuningx_credits}}';
+          stage_0_credits = '{{$firstStage->efiles_credits}}';
         }
         else if(file_type == 'slave'){
-          stage_0_credits = '{{$firstStage->tuningx_slave_credits}}';
+          stage_0_credits = '{{$firstStage->efiles_slave_credits}}';
         }
 
         let stages_str = '<div class="bb-light"></div><p class="tuning-resume">'+firstStageName+' <small>'+stage_0_credits+' credits</small></p>';
