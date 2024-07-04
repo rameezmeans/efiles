@@ -5490,12 +5490,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:rameezmeans/ecutech-shared-code.git",
-                "reference": "300bc4660b134232b10fb600a0e842517d5ff7d4"
+                "reference": "7bfe0614b7b31c25974fa8a4f6dfe36595af048d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rameezmeans/ecutech-shared-code/zipball/300bc4660b134232b10fb600a0e842517d5ff7d4",
-                "reference": "300bc4660b134232b10fb600a0e842517d5ff7d4",
+                "url": "https://api.github.com/repos/rameezmeans/ecutech-shared-code/zipball/7bfe0614b7b31c25974fa8a4f6dfe36595af048d",
+                "reference": "7bfe0614b7b31c25974fa8a4f6dfe36595af048d",
                 "shasum": ""
             },
             "default-branch": true,
@@ -5519,7 +5519,7 @@
                 "source": "https://github.com/rameezmeans/ecutech-shared-code/tree/main",
                 "issues": "https://github.com/rameezmeans/ecutech-shared-code/issues"
             },
-            "time": "2024-07-03T00:43:05+00:00"
+            "time": "2024-07-04T14:10:15+00:00"
         },
         {
             "name": "ramsey/collection",
