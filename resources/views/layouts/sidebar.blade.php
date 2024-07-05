@@ -94,7 +94,7 @@
 	<div class="sidebar-section">
 		<h3 class="nav-heading">{{__('Credits')}}</h3>
 		<ul class="nav sidebar">
-		  <li class="">
+		  {{-- <li class="">
 			<a href="{{route('evc-credits-shop')}}">
 			  <i class="fa-solid fa-cart-plus"></i> {{__('EVC Credits Shop')}}
 			  @if(!Auth::user()->is_evc_customer())
@@ -102,7 +102,7 @@
 			  @endif
 			</a>
 		   
-		  </li>
+		  </li> --}}
 		  <li class="">
 			<a href="{{route('shop-product')}}">
 			  <i>
