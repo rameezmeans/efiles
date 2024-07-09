@@ -629,9 +629,11 @@ p.tuning-resume {
           let locale = '{{Session::get('locale') }}';
 
           let file_id = $('#file_id').val();
-              let service_id = $(this).val();
+          let service_id = $(this).val();
 
           if(checked){
+
+              
 
               // let file_id = $('#file_id').val();
               // let service_id = $(this).val();
