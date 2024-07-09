@@ -277,7 +277,7 @@ strong {
 
                           <span style="display: inline-grid;">
                             <strong>{{$stage['name']}} @if(isset($vehicleType)){{' ('.ucfirst($vehicleType).')'}}@endif </strong>
-                            <span class="text-danger"> @if($type == 'slave') {{$stage['tuningx_slave_credits']}} @else {{$stage['tuningx_credits']}} @endif Credits </span>
+                            <span class="text-danger"> @if($type == 'slave') {{$stage['efiles_slave_credits']}} @else {{$stage['efiles_credits']}} @endif Credits </span>
                           </span>
 
                           <button type="button" data-tooltip-location="left" data-tooltip="{{__(trim($stage['description']))}}"  class="btn btn-transparent" style="font-size: 16px; float: right;"><i style="font-size: 18px;" class="fa fa-info-circle"></i> Info</button>
@@ -312,7 +312,7 @@ strong {
 
                           <span style="display: inline-grid;">
                             <strong>{{$option['name']}} @if(isset($vehicleType)){{' ('.ucfirst($vehicleType).')'}}@endif</strong>
-                            <span class="text-danger"> <span id="option-credits-{{$option['id']}}"> @if($type == 'slave') {{$option['tuningx_slave_credits']}} @else {{$option['tuningx_credits']}} @endif </span> Credits </span>
+                            <span class="text-danger"> <span id="option-credits-{{$option['id']}}"> @if($type == 'slave') {{$option['efiles_slave_credits']}} @else {{$option['efiles_credits']}} @endif </span> Credits </span>
                           </span>
 
                           <button type="button" data-tooltip-location="left" data-tooltip="{{__(trim($option['description']))}}"  class="btn btn-transparent" style="font-size: 16px; float: right;"><i style="font-size: 18px;" class="fa fa-info-circle"></i> Info</button>
