@@ -968,16 +968,16 @@
         },
         {
             "name": "dflydev/dot-access-data",
-            "version": "v3.0.2",
+            "version": "v3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dflydev/dflydev-dot-access-data.git",
-                "reference": "f41715465d65213d644d3141a6a93081be5d3549"
+                "reference": "a23a2bf4f31d3518f3ecb38660c95715dfead60f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dflydev/dflydev-dot-access-data/zipball/f41715465d65213d644d3141a6a93081be5d3549",
-                "reference": "f41715465d65213d644d3141a6a93081be5d3549",
+                "url": "https://api.github.com/repos/dflydev/dflydev-dot-access-data/zipball/a23a2bf4f31d3518f3ecb38660c95715dfead60f",
+                "reference": "a23a2bf4f31d3518f3ecb38660c95715dfead60f",
                 "shasum": ""
             },
             "require": {
@@ -1037,9 +1037,9 @@
             ],
             "support": {
                 "issues": "https://github.com/dflydev/dflydev-dot-access-data/issues",
-                "source": "https://github.com/dflydev/dflydev-dot-access-data/tree/v3.0.2"
+                "source": "https://github.com/dflydev/dflydev-dot-access-data/tree/v3.0.3"
             },
-            "time": "2022-10-27T11:44:00+00:00"
+            "time": "2024-07-08T12:26:09+00:00"
         },
         {
             "name": "doctrine/inflector",
@@ -5490,12 +5490,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:rameezmeans/ecutech-shared-code.git",
-                "reference": "b3c60e0a78304fb9b6c4ee1026eb6969a2f60689"
+                "reference": "b1f6220b07b13583dffc8cbf58885461bd5a1519"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rameezmeans/ecutech-shared-code/zipball/b3c60e0a78304fb9b6c4ee1026eb6969a2f60689",
-                "reference": "b3c60e0a78304fb9b6c4ee1026eb6969a2f60689",
+                "url": "https://api.github.com/repos/rameezmeans/ecutech-shared-code/zipball/b1f6220b07b13583dffc8cbf58885461bd5a1519",
+                "reference": "b1f6220b07b13583dffc8cbf58885461bd5a1519",
                 "shasum": ""
             },
             "default-branch": true,
@@ -5519,7 +5519,7 @@
                 "source": "https://github.com/rameezmeans/ecutech-shared-code/tree/main",
                 "issues": "https://github.com/rameezmeans/ecutech-shared-code/issues"
             },
-            "time": "2024-07-05T13:56:19+00:00"
+            "time": "2024-07-09T10:43:30+00:00"
         },
         {
             "name": "ramsey/collection",
@@ -5704,16 +5704,16 @@
         },
         {
             "name": "rmccue/requests",
-            "version": "v2.0.11",
+            "version": "v2.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/Requests.git",
-                "reference": "31435a468e2357e68df743f2527bda32556a0818"
+                "reference": "fb67e3d392ff6b89a90e96f19745662f4ecd62b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/Requests/zipball/31435a468e2357e68df743f2527bda32556a0818",
-                "reference": "31435a468e2357e68df743f2527bda32556a0818",
+                "url": "https://api.github.com/repos/WordPress/Requests/zipball/fb67e3d392ff6b89a90e96f19745662f4ecd62b1",
+                "reference": "fb67e3d392ff6b89a90e96f19745662f4ecd62b1",
                 "shasum": ""
             },
             "require": {
@@ -5787,7 +5787,7 @@
                 "issues": "https://github.com/WordPress/Requests/issues",
                 "source": "https://github.com/WordPress/Requests"
             },
-            "time": "2024-03-25T10:48:46+00:00"
+            "time": "2024-07-08T08:10:42+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",

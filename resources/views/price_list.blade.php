@@ -270,7 +270,7 @@ strong {
                     <div class="col-xl-6 col-lg-6 col-md-6">
                       <div class="stage-option-container">
                         <span class="bl stage-img-box">
-                          <input name="stage" class="with-gap" type="radio" id="tuning-{{$stage['id']}}" value="{{$stage['id']}}">
+                          <input name="stage" class="with-gap" type="radio" id="tuning-{{$stage['id']}}" value="{{$stage['id']}}" @if($stage['id'] == 1) checked @endif>
                           <img width="50%" src="{{'https://devback.ecutech.gr/icons/'.$stage['icon']}}" alt="{{$stage['name']}}">
                         </span>
                         <span class="text-stage">
@@ -373,6 +373,51 @@ strong {
         }
           document.location = url;
       });
+
+      let stage_id = 1;
+        let file_type = 'master';
+
+        console.log(file_type);
+
+        $.ajax({
+                  url: 'get_options_for_stage',
+                  data: {
+                      stage_id: stage_id,
+                  },
+                  async: false,
+                  type: "POST",
+                  headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
+                  success: function(options) {
+
+                        $('.loader').addClass('hide');
+                        
+
+                        valuesArray = jQuery.parseJSON(options);
+
+                        console.log(valuesArray);
+
+                        jQuery.each( valuesArray , function(i,v){
+
+                        if(file_type == 'slave'){
+                          
+                          jQuery('#option-credits-'+v.option_id).html(v.slave_credits);
+                          
+                        }
+                        else if(file_type == 'master'){
+                          console.log('#option-credits-'+v.option_id);
+                          console.log(v.master_credits);
+
+                          jQuery('#option-credits-'+v.option_id).html(v.master_credits);
+                          
+                        }
+
+                        });
+
+                  },
+                  error: function(XMLHttpRequest, textStatus, errorThrown) { 
+
+                  } 
+              });
 
       $(document).on('change', '.with-gap', function(){
 
