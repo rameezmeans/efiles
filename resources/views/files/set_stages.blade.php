@@ -633,10 +633,39 @@ p.tuning-resume {
 
           if(checked){
 
-              
-
               // let file_id = $('#file_id').val();
               // let service_id = $(this).val();
+
+              if(service_id == 113){
+
+                Swal.fire(
+                    'Please Read Very Carefully',
+                    'You have select to remove the DPF. Please remember to clear the DTC and reset the DPF (soot mass value) before writing the modified file. If the solution does not work immediately, try removing the DPF pressure sensor and the EGT sensor, and then clear the DTC before submitting a support ticket.',
+                    'warning'
+                    );
+
+                $('.swal2-confirm').attr("disabled", true);
+                
+                setTimeout(
+                    function() {
+                        $('.swal2-confirm').attr("disabled", false);
+                }, 5000);
+
+
+              }
+
+              Swal.fire(
+                              note,
+                              comment,
+                              'warning'
+                              );
+
+                          $('.swal2-confirm').attr("disabled", true);
+
+                          setTimeout(
+                              function() {
+                                  $('.swal2-confirm').attr("disabled", false);
+                          }, 5000);
 
               $('.comments-area-'+service_id).removeClass('hide');
 
@@ -687,6 +716,7 @@ p.tuning-resume {
                       console.log("Error: " + errorThrown); 
                   } 
               });
+
           }
           else{
 
