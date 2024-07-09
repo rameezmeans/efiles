@@ -645,12 +645,46 @@ p.tuning-resume {
                     );
 
                 $('.swal2-confirm').attr("disabled", true);
-                
+
                 setTimeout(
                     function() {
                         $('.swal2-confirm').attr("disabled", false);
                 }, 5000);
 
+
+              }
+
+              if(service_id == 114){
+
+                Swal.fire(
+                    'Please Read Very Carefully',
+                    'You have select to remove the EGR. Please ensure that you clear the DTC, reset the EGR, and mechanically block the valve. If the solution does not work immediately, try removing the EGR actuator plug and then clear the DTC before submitting a support ticket.',
+                    'warning'
+                    );
+
+                $('.swal2-confirm').attr("disabled", true);
+
+                setTimeout(
+                    function() {
+                        $('.swal2-confirm').attr("disabled", false);
+                }, 5000);
+
+            }
+
+            if(service_id == 118){
+
+              Swal.fire(
+                  'Please Read Very Carefully',
+                  'You have chosen to remove the AdBlue system. Please remember to clear the DTC and reset the AdBlue before writing the modified file. If the solution does not work immediately, try removing the AdBlue unit and/or pump, then clear the DTC before submitting a support ticket.',
+                  'warning'
+                  );
+
+              $('.swal2-confirm').attr("disabled", true);
+
+              setTimeout(
+                  function() {
+                      $('.swal2-confirm').attr("disabled", false);
+              }, 5000);
 
               }
 
