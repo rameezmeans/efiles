@@ -94,7 +94,7 @@ input.qty-input {
                     </tbody>
                   </table>
                   @if(country_to_continent(Auth::user()->country) == 'Europe')
-                    @if(Auth::user()->country != 'GR')
+                    @if(Auth::user()->country != 'RO')
                       @if(Auth::user()->group->slug == 'VAT0-ETF')
                         <p class="text-success" style="margin-top: 20px; font-size: 12px;">*Valid EU VAT number.</p>
                       @else
