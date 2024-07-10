@@ -293,47 +293,47 @@ class RegisterController extends Controller
             Log::info($e->getMessage());
         }
         
-        try{
+        // try{
         
-            $client = new MailchimpMarketing\ApiClient();
+        //     $client = new MailchimpMarketing\ApiClient();
 
-            $client->setConfig([
-                'apiKey' => 'cdc22134ee97dfedeaa7a85838784b4c-us21',
-                'server' => 'us21'
-                ]);
+        //     $client->setConfig([
+        //         'apiKey' => 'cdc22134ee97dfedeaa7a85838784b4c-us21',
+        //         'server' => 'us21'
+        //         ]);
         
-            //id: cac79dc83a
+        //     //id: cac79dc83a
         
-            $member = $client->lists->addListMember("cac79dc83a", [
-                "email_address" => $user->email,
-                "status" => "pending",
-                "tags" => ["portal"],
-            ]);
+        //     $member = $client->lists->addListMember("cac79dc83a", [
+        //         "email_address" => $user->email,
+        //         "status" => "pending",
+        //         "tags" => ["portal"],
+        //     ]);
 
-            $user->mailchimp_id = $member->id;
-            $user->save();
+        //     $user->mailchimp_id = $member->id;
+        //     $user->save();
         
-            $response = $client->lists->setListMember("cac79dc83a", $member->id, [
+        //     $response = $client->lists->setListMember("cac79dc83a", $member->id, [
             
-            "status" => "subscribed",
-            "merge_fields" => [
+        //     "status" => "subscribed",
+        //     "merge_fields" => [
 
-                "FNAME" => $user->name,
+        //         "FNAME" => $user->name,
                 
-               "ADDRESS" => [
-                    "addr1" => $user->address,
-                    "city" => $user->city,
-                    "state" => $user->country,
-                    "zip" => $user->zip
-                  ]
-               ],
+        //        "ADDRESS" => [
+        //             "addr1" => $user->address,
+        //             "city" => $user->city,
+        //             "state" => $user->country,
+        //             "zip" => $user->zip
+        //           ]
+        //        ],
             
-            ]);
-        }
+        //     ]);
+        // }
 
-        catch(\Exception $e){
+        // catch(\Exception $e){
 
-        }
+        // }
 
         $this->authMainObj->VATCheckPolicy($user);
 
