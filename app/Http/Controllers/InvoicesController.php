@@ -55,7 +55,11 @@ class InvoicesController extends Controller
     public function makePDF(Request $request)
     {
         $invoice = Credit::findOrFail($request->id);
-        $price = Price::where('label', 'credit_price')->whereNull('subdealer_group_id')->first();
+        $price = Price::where('label', 'credit_price')
+        ->whereNull('subdealer_group_id')
+        ->where('front_end_id', 3)
+        ->first();
+
         $user = User::findOrFail($invoice->user_id);
 
         if($invoice->type == 'stripe'){
