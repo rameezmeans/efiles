@@ -18,6 +18,11 @@
     min-width:85px;
 }
 
+.swal2-popup {
+  font-size: 1.6rem !important;
+  font-family: Georgia, serif;
+}
+
 /* Positioning and visibility settings of the tooltip */
 [data-tooltip]:before,
 [data-tooltip]:after {
