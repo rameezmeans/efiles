@@ -1782,7 +1782,7 @@ div.file-type-buttons label > input + img {
                         
                         $stage = \ECUApp\SharedCode\Models\Service::FindOrFail( $file->stage_offer->service_id);
                       
-                          $creditsProposed += $stage->credits;
+                          $creditsProposed += $stage->efiles_credits;
 
                       @endphp
                       @if($stage)
