@@ -116,7 +116,7 @@ class InvoicesController extends Controller
                 (new InvoiceItem())
                     ->title('Tuning Credits')
                     ->description('You can use these credits to buy the services.')
-                    ->pricePerUnit($price)
+                    ->pricePerUnit($invoice->unit_price)
                     ->quantity($invoice->credits)
                     ->tax($invoice->tax),
             ];
