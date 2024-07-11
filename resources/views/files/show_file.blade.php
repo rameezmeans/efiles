@@ -932,10 +932,10 @@ div.file-type-buttons label > input + img {
                         $stage = \ECUApp\SharedCode\Models\Service::FindOrFail( $file->stage_offer->service_id);
 
                         if($file->tool_type == 'master'){
-                              $creditsProposed += $stage->tuningx_credits;
+                              $creditsProposed += $stage->efiles_credits;
                             }
                             else{
-                              $creditsProposed += $stage->tuningx_slave_credits;
+                              $creditsProposed += $stage->efiles_slave_credits;
                             }
 
                       @endphp
