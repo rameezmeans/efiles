@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use ECUApp\SharedCode\Controllers\PaymentsMainController;
 use ECUApp\SharedCode\Models\Credit;
 use ECUApp\SharedCode\Models\Price;
 use ECUApp\SharedCode\Models\User;
@@ -14,6 +15,8 @@ use PDF;
 
 class InvoicesController extends Controller
 {
+
+    private $paymenttMainObj;
     /**
      * Create a new controller instance.
      *
@@ -22,6 +25,7 @@ class InvoicesController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->paymenttMainObj = new PaymentsMainController();
     }
 
     /**
@@ -55,10 +59,7 @@ class InvoicesController extends Controller
     public function makePDF(Request $request)
     {
         $invoice = Credit::findOrFail($request->id);
-        $price = Price::where('label', 'credit_price')
-        ->whereNull('subdealer_group_id')
-        ->where('front_end_id', 3)
-        ->first();
+        $price = $this->paymenttMainObj->getPrice()->value;
 
         $user = User::findOrFail($invoice->user_id);
 
