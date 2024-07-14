@@ -400,6 +400,9 @@ class PaymentsController extends Controller
         }
         else if($type == 'paypal'){
             $sessionID = $request->get('paymentId');
+
+            dd($sessionID);
+            
         }
 
         if($offer){ 
