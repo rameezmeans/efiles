@@ -399,10 +399,8 @@ class PaymentsController extends Controller
             $sessionID = $request->get('session_id');
         }
         else if($type == 'paypal'){
-            $sessionID = $request->get('paymentId');
+            $sessionID = $request->get('id');
 
-            dd($sessionID);
-            
         }
 
         if($offer){ 
@@ -526,7 +524,7 @@ class PaymentsController extends Controller
         else{
             $account = $user->paypal_payment_account();
         }
-
+        
         if($account->elorus){
 
                     $clientID = null;
