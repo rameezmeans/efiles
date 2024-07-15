@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\ServiceProvider;
 
 return [
 
@@ -195,6 +196,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\BootstrapServiceProvider::class,
+
+        Srmklive\PayPal\Providers\PayPalServiceProvider::class
 
     ],
 
