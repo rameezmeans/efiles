@@ -399,8 +399,7 @@ class PaymentsController extends Controller
             $sessionID = $request->get('session_id');
         }
         else if($type == 'paypal'){
-            dd($request->all());
-            $sessionID = $request->get('id');
+            $sessionID = $request->get('PayerID');
 
         }
 
