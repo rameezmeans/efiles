@@ -12,8 +12,8 @@ return [
         'app_id'            => 'APP-80W284485P519543T',
     ],
     'live' => [
-        'client_id'         => 'Afd5tQ3xKYrnq_93Wk33mPy-ZX3ARJDsgarWVRQ5EwE0rat5sfcV-sCp8Mlu9G6AsAVPdzyugA7S8goO',
-        'client_secret'     => 'EL8QiBWNSaO5FLufL-nexWXDrjhnKoP5EC9i4pAn0kx2xMKi_6tyy1iI489UHlSiCvByYejXNgfh5y6i',
+        'client_id'         => 'here',
+        'client_secret'     => 'here',
         'app_id'            => env('PAYPAL_LIVE_APP_ID', ''),
     ],
 
