@@ -404,8 +404,8 @@ class PaymentsController extends Controller
             // $sessionID = $request->get('PayerID');
             PayPal::setProvider();
             $paypalProvider = PayPal::getProvider();
-            $paypalProvider->setApiCredentials(config('paypal'));
-            $paypalProvider->setAccessToken($paypalProvider->getAccessToken());   
+            // $paypalProvider->setApiCredentials(config('paypal'));
+            // $paypalProvider->setAccessToken($paypalProvider->getAccessToken());   
             $token = $request->get('token');
 
             $orderInfo = $paypalProvider->showOrderDetails($token);
