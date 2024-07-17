@@ -545,23 +545,26 @@ class PaymentsController extends Controller
         else{
             $account = $user->paypal_payment_account();
         }
-        
+
         if($account->elorus){
 
-                    $clientID = null;
+            $clientID = null;
 
-                    if($user->elorus_id){
-                        $clientID = $user->elorus_id;
-                    }
-                    else{
-                        $clientID = $this->elorusMainObj->createElorusCustomer($user);
-                    }
-                    
-                    if(country_to_continent($user->country) == 'Europe'){
+            // dd($user->elorus_id);
 
-                        $this->elorusMainObj->createElorusInvoice($invoice, $clientID, $user, $package);
+            if($user->elorus_id == null){
+                
+                $clientID = $this->elorusMainObj->createElorusCustomer($user);
+            }
+            else{
+                $clientID = $user->elorus_id;
+            }
+            
+            if(country_to_continent($user->country) == 'Europe'){
 
-                    }
+                $this->elorusMainObj->createElorusInvoice($invoice, $clientID, $user, $package);
+
+            }
         }
 
         \Cart::remove(101);
