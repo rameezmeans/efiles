@@ -550,8 +550,6 @@ class PaymentsController extends Controller
 
             $clientID = null;
 
-            // dd($user->elorus_id);
-
             if($user->elorus_id == null){
                 
                 $clientID = $this->elorusMainObj->createElorusCustomer($user);
