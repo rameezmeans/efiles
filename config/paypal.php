@@ -5,11 +5,11 @@
  */
 // dd(env('PAYPAL_LIVE_CLIENT_SECRET', ''));
 return [
-    'mode'    => env('PAYPAL_MODE', 'live'), // Can only be 'sandbox' Or 'live'. If empty or invalid, 'live' will be used.
+    'mode'    => env('PAYPAL_MODE', 'sandbox'), // Can only be 'sandbox' Or 'live'. If empty or invalid, 'live' will be used.
     'sandbox' => [
-        'client_id'         => 'Afd5tQ3xKYrnq_93Wk33mPy-ZX3ARJDsgarWVRQ5EwE0rat5sfcV-sCp8Mlu9G6AsAVPdzyugA7S8goO',
-        'client_secret'     => 'EL8QiBWNSaO5FLufL-nexWXDrjhnKoP5EC9i4pAn0kx2xMKi_6tyy1iI489UHlSiCvByYejXNgfh5y6i',
-        'app_id'            => 'APP-80W284485P519543T',
+        'client_id'         => 'AZ_EH4XG1YNtCN395Z1z7o',
+        'client_secret'     => 'EE7fEq6tRzuh0lHZpcesAIvL8DrGtPaOTOqaQAIDnLZGAznpW2ODBGLs6eWOpKygbi3agzJwS4mLUQhx',
+        'app_id'            => '',
     ],
     'live' => [
         'client_id'         => 'here',
