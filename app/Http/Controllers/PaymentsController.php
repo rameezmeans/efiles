@@ -419,6 +419,7 @@ class PaymentsController extends Controller
                     $sessionID = $arr['id'];
 
                 }
+            }
 
             // $configArr = config('paypal');
 
