@@ -404,32 +404,37 @@ class PaymentsController extends Controller
         }
         else if($type == 'paypal'){
 
-            $this->gateway->setClientId($user->paypal_payment_account()->key);
-            $this->gateway->setSecret($user->paypal_payment_account()->secret);
-            // $this->gateway->setTestMode(false);
-            $this->gateway->setTestMode(true);
+            $arr = [];
 
+            $arr['PayerID'] = $request->input('PayerID');
+            $arr['paymentId'] = $request->input('paymentId');
+            
+            $sessionID = $arr;
 
-            if ($request->input('paymentId') && $request->input('PayerID')) {
-                $transaction = $this->gateway->completePurchase(array(
-                    'payer_id' => $request->input('PayerID'),
-                    'transactionReference' => $request->input('paymentId')
-                ));
+            // $this->gateway->setClientId($user->paypal_payment_account()->key);
+            // $this->gateway->setSecret($user->paypal_payment_account()->secret);
+            // // $this->gateway->setTestMode(false);
+            // $this->gateway->setTestMode(true);
+
+            // if ($request->input('paymentId') && $request->input('PayerID')) {
+            //     $transaction = $this->gateway->completePurchase(array(
+            //         'payer_id' => $request->input('PayerID'),
+            //         'transactionReference' => $request->input('paymentId')
+            //     ));
     
-                $response = $transaction->send();
+            //     $response = $transaction->send();
 
-                // dd($response);
+            //     if ($response->isSuccessful()) {
     
-                if ($response->isSuccessful()) {
-    
-                    $arr = $response->getData();
+            //         $arr = $response->getData();
 
-                    Log::info(json_encode($arr));
+            //         Log::info(json_encode($arr));
 
-                    $sessionID = $arr['id'];
+            //         $sessionID = $arr['id'];
 
-                }
-            }
+            //     }
+
+            // }
 
             // $configArr = config('paypal');
 
