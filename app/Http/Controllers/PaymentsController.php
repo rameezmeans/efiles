@@ -414,6 +414,8 @@ class PaymentsController extends Controller
     
                     $arr = $response->getData();
 
+                    Log::info(json_encode($arr));
+
                     $sessionID = $arr['id'];
 
                 }
