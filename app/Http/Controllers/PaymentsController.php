@@ -401,27 +401,44 @@ class PaymentsController extends Controller
         }
         else if($type == 'paypal'){
 
-            $configArr = config('paypal');
 
-            $configArr['live']['client_id'] = $user->paypal_payment_account()->key;
-            $configArr['live']['client_secret'] = $user->paypal_payment_account()->secret;
+            if ($request->input('paymentId') && $request->input('PayerID')) {
+                $transaction = $this->gateway->completePurchase(array(
+                    'payer_id' => $request->input('PayerID'),
+                    'transactionReference' => $request->input('paymentId')
+                ));
+    
+                $response = $transaction->send();
+    
+                if ($response->isSuccessful()) {
+    
+                    $arr = $response->getData();
 
-            // $sessionID = $request->get('PayerID');
-            PayPal::setProvider();
-            $paypalProvider = PayPal::getProvider();
-            $paypalProvider->setApiCredentials($configArr);
-            $paypalProvider->setAccessToken($paypalProvider->getAccessToken());   
-            $token = $request->get('token');
+                    $sessionID = $arr['id'];
 
-            $orderInfo = $paypalProvider->showOrderDetails($token);
-            $response = $paypalProvider->capturePaymentOrder($token);
+                }
 
-            Log::info(json_encode($orderInfo));
-            Log::info(json_encode($response));
+            // $configArr = config('paypal');
+
+            // $configArr['live']['client_id'] = $user->paypal_payment_account()->key;
+            // $configArr['live']['client_secret'] = $user->paypal_payment_account()->secret;
+
+            // // $sessionID = $request->get('PayerID');
+            // PayPal::setProvider();
+            // $paypalProvider = PayPal::getProvider();
+            // $paypalProvider->setApiCredentials($configArr);
+            // $paypalProvider->setAccessToken($paypalProvider->getAccessToken());   
+            // $token = $request->get('token');
+
+            // $orderInfo = $paypalProvider->showOrderDetails($token);
+            // $response = $paypalProvider->capturePaymentOrder($token);
+
+            // Log::info(json_encode($orderInfo));
+            // Log::info(json_encode($response));
 
             // dd($response);
 
-            $sessionID = $response['id'];
+            
         }
 
         if($offer){ 
