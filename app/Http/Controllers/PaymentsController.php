@@ -412,6 +412,8 @@ class PaymentsController extends Controller
                 ));
     
                 $response = $transaction->send();
+
+                dd($response);
     
                 if ($response->isSuccessful()) {
     
