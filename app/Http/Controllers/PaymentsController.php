@@ -370,7 +370,7 @@ class PaymentsController extends Controller
 
     public function success(Request $request){
 
-        dd($request->all());
+        // dd($request->all());
 
         $this->vivaCreds();
 
@@ -462,6 +462,8 @@ class PaymentsController extends Controller
         }
 
         if($offer){ 
+
+            dd($offer);
             $creditsForFile = $request->creditsForFile;
             $credits = $request->creditsToBuy;
             $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
