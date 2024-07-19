@@ -404,6 +404,11 @@ class PaymentsController extends Controller
         }
         else if($type == 'paypal'){
 
+            $this->gateway->setClientId($user->paypal_payment_account()->key);
+            $this->gateway->setSecret($user->paypal_payment_account()->secret);
+            // $this->gateway->setTestMode(false);
+            $this->gateway->setTestMode(true);
+
 
             if ($request->input('paymentId') && $request->input('PayerID')) {
                 $transaction = $this->gateway->completePurchase(array(
