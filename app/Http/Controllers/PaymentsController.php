@@ -370,6 +370,8 @@ class PaymentsController extends Controller
 
     public function success(Request $request){
 
+        dd($request->all());
+
         $this->vivaCreds();
 
         $package = false;
