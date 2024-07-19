@@ -21,6 +21,8 @@ use Deyjandi\VivaWallet\VivaWallet;
 use Deyjandi\VivaWallet\Payment;
 use Srmklive\PayPal\Facades\PayPal;
 
+use Omnipay\Omnipay;
+
 class PaymentsController extends Controller
 {
     private $paymenttMainObj;
@@ -44,6 +46,7 @@ class PaymentsController extends Controller
         $this->filesMainObj = new FilesMainController();
         $this->zohoMainObj = new ZohoMainController();
         $this->elorusMainObj = new ElorusMainController();
+        $this->gateway = Omnipay::create('PayPal_Rest');
     }
 
     public function vivaCreds(){
