@@ -462,8 +462,7 @@ class PaymentsController extends Controller
         }
 
         if($offer){ 
-
-            dd($offer);
+            
             $creditsForFile = $request->creditsForFile;
             $credits = $request->creditsToBuy;
             $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
