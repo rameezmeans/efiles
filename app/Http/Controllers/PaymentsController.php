@@ -462,7 +462,7 @@ class PaymentsController extends Controller
         }
 
         if($offer){ 
-            
+
             $creditsForFile = $request->creditsForFile;
             $credits = $request->creditsToBuy;
             $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
@@ -542,19 +542,22 @@ class PaymentsController extends Controller
             }
             else{
 
-                if($request->packageID == 0){
+                if($offer == false){ 
 
-                    $credits = $request->credits;
-                    $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
-                }
-                else{
+                    if($request->packageID == 0){
 
-                    $package = true;
-                    $packageID = $request->packageID;
-                    $package = Package::findOrFail($packageID);
-                    $credits = $package->credits;
-                    $invoice = $this->paymenttMainObj->addCreditsPackage($user, $sessionID, $package, $type);
-                    
+                        $credits = $request->credits;
+                        $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
+                    }
+                    else{
+
+                        $package = true;
+                        $packageID = $request->packageID;
+                        $package = Package::findOrFail($packageID);
+                        $credits = $package->credits;
+                        $invoice = $this->paymenttMainObj->addCreditsPackage($user, $sessionID, $package, $type);
+                        
+                    }
                 }
             }
         }
