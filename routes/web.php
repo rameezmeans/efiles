@@ -27,6 +27,20 @@ Route::get('/info', function () {
 
 Route::get('/test', function () {
 
+    // $tempFileID = 867;
+
+    // $zip = new ZipArchive;
+    // $res = $zip->open(public_path('uploads/files/'.$tempFileID.'.zip'));
+
+    // if ($res === TRUE) {
+    //     $zip->extractTo(public_path('uploads/files/'.$tempFileID));
+    //     $zip->close();
+    // }
+
+    // $files = array_diff(scandir(public_path('uploads/files/'.$tempFileID)), array('.', '..'));
+
+    // dd($files);
+
     abort(404);
 
     // \Mail::to('xrkalix@gmail.com')->send(new \App\Mail\AllMails(['html' => "testing email", 'subject' => 'test email']));
