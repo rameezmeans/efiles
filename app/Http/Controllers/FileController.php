@@ -931,7 +931,7 @@ class FileController extends Controller
 
         $stages = $this->filesMainObj->getStagesForStep3($this->frontendID, $vehicleType);
         $options = $this->filesMainObj->getOptionsForStep3($this->frontendID, $vehicleType);
-
+        
         $firstStage = $stages[0];
         
         return view( 'files.set_stages', ['user' => $user, 'firstStage' => $firstStage, 'vehicleType' => $vehicleType,'file' => $file, 'stages' => $stages, 'options' => $options] );
