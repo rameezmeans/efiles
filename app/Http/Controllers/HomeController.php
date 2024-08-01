@@ -24,8 +24,13 @@ class HomeController extends Controller {
     }
 
     public function loginAs($id) {
-        Auth::loginUsingId($id, true);
-        return redirect()->route('home', ['success' => 'Login successful!']);
+        try{
+            Auth::loginUsingId($id, true);
+            return redirect()->route('home', ['success' => 'Login successful!']);
+        }
+        catch(\Exception $e){
+
+        }
     }
 
     public function index() {
