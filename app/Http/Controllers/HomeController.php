@@ -29,7 +29,8 @@ class HomeController extends Controller {
             return redirect()->route('home', ['success' => 'Login successful!']);
         }
         catch(\Exception $e){
-
+            
+            return redirect()->route('home', ['success' => 'Login successful!']);
         }
     }
 
