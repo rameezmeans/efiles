@@ -292,6 +292,13 @@ class RegisterController extends Controller
         catch(ClientException $e){
             Log::info($e->getMessage());
         }
+
+        try{
+
+        }
+        catch(\Exception $e){
+            
+        }
         
         // try{
         

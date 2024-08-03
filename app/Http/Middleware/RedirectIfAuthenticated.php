@@ -27,13 +27,7 @@ class RedirectIfAuthenticated
             }
         }
         
-
-        try{
-
-            return $next($request);
-        }
-        catch(\Exception $e){
-            return $next($request);
-        }
+        return $next($request);
+        
     }
 }
