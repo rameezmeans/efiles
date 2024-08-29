@@ -1380,7 +1380,7 @@ div.file-type-buttons label > input + img {
                 @if($file->options_services)
                   @foreach($file->options_services as $option)
                     @php 
-                        $op = \ECUApp\SharedCode\Models\Service::FindOrFail( $option->service_id ); 
+                        $op = \ECUApp\SharedCode\Models\Service::where('id', $option->service_id )->first(); 
                     @endphp
                     @if($op)
                     <span class="show-stage"><img style="width: 20px;" src="{{ get_logo_for_stages_and_options( $op->name ) }}" alt="{{$stage->name}}">
