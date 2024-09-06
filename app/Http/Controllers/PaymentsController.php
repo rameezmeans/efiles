@@ -65,8 +65,14 @@ class PaymentsController extends Controller
     public function redirectVivaFile(Request $request) {
 
         $user = Auth::user();
-        $creditsToBuy = $request->creditsToBuy;
-        $creditsForFile = $request->creditsForFile;
+
+        $file = TemporaryFile::findOrFail($request->file_id);
+
+        $serviceCredits = $this->filesMainObj->getCredits($file);
+
+        $creditsToBuy = $serviceCredits - Auth::user()->credits->sum('credits');
+        $creditsForFile = $serviceCredits;
+
         $fileID = $request->file_id;
 
         $unitPrice =  $this->paymenttMainObj->getPrice()->value;
@@ -123,8 +129,14 @@ class PaymentsController extends Controller
     public function offerCheckoutViva(Request $request) {
 
         $user = Auth::user();
-        $creditsToBuy = $request->total_credits_to_submit;
-        $creditsForFile = $request->credits_for_checkout;
+
+        $file = TemporaryFile::findOrFail($request->file_id);
+
+        $serviceCredits = $this->filesMainObj->getCredits($file);
+
+        $creditsToBuy = $serviceCredits - Auth::user()->credits->sum('credits');
+        $creditsForFile = $serviceCredits;
+
         $fileID = $request->file_id;
 
         $unitPrice =  $this->paymenttMainObj->getPrice()->value;
@@ -187,8 +199,13 @@ class PaymentsController extends Controller
 
     public function offerCheckout(Request $request) {
 
-        $creditsToBuy = $request->credits_to_buy;
-        $creditsForCheckout = $request->credits_for_checkout;
+        $file = TemporaryFile::findOrFail($request->file_id);
+
+        $serviceCredits = $this->filesMainObj->getCredits($file);
+
+        $creditsToBuy = $serviceCredits - Auth::user()->credits->sum('credits');
+        $creditsForCheckout = $serviceCredits;
+
         $fileID = $request->file_id;
 
         $user = Auth::user();
@@ -243,8 +260,12 @@ class PaymentsController extends Controller
 
     public function buyOffer(Request $request){
 
-        $creditsToBuy = $request->total_credits_to_submit;
-        $creditsForFile = $request->credits_for_checkout;
+        $file = TemporaryFile::findOrFail($request->file_id);
+
+        $serviceCredits = $this->filesMainObj->getCredits($file);
+
+        $creditsToBuy = $serviceCredits - Auth::user()->credits->sum('credits');
+        $creditsForFile = $serviceCredits;
         $fileID = $request->file_id;
 
         $type = $request->type;
@@ -466,16 +487,26 @@ class PaymentsController extends Controller
 
         if($offer){ 
 
-            $creditsForFile = $request->creditsForFile;
-            $credits = $request->creditsToBuy;
+            $file = TemporaryFile::findOrFail($request->file_id);
+
+            $serviceCredits = $this->filesMainObj->getCredits($file);
+
+            $credits = $serviceCredits - Auth::user()->credits->sum('credits');
+            $creditsForFile = $serviceCredits;
+
             $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
             $file = $this->filesMainObj->acceptOfferFinalise($user, $fileID, $creditsForFile, $this->frontendID);
         }
 
         if($fileFlag){
 
-            $creditsForFile = $request->creditsForFile;
-            $credits = $request->creditsToBuy;
+            $file = TemporaryFile::findOrFail($request->file_id);
+
+            $serviceCredits = $this->filesMainObj->getCredits($file);
+
+            $credits = $serviceCredits - Auth::user()->credits->sum('credits');
+            $creditsForFile = $serviceCredits;
+
             $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
             $file = $this->filesMainObj->saveFile($user, $fileID, $creditsForFile, $type);
             $this->filesMainObj->notifications($file);
@@ -517,8 +548,11 @@ class PaymentsController extends Controller
                     
                         $fileFlag = true;
                         $fileID = $merchantTrns->file_id;
-                        $creditsForFile = $merchantTrns->credits_for_file;
-                        $credits = $merchantTrns->credits_to_buy;
+
+                        $file = TemporaryFile::findOrFail($request->file_id);
+                        $serviceCredits = $this->filesMainObj->getCredits($file);
+                        $credits = $serviceCredits - Auth::user()->credits->sum('credits');
+                        $creditsForFile = $serviceCredits;
 
                         $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
                         $file = $this->filesMainObj->saveFile($user, $fileID, $creditsForFile, $type);
@@ -702,8 +736,13 @@ class PaymentsController extends Controller
     
     public function checkoutFile(Request $request){
 
-        $creditsToBuy = $request->creditsToBuy;
-        $creditsForFile = $request->creditsForFile;
+        $file = TemporaryFile::findOrFail($request->file_id);
+
+        $serviceCredits = $this->filesMainObj->getCredits($file);
+
+        $creditsToBuy = $serviceCredits - Auth::user()->credits->sum('credits');
+        $creditsForFile = $serviceCredits;
+
         $fileID = $request->file_id;
 
         $type = $request->type;
