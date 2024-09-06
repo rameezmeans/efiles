@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Log;
 
 use Deyjandi\VivaWallet\VivaWallet;
 use Deyjandi\VivaWallet\Payment;
+use ECUApp\SharedCode\Models\TemporaryFile;
 use Srmklive\PayPal\Facades\PayPal;
 
 use Omnipay\Omnipay;
@@ -261,8 +262,12 @@ class PaymentsController extends Controller
 
     public function fileCart(Request $request){
 
-        $creditsToBuy = $request->credits_to_buy;
-        $creditsForFile = $request->credits_for_file;
+        $file = TemporaryFile::findOrFail($request->file_id);
+
+        $serviceCredits = $this->filesMainObj->getCredits($file);
+
+        $creditsToBuy = $serviceCredits - Auth::user()->credits->sum('credits');
+        $creditsForFile = $serviceCredits;
 
         $fileID = $request->file_id;
 
@@ -369,8 +374,6 @@ class PaymentsController extends Controller
     }
 
     public function success(Request $request){
-
-        // dd($request->all());
 
         $this->vivaCreds();
 

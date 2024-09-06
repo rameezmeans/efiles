@@ -766,13 +766,13 @@ class FileController extends Controller
         
         FileService::where('service_id', $stage->id)->where('temporary_file_id', $file->id)->delete();
         
-        $servieCredits = 0;
+        $serviceCredits = 0;
 
-        $servieCredits += $this->filesMainObj->saveFileStages($file, $stage, $this->frontendID);
+        $serviceCredits += $this->filesMainObj->saveFileStages($file, $stage, $this->frontendID);
 
         $options = $request->options;
 
-        $servieCredits += $this->filesMainObj->saveFileOptions($file, $stage, $options, $this->frontendID);
+        $serviceCredits += $this->filesMainObj->saveFileOptions($file, $stage, $options, $this->frontendID);
 
         $price = $this->paymentMainObj->getPrice();
 
@@ -780,7 +780,7 @@ class FileController extends Controller
 
         return view( 'files.pay_credits', [ 
         'file' => $file, 
-        'credits' => $servieCredits, 
+        'credits' => $serviceCredits, 
         'price' => $price,
         'factor' => 0,
         'tax' => 0,
