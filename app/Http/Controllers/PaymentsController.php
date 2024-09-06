@@ -494,6 +494,8 @@ class PaymentsController extends Controller
             $credits = $serviceCredits - Auth::user()->credits->sum('credits');
             $creditsForFile = $serviceCredits;
 
+            $fileID = $request->file_id;
+
             $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
             $file = $this->filesMainObj->acceptOfferFinalise($user, $fileID, $creditsForFile, $this->frontendID);
         }
@@ -506,6 +508,8 @@ class PaymentsController extends Controller
 
             $credits = $serviceCredits - Auth::user()->credits->sum('credits');
             $creditsForFile = $serviceCredits;
+
+            $fileID = $request->file_id;
 
             $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
             $file = $this->filesMainObj->saveFile($user, $fileID, $creditsForFile, $type);
