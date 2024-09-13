@@ -448,7 +448,7 @@ p.tuning-resume {
                             data-price="@if($record){{$record->master_credits}}@else Problem @endif" 
                             data-default-price="@if($record){{$record->master_credits}}@else Problem @endif">
                           @endif
-                            <img width="50%" src="{{'https://devback.ecutech.gr/icons/'.$option['icon']}}" alt="{{$option['name']}}">
+                            <img width="50%" src="{{'https://backend.ecutech.gr/icons/'.$option['icon']}}" alt="{{$option['name']}}">
                         </span>
                         <span class="text-stage">
 
