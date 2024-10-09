@@ -609,7 +609,7 @@ class FileController extends Controller
             }
             else{
                 $encodedFileNameToBe = $fileName.'_encoded_api';
-                $processedFile = ProcessedFile::where('name', $encodedFileNameToBe)->first();
+                $processedFile = ProcessedFile::where('name', $encodedFileNameToBe)->where('processed', 1)->first();
 
                 if($processedFile){
 
@@ -620,12 +620,16 @@ class FileController extends Controller
                     $finalFileName = $processedFile->name;
                 // }
 
-            }else{
-                $finalFileName = $fileName;
-            }
-
                 $file_path = public_path($file->file_path).$finalFileName;
                 return response()->download($file_path);
+
+                }
+
+                // }else{
+                //     $finalFileName = $fileName;
+                // }
+
+                
 
             }
         }
@@ -640,7 +644,8 @@ class FileController extends Controller
         return response()->download($file_path);
     }
 
-        }
+    
+    }
 
         else if($file->tool_type == 'slave' && $file->tool_id == $flexLabel->id){
         
@@ -659,7 +664,7 @@ class FileController extends Controller
             return response()->download($file_path);
         }
     }
-
+    
     public function autoDownload(Request $request){
 
         $file = File::findOrFail($request->id);
