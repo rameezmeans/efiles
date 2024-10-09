@@ -609,7 +609,7 @@ class FileController extends Controller
             }
             else{
                 $encodedFileNameToBe = $fileName.'_encoded_api';
-                $processedFile = ProcessedFile::where('name', $encodedFileNameToBe)->where('processed', 1)->first();
+                $processedFile = ProcessedFile::where('name', $encodedFileNameToBe)->where('type', 'encoded')->first();
 
                 if($processedFile){
 
