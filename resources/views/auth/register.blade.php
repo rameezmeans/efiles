@@ -90,7 +90,7 @@ body {
                                 
                                 <select name="language" id="exampleInputLanguage1" class="select-dropdown form-control" style="width: 100%;">
                                     <option value="english">English</option>
-                                    <option value="gr">Greek</option>
+                                    {{-- <option value="gr">Greek</option> --}}
                                 </select>
                                 
                             </div>
