@@ -178,7 +178,7 @@ Route::get('/price-list', [App\Http\Controllers\PricelistController::class, 'ind
 Route::get('/dtc_lookup', [App\Http\Controllers\HomeController::class, 'dtcLookup'])->name('dtc-lookup');
 
 Route::get('/create_test_customer/{id}', [App\Http\Controllers\PaymentsController::class, 'createTestElorusCustomer'])->name('create-customer-elorus');
-Route::get('/create_elorus_invoice/{user_id}/{credit_id}', [App\Http\Controllers\PaymentsController::class, 'createTestElorusCustomer'])->name('create-elorus-invoice');
+Route::get('/create_elorus_invoice/{user_id}/{credit_id}', [App\Http\Controllers\PaymentsController::class, 'createElorusInvoice'])->name('create-elorus-invoice');
 
 
 
