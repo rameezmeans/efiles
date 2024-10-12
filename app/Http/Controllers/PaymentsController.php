@@ -19,7 +19,9 @@ use Illuminate\Support\Facades\Log;
 
 use Deyjandi\VivaWallet\VivaWallet;
 use Deyjandi\VivaWallet\Payment;
+use ECUApp\SharedCode\Models\Credit;
 use ECUApp\SharedCode\Models\TemporaryFile;
+use GuzzleHttp\Promise\Create;
 use Srmklive\PayPal\Facades\PayPal;
 
 use Omnipay\Omnipay;
@@ -385,6 +387,12 @@ class PaymentsController extends Controller
         
         return view('cart', ['packages' => $packages, 'price' => $price, 'tax' => $tax, 'factor' => $factor, 'group' => $user->group, 'user' => $user] );
 
+    }
+
+    public function createElorusInvoice($userID, $creditID){
+        $user = User::findOrFail($userID);
+        $credit = Credit::findOrFail($creditID);
+        $this->elorusMainObj->createElorusInvoice($credit, $user->elorus_id, $user, false);
     }
 
     public function createTestElorusCustomer($userID){
