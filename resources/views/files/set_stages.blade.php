@@ -641,7 +641,7 @@ p.tuning-resume {
               // let file_id = $('#file_id').val();
               // let service_id = $(this).val();
 
-              if(service_id == 113){
+              if(service_id == 113 || service_id == 147 || service_id == 151){
 
                 Swal.fire(
                     'Please Read Very Carefully',
@@ -659,7 +659,7 @@ p.tuning-resume {
 
               }
 
-              if(service_id == 114){
+              if(service_id == 114 || service_id == 146 || service_id == 150){
 
                 Swal.fire(
                     'Please Read Very Carefully',
@@ -676,7 +676,7 @@ p.tuning-resume {
 
             }
 
-            if(service_id == 118){
+            if(service_id == 118 || service_id == 145 || service_id == 152){
 
               Swal.fire(
                   'Please Read Very Carefully',
