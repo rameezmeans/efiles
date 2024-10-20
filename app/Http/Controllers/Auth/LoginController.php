@@ -60,7 +60,7 @@ class LoginController extends Controller
         ->where('front_end_id', 3)
         ->get();
 
-        dd($feeds);
+        
         
         foreach($feeds as $feed){
             Session::put('feed', $feed);
@@ -80,11 +80,13 @@ class LoginController extends Controller
 
         try{
 
+            dd(Auth::user());
+            
             if ($this->attemptLogin($request)) {
                 //check user is admin or not  
 
                 if (Auth::user()->front_end_id == 3 && Auth::user()->subdealer_group_id == NULL && Auth::user()->is_admin() == false && Auth::user()->is_engineer() == false) {
-                    dd(Auth::user());
+                    
                     return $this->sendLoginResponse($request);
                 }
                 else if (Auth::user()->is_admin() == true) {
