@@ -82,6 +82,7 @@ class LoginController extends Controller
                 //check user is admin or not  
 
                 if (Auth::user()->front_end_id == 3 && Auth::user()->subdealer_group_id == NULL && Auth::user()->is_admin() == false && Auth::user()->is_engineer() == false) {
+                    dd(Auth::user());
                     return $this->sendLoginResponse($request);
                 }
                 else if (Auth::user()->is_admin() == true) {
