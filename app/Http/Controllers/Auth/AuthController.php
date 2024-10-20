@@ -62,7 +62,7 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
         
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->where('front_end_id', 3)->first();
         if($user){
 
             if( $this->authMainObj->loginRule($this->frontEndID, $user) ){
