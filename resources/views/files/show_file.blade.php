@@ -1195,7 +1195,7 @@ div.file-type-buttons label > input + img {
                 
                 <div class="m-t-20 bt">
                   <ul class="nav nav-tabs fl-nav fl-nav-mb" style="border-bottom: 0px; padding: 10px 0;">
-                    @if($row->is_lastest())
+                    @if($row->is_latest())
                     <li  class="active">
                       <a style="border: none;" data-toggle="tab" href="#support-{{$row->id}}">
                         <button class="btn btn-white">
@@ -1212,7 +1212,7 @@ div.file-type-buttons label > input + img {
                   </ul>
                   
                   <div class="tab-content">
-                    @if($row->is_lastest())
+                    @if($row->is_latest())
                     <div id="support-{{$row->id}}" class="tab-pane fade active in">
 
                       <div class="row">
@@ -1513,7 +1513,7 @@ div.file-type-buttons label > input + img {
               
               <div class="m-t-20 bt">
                 <ul class="nav nav-tabs fl-nav fl-nav-mb" style="border-bottom: 0px; padding: 10px 0;">
-                  @if($row->is_lastest())
+                  @if($row->is_latest())
                   <li  class="active">
                     <a style="border: none;" data-toggle="tab" href="#support-{{$row->id}}">
                       <button class="btn btn-white">
@@ -1531,7 +1531,7 @@ div.file-type-buttons label > input + img {
                 </ul>
                 
                 <div class="tab-content">
-                  @if($row->is_lastest())
+                  @if($row->is_latest())
                   <div id="support-{{$row->id}}" class="tab-pane fade active in">
 
                     <div class="row">
@@ -2138,7 +2138,7 @@ div.file-type-buttons label > input + img {
 
                 <div class="m-t-20 bt">
                   <ul class="nav nav-tabs fl-nav" style="border-bottom: 0px; padding: 10px 0;">
-                    @if($row->is_lastest())
+                    @if($row->is_latest())
                     <li  class="active">
                       <a style="border: none;" data-toggle="tab" href="#support-{{$row->id}}">
                         <button class="btn btn-white">
@@ -2156,7 +2156,7 @@ div.file-type-buttons label > input + img {
                   
                   <div class="tab-content">
 
-                    @if($row->is_lastest())
+                    @if($row->is_latest())
 
                     <div id="support-{{$row->id}}" class="tab-pane fade active in">
 
