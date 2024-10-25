@@ -786,6 +786,8 @@ div.file-type-buttons label > input + img {
               </div>
             </div>
 
+            @if($file->files->isEmpty())
+
             <div class="main-file-box m-t-40">
               <span>
                 <i class="fa fa-download top-box top-box-grey"></i>
@@ -891,6 +893,8 @@ div.file-type-buttons label > input + img {
             </div>
             
             </div>
+
+            @endif
 
             @if(!$file->offers->isEmpty())
             @php $difference=0; 
