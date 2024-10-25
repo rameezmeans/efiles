@@ -1141,6 +1141,57 @@ div.file-type-buttons label > input + img {
                     </span>
                   </div>
                 </div>
+
+                @if(!$row->messages_and_logs()->isEmpty())
+                <div class="bt m-t-20 text-center collapsible-ecu">
+                  <h4 style="margin-top: 20px;"><i class="fa @if(Session::has('success')) fa-chevron-circle-down @else fa-chevron-circle-up @endif" id="arrow-message"></i> Support Messages</h4>
+                </div>
+                  <div class="bt m-t-20 p-t-10 red-scroll content-ecu" @if(Session::has('success')) style="display: block;" @endif>
+                    @foreach($row->messages_and_logs() as $engineersMessage)
+                      <div class="row bb-light" style="padding: 10px 30px 10px 30px;">
+                        <div>
+                          @if($engineersMessage->engineer)
+                          <div>
+                            <i style="font-size: 24px; color: #B01321;" class="fas fa-user-circle"></i>
+                            <strong style="font-size: 18px;color: #B01321;">Engineer's Reply</strong>
+                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at {{$engineersMessage->created_at->format('H:i:s')}}</p>
+                          </div>
+                          @else
+                            
+                            <i style="font-size: 24px;" class="fas fa-user-circle"></i>
+                            @if(isset($engineersMessage->egnineers_internal_notes))
+                              <strong style="font-size: 18px;">Help Request</strong>  
+                            @else
+                              <strong style="font-size: 18px;">Log Entry</strong> 
+                            @endif
+                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at {{$engineersMessage->created_at->format('H:i:s')}}</p>
+                          @endif
+                        <p>
+                          @if(isset($engineersMessage->egnineers_internal_notes))
+                            <p>{!!$engineersMessage->egnineers_internal_notes!!}</p>
+                          @else
+                            <p>{{$engineersMessage->events_internal_notes}}</p>
+                          @endif
+                        </div>
+
+                        @if(isset($engineersMessage->egnineers_internal_notes))
+                        @if($engineersMessage->engineers_attachement)
+                            
+                            <strong class="">Filename: </strong><span class="">{{$engineersMessage->engineers_attachement}}</span>
+                            <a href="{{route('download', [$file->id,$engineersMessage->engineers_attachement])}}" class="btn-sm btn-info" style="float: right;">Download</a>
+                        @endif
+                        @else
+                        @if($engineersMessage->events_attachement)
+                            
+                        <strong class="">Filename: </strong><span class="">{{$engineersMessage->events_attachement}}</span>
+                        <a href="{{route('download', [$file->id,$engineersMessage->events_attachement])}}" class="btn-sm btn-info" style="float: right;">Download</a>
+                        @endif
+                        @endif
+                      </div>
+                    @endforeach
+                    
+                  </div>
+                @endif
                 
                 <div class="m-t-20 bt">
                   <ul class="nav nav-tabs fl-nav fl-nav-mb" style="border-bottom: 0px; padding: 10px 0;">
@@ -1402,6 +1453,57 @@ div.file-type-buttons label > input + img {
                   </span>
                 </div>
               </div>
+
+              @if(!$row->messages_and_logs()->isEmpty())
+                <div class="bt m-t-20 text-center collapsible-ecu">
+                  <h4 style="margin-top: 20px;"><i class="fa @if(Session::has('success')) fa-chevron-circle-down @else fa-chevron-circle-up @endif" id="arrow-message"></i> Support Messages</h4>
+                </div>
+                  <div class="bt m-t-20 p-t-10 red-scroll content-ecu" @if(Session::has('success')) style="display: block;" @endif>
+                    @foreach($row->messages_and_logs() as $engineersMessage)
+                      <div class="row bb-light" style="padding: 10px 30px 10px 30px;">
+                        <div>
+                          @if($engineersMessage->engineer)
+                          <div>
+                            <i style="font-size: 24px; color: #B01321;" class="fas fa-user-circle"></i>
+                            <strong style="font-size: 18px;color: #B01321;">Engineer's Reply</strong>
+                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at {{$engineersMessage->created_at->format('H:i:s')}}</p>
+                          </div>
+                          @else
+                            
+                            <i style="font-size: 24px;" class="fas fa-user-circle"></i>
+                            @if(isset($engineersMessage->egnineers_internal_notes))
+                              <strong style="font-size: 18px;">Help Request</strong>  
+                            @else
+                              <strong style="font-size: 18px;">Log Entry</strong> 
+                            @endif
+                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at {{$engineersMessage->created_at->format('H:i:s')}}</p>
+                          @endif
+                        <p>
+                          @if(isset($engineersMessage->egnineers_internal_notes))
+                            <p>{!!$engineersMessage->egnineers_internal_notes!!}</p>
+                          @else
+                            <p>{{$engineersMessage->events_internal_notes}}</p>
+                          @endif
+                        </div>
+
+                        @if(isset($engineersMessage->egnineers_internal_notes))
+                        @if($engineersMessage->engineers_attachement)
+                            
+                            <strong class="">Filename: </strong><span class="">{{$engineersMessage->engineers_attachement}}</span>
+                            <a href="{{route('download', [$file->id,$engineersMessage->engineers_attachement])}}" class="btn-sm btn-info" style="float: right;">Download</a>
+                        @endif
+                        @else
+                        @if($engineersMessage->events_attachement)
+                            
+                        <strong class="">Filename: </strong><span class="">{{$engineersMessage->events_attachement}}</span>
+                        <a href="{{route('download', [$file->id,$engineersMessage->events_attachement])}}" class="btn-sm btn-info" style="float: right;">Download</a>
+                        @endif
+                        @endif
+                      </div>
+                    @endforeach
+                    
+                  </div>
+                @endif
               
               <div class="m-t-20 bt">
                 <ul class="nav nav-tabs fl-nav fl-nav-mb" style="border-bottom: 0px; padding: 10px 0;">
@@ -1970,7 +2072,7 @@ div.file-type-buttons label > input + img {
                   </div>
                 </div>
                 
-                {{-- @if(!$row->messages_and_logs()->isEmpty())
+                @if(!$row->messages_and_logs()->isEmpty())
                 <div class="bt m-t-20 text-center collapsible-ecu">
                   <h4 style="margin-top: 20px;"><i class="fa @if(Session::has('success')) fa-chevron-circle-down @else fa-chevron-circle-up @endif" id="arrow-message"></i> Support Messages</h4>
                 </div>
@@ -2020,7 +2122,7 @@ div.file-type-buttons label > input + img {
                     
                   </div>
                 @endif
-                 --}}
+                
 
                 <div class="m-t-20 bt">
                   <ul class="nav nav-tabs fl-nav" style="border-bottom: 0px; padding: 10px 0;">
