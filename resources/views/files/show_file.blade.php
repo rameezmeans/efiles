@@ -1824,6 +1824,9 @@ div.file-type-buttons label > input + img {
                               <i style="color: red;" class="fa fa-exclamation-triangle" aria-hidden="true"></i>
                               <span style="color: darkgray;">You can send Message to Engineer. Engineers will be notified.</span>
                             </p>
+
+                            @if($file->files->isEmpty())
+
                             <div class="row">
                               <div class="col-xl-12 col-lg-12 col-md-12">
                             <form method="POST" action="{{ route('file-engineers-notes') }}" enctype="multipart/form-data">
@@ -1849,6 +1852,8 @@ div.file-type-buttons label > input + img {
                             </form>
                               </div>
                             </div>
+
+                            @endif
                             
                           </span>
                         </div>
