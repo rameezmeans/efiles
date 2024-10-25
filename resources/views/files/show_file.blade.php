@@ -1405,7 +1405,7 @@ div.file-type-buttons label > input + img {
               
               <div class="m-t-20 bt">
                 <ul class="nav nav-tabs fl-nav fl-nav-mb" style="border-bottom: 0px; padding: 10px 0;">
-                  {{-- <li  class="active">
+                  <li  class="active">
                     <a style="border: none;" data-toggle="tab" href="#support-{{$row->id}}">
                       <button class="btn btn-white">
                         <i>
@@ -1413,14 +1413,14 @@ div.file-type-buttons label > input + img {
                         </i> Engineer Support
                       </button>
                     </a>
-                  </li> --}}
+                  </li>
                   <li><a style="border: none;" data-toggle="tab" href="#log-{{$row->id}}"><button class="btn btn-white"><i class="fa fa-file" style="transform: rotate(-90deg)"></i> Add Log</button></a></li>
                   <li><a style="border: none;" data-toggle="tab" href="#star-{{$row->id}}"><button class="btn btn-white"><i class="fa fa-star"></i> Add a Rating</button></a></li>
                   
                 </ul>
                 
                 <div class="tab-content">
-                  {{-- <div id="support-{{$row->id}}" class="tab-pane fade active in">
+                  <div id="support-{{$row->id}}" class="tab-pane fade active in">
 
                     <div class="row">
                       <div class="col-xl-12 col-lg-12 col-md-12">
@@ -1449,7 +1449,7 @@ div.file-type-buttons label > input + img {
                     </div>
                     </div>
 
-                  </div> --}}
+                  </div>
                   <div id="log-{{$row->id}}" class="tab-pane fade">
 
                     <div class="row">
