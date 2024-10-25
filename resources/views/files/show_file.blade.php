@@ -1153,7 +1153,7 @@ div.file-type-buttons label > input + img {
                         </button>
                       </a>
                     </li>
-                    <li><a style="border: none;" data-toggle="tab" href="#log-{{$row->id}}"><button class="btn btn-white"><i class="fa fa-file" style="transform: rotate(-90deg)"></i> Add Log</button></a></li>
+                    <li><a style="border: none;" data-toggle="tab" href="#log-{{$row->id}}"><button class="btn btn-white"><i class="fa fa-file" style="transform: rotate(-90deg)"></i> Add Log 1</button></a></li>
                     <li><a style="border: none;" data-toggle="tab" href="#star-{{$row->id}}"><button class="btn btn-white"><i class="fa fa-star"></i> Add a Rating</button></a></li>
                     
                   </ul>
@@ -1414,7 +1414,7 @@ div.file-type-buttons label > input + img {
                       </button>
                     </a>
                   </li>
-                  <li><a style="border: none;" data-toggle="tab" href="#log-{{$row->id}}"><button class="btn btn-white"><i class="fa fa-file" style="transform: rotate(-90deg)"></i> Add Log</button></a></li>
+                  <li><a style="border: none;" data-toggle="tab" href="#log-{{$row->id}}"><button class="btn btn-white"><i class="fa fa-file" style="transform: rotate(-90deg)"></i> Add Log 2</button></a></li>
                   <li><a style="border: none;" data-toggle="tab" href="#star-{{$row->id}}"><button class="btn btn-white"><i class="fa fa-star"></i> Add a Rating</button></a></li>
                   
                 </ul>
@@ -2033,7 +2033,7 @@ div.file-type-buttons label > input + img {
                         </button>
                       </a>
                     </li>
-                    <li class="active"><a style="border: none;" data-toggle="tab" href="#log-{{$row->id}}"><button class="btn btn-white"><i class="fa fa-file" style="transform: rotate(-90deg)"></i> Add Log</button></a></li>
+                    <li class="active"><a style="border: none;" data-toggle="tab" href="#log-{{$row->id}}"><button class="btn btn-white"><i class="fa fa-file" style="transform: rotate(-90deg)"></i> Add Log 3</button></a></li>
                     <li><a style="border: none;" data-toggle="tab" href="#star-{{$row->id}}"><button class="btn btn-white"><i class="fa fa-star"></i> Add a Rating</button></a></li>
                     
                   </ul>
