@@ -718,7 +718,7 @@ div.file-type-buttons label > input + img {
                   Credits: {{$file->credits}}
                 </span> 
                 {{ $file->created_at->format('d/m/Y')}} at 
-                @if(Auth::user()->timeline != NULL)
+                @if(Auth::user()->timezone != NULL)
                   {{ \Carbon\Carbon::parse( $file->created_at)->setTimezone(Auth::user()->timezone)->format('H:i:s') }}
                 @else
                   {{ $file->created_at->format('H:i:s') }}
