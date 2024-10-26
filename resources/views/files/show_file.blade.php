@@ -813,7 +813,17 @@ div.file-type-buttons label > input + img {
                             <div>
                               <i style="font-size: 24px; color: #B01321;" class="fas fa-user-circle"></i>
                               <strong style="font-size: 18px;color: #B01321;">Engineer's Reply</strong>
-                              <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at {{$engineersMessage->created_at->format('H:i:s')}}</p>
+                              <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at 
+                                
+                                @if(Auth::user()->timezone != NULL)
+                                  {{ \Carbon\Carbon::parse( $engineersMessage->created_at)->setTimezone(Auth::user()->timezone)->format('H:i:s') }}
+                                @else
+                                  {{ $engineersMessage->created_at->format('H:i:s') }}
+                                @endif
+
+                                {{-- {{$engineersMessage->created_at->format('H:i:s')}} --}}
+                              
+                              </p>
                             </div>
                             @else
                               
@@ -823,7 +833,17 @@ div.file-type-buttons label > input + img {
                               @else
                                 <strong style="font-size: 18px;">Log Entry</strong> 
                               @endif
-                              <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at {{$engineersMessage->created_at->format('H:i:s')}}</p>
+                              <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at 
+
+                                @if(Auth::user()->timezone != NULL)
+                                  {{ \Carbon\Carbon::parse( $engineersMessage->created_at)->setTimezone(Auth::user()->timezone)->format('H:i:s') }}
+                                @else
+                                  {{ $engineersMessage->created_at->format('H:i:s') }}
+                                @endif
+                                
+                                {{-- {{$engineersMessage->created_at->format('H:i:s')}} --}}
+                              
+                              </p>
                             @endif
                           <p>
                             @if(isset($engineersMessage->egnineers_internal_notes))
@@ -1066,7 +1086,17 @@ div.file-type-buttons label > input + img {
               <h3 style="display: inline; color: #237E02; margin-left: 20px;">
                 File Received
               </h3>
-              <span class="r-file-span" style="float: right; margin-top: 15px;">{{ $row->created_at->format('d/m/Y')}} at {{$row->created_at->format('H:i:s')}}</span>
+              <span class="r-file-span" style="float: right; margin-top: 15px;">{{ $row->created_at->format('d/m/Y')}} at 
+                
+                @if(Auth::user()->timezone != NULL)
+                  {{ \Carbon\Carbon::parse( $row->created_at)->setTimezone(Auth::user()->timezone)->format('H:i:s') }}
+                @else
+                  {{ $row->created_at->format('H:i:s') }}
+                @endif
+
+                {{-- {{$row->created_at->format('H:i:s')}} --}}
+              
+              </span>
             
             <div style="padding-left: 60px;" class="card-dt">
             <div class="card m-t-10">
@@ -1162,7 +1192,17 @@ div.file-type-buttons label > input + img {
                           <div>
                             <i style="font-size: 24px; color: #B01321;" class="fas fa-user-circle"></i>
                             <strong style="font-size: 18px;color: #B01321;">Engineer's Reply</strong>
-                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at {{$engineersMessage->created_at->format('H:i:s')}}</p>
+                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at 
+                              
+                              @if(Auth::user()->timezone != NULL)
+                              {{ \Carbon\Carbon::parse( $engineersMessage->created_at)->setTimezone(Auth::user()->timezone)->format('H:i:s') }}
+                              @else
+                                {{ $engineersMessage->created_at->format('H:i:s') }}
+                              @endif
+
+                              {{-- {{$engineersMessage->created_at->format('H:i:s')}} --}}
+                            
+                            </p>
                           </div>
                           @else
                             
@@ -1172,7 +1212,17 @@ div.file-type-buttons label > input + img {
                             @else
                               <strong style="font-size: 18px;">Log Entry</strong> 
                             @endif
-                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at {{$engineersMessage->created_at->format('H:i:s')}}</p>
+                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at 
+
+                              @if(Auth::user()->timezone != NULL)
+                              {{ \Carbon\Carbon::parse( $engineersMessage->created_at)->setTimezone(Auth::user()->timezone)->format('H:i:s') }}
+                              @else
+                                {{ $engineersMessage->created_at->format('H:i:s') }}
+                              @endif
+                              
+                              {{-- {{$engineersMessage->created_at->format('H:i:s')}} --}}
+                            
+                            </p>
                           @endif
                         <p>
                           @if(isset($engineersMessage->egnineers_internal_notes))
@@ -1378,7 +1428,18 @@ div.file-type-buttons label > input + img {
             <h3 style="display: inline; color: #237E02; margin-left: 20px;">
               File Received
             </h3>
-            <span class="r-file-span" style="float: right; margin-top: 15px;">{{ $row->created_at->format('d/m/Y')}} at {{$row->created_at->format('H:i:s')}}</span>
+            <span class="r-file-span" style="float: right; margin-top: 15px;">{{ $row->created_at->format('d/m/Y')}} at 
+              
+
+              @if(Auth::user()->timezone != NULL)
+              {{ \Carbon\Carbon::parse( $row->created_at)->setTimezone(Auth::user()->timezone)->format('H:i:s') }}
+              @else
+                {{ $row->created_at->format('H:i:s') }}
+              @endif
+
+              {{-- {{$row->created_at->format('H:i:s')}} --}}
+            
+            </span>
           
           <div style="padding-left: 60px;" class="card-dt">
           <div class="card m-t-10">
@@ -1480,7 +1541,17 @@ div.file-type-buttons label > input + img {
                           <div>
                             <i style="font-size: 24px; color: #B01321;" class="fas fa-user-circle"></i>
                             <strong style="font-size: 18px;color: #B01321;">Engineer's Reply</strong>
-                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at {{$engineersMessage->created_at->format('H:i:s')}}</p>
+                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at 
+                              
+                              @if(Auth::user()->timezone != NULL)
+                              {{ \Carbon\Carbon::parse( $engineersMessage->created_at)->setTimezone(Auth::user()->timezone)->format('H:i:s') }}
+                              @else
+                                {{ $engineersMessage->created_at->format('H:i:s') }}
+                              @endif
+
+                              {{-- {{$engineersMessage->created_at->format('H:i:s')}} --}}
+                            
+                            </p>
                           </div>
                           @else
                             
@@ -1490,7 +1561,17 @@ div.file-type-buttons label > input + img {
                             @else
                               <strong style="font-size: 18px;">Log Entry</strong> 
                             @endif
-                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at {{$engineersMessage->created_at->format('H:i:s')}}</p>
+                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at 
+                              
+                              @if(Auth::user()->timezone != NULL)
+                              {{ \Carbon\Carbon::parse( $engineersMessage->created_at)->setTimezone(Auth::user()->timezone)->format('H:i:s') }}
+                              @else
+                                {{ $engineersMessage->created_at->format('H:i:s') }}
+                              @endif
+                              
+                              {{-- {{$engineersMessage->created_at->format('H:i:s')}} --}}
+                            
+                            </p>
                           @endif
                         <p>
                           @if(isset($engineersMessage->egnineers_internal_notes))
@@ -1703,7 +1784,17 @@ div.file-type-buttons label > input + img {
               <span class="label label-danger">
                 Credits: {{$file->credits}}
               </span> 
-              {{ $file->created_at->format('d/m/Y')}} at {{$file->created_at->format('H:i:s')}}
+              {{ $file->created_at->format('d/m/Y')}} at 
+
+              @if(Auth::user()->timezone != NULL)
+              {{ \Carbon\Carbon::parse( $file->created_at)->setTimezone(Auth::user()->timezone)->format('H:i:s') }}
+              @else
+                {{ $file->created_at->format('H:i:s') }}
+              @endif
+              
+              {{-- {{$file->created_at->format('H:i:s')}} --}}
+
+
             </span>
             <div style="padding-left: 60px;" class="card-dt">
               <div class="card m-t-10">
@@ -1783,7 +1874,17 @@ div.file-type-buttons label > input + img {
                           <div>
                             <i style="font-size: 24px; color: #B01321;" class="fas fa-user-circle"></i>
                             <strong style="font-size: 18px;color: #B01321;">Engineer's Reply</strong>
-                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at {{$engineersMessage->created_at->format('H:i:s')}}</p>
+                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at 
+                              
+                              @if(Auth::user()->timezone != NULL)
+                              {{ \Carbon\Carbon::parse( $engineersMessage->created_at)->setTimezone(Auth::user()->timezone)->format('H:i:s') }}
+                              @else
+                                {{ $engineersMessage->created_at->format('H:i:s') }}
+                              @endif
+
+                              {{-- {{$engineersMessage->created_at->format('H:i:s')}} --}}
+                            
+                            </p>
                           </div>
                           @else
                             
@@ -1793,7 +1894,17 @@ div.file-type-buttons label > input + img {
                             @else
                               <strong style="font-size: 18px;">Log Entry</strong> 
                             @endif
-                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at {{$engineersMessage->created_at->format('H:i:s')}}</p>
+                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at 
+
+                              @if(Auth::user()->timezone != NULL)
+                              {{ \Carbon\Carbon::parse( $engineersMessage->created_at)->setTimezone(Auth::user()->timezone)->format('H:i:s') }}
+                              @else
+                                {{ $engineersMessage->created_at->format('H:i:s') }}
+                              @endif
+                              
+                              {{-- {{$engineersMessage->created_at->format('H:i:s')}} --}}
+                            
+                            </p>
                           @endif
                         <p>
                           @if(isset($engineersMessage->egnineers_internal_notes))
@@ -2030,7 +2141,18 @@ div.file-type-buttons label > input + img {
               <h3 style="display: inline; color: #237E02; margin-left: 20px;">
                 File Received
               </h3>
-              <span style="float: right; margin-top: 15px;">{{ $row->created_at->format('d/m/Y')}} at {{$row->created_at->format('H:i:s')}}</span>
+              <span style="float: right; margin-top: 15px;">{{ $row->created_at->format('d/m/Y')}} at 
+                
+
+                @if(Auth::user()->timezone != NULL)
+                {{ \Carbon\Carbon::parse( $row->created_at)->setTimezone(Auth::user()->timezone)->format('H:i:s') }}
+                @else
+                  {{ $row->created_at->format('H:i:s') }}
+                @endif
+
+                {{-- {{$row->created_at->format('H:i:s')}} --}}
+              
+              </span>
             
             <div style="padding-left: 60px;" class="card-dt">
             <div class="card m-t-10">
@@ -2109,7 +2231,19 @@ div.file-type-buttons label > input + img {
                           <div>
                             <i style="font-size: 24px; color: #B01321;" class="fas fa-user-circle"></i>
                             <strong style="font-size: 18px;color: #B01321;">Engineer's Reply</strong>
-                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at {{$engineersMessage->created_at->format('H:i:s')}}</p>
+                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at 
+                              
+
+                              @if(Auth::user()->timezone != NULL)
+                              {{ \Carbon\Carbon::parse( $engineersMessage->created_at)->setTimezone(Auth::user()->timezone)->format('H:i:s') }}
+                              @else
+                                {{ $engineersMessage->created_at->format('H:i:s') }}
+                              @endif
+
+
+                              {{-- {{$engineersMessage->created_at->format('H:i:s')}} --}}
+                            
+                            </p>
                           </div>
                           @else
                             
@@ -2119,7 +2253,18 @@ div.file-type-buttons label > input + img {
                             @else
                               <strong style="font-size: 18px;">Log Entry</strong> 
                             @endif
-                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at {{$engineersMessage->created_at->format('H:i:s')}}</p>
+                            <p style="float: right;">{{ $engineersMessage->created_at->format('d/m/Y')}} at 
+                              
+
+                              @if(Auth::user()->timezone != NULL)
+                              {{ \Carbon\Carbon::parse( $engineersMessage->created_at)->setTimezone(Auth::user()->timezone)->format('H:i:s') }}
+                              @else
+                                {{ $engineersMessage->created_at->format('H:i:s') }}
+                              @endif
+
+                              {{-- {{$engineersMessage->created_at->format('H:i:s')}} --}}
+                            
+                            </p>
                           @endif
                         <p>
                           @if(isset($engineersMessage->egnineers_internal_notes))
@@ -2508,7 +2653,17 @@ div.file-type-buttons label > input + img {
                           <div>
                               <i style="font-size: 24px;" class="fas fa-user-circle"></i>
                               <strong style="font-size: 18px;">Personal Message</strong>
-                              <p style="float: right;">{{ $fileUrl->created_at->format('d/m/Y')}} at {{$fileUrl->created_at->format('H:i:s')}}</p>
+                              <p style="float: right;">{{ $fileUrl->created_at->format('d/m/Y')}} at 
+                                
+                                @if(Auth::user()->timezone != NULL)
+                                {{ \Carbon\Carbon::parse( $fileUrl->created_at)->setTimezone(Auth::user()->timezone)->format('H:i:s') }}
+                                @else
+                                  {{ $fileUrl->created_at->format('H:i:s') }}
+                                @endif
+
+                                {{-- {{$fileUrl->created_at->format('H:i:s')}} --}}
+                              
+                              </p>
                               <p>{{$fileUrl->file_url}}</p>
                           </div>
                           @if(isset($fileUrl->file_url_attachment))
