@@ -717,7 +717,12 @@ div.file-type-buttons label > input + img {
                 <span class="label label-danger">
                   Credits: {{$file->credits}}
                 </span> 
-                {{ $file->created_at->format('d/m/Y')}} at {{ \Carbon\Carbon::parse( $file->created_at)->setTimezone('Asia/Karachi')->format('H:i:s') }}
+                {{ $file->created_at->format('d/m/Y')}} at 
+                @if(Auth::user()->timeline != NULL)
+                  {{ \Carbon\Carbon::parse( $file->created_at)->setTimezone(Auth::user()->timezone)->format('H:i:s') }}
+                @else
+                  {{ $file->created_at->format('H:i:s') }}
+                @endif
               </span>
               <div style="padding-left: 60px;" class="card-dt">
                 <div class="card m-t-10">
