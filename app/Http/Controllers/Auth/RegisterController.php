@@ -81,48 +81,76 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {   
+        $unique = User::where('email', $data['email'])->where('front_end_id', 3)->first();
 
-        if($data['evc_customer_id']){
-            return Validator::make($data, [
-                'name' => ['required', 'string', 'max:255'],
-                'phone' => ['required', 'string', 'max:255'],
-                'language' => ['required', 'string', 'max:255'],
-                'address' => ['required', 'string', 'max:255'],
-                'zip' => ['required', 'string', 'max:255'],
-                'city' => ['required', 'string', 'max:255'],
-                'country' => ['required', 'string', 'max:255'],
-                'status' => ['required', 'string', 'max:255'],
-                'company_name' => ['max:255'],
-                'company_id' => ['max:255'],
-                'slave_tools_flag' => ['string', 'max:255'],
-                'master_tools' => [],
-                'slave_tools' => [],
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'evc_customer_id' => ['required','unique:users', 'string'],
-                'password' => ['required', 'string', 'min:8', 'confirmed'],
-                'g-recaptcha-response' => ['required', new ReCaptcha]
-            ]);
-        }
-        else{
-            return Validator::make($data, [
-                'name' => ['required', 'string', 'max:255'],
-                'phone' => ['required', 'string', 'max:255'],
-                'language' => ['required', 'string', 'max:255'],
-                'address' => ['required', 'string', 'max:255'],
-                'zip' => ['required', 'string', 'max:255'],
-                'city' => ['required', 'string', 'max:255'],
-                'country' => ['required', 'string', 'max:255'],
-                'status' => ['required', 'string', 'max:255'],
-                'company_name' => ['max:255'],
-                'company_id' => ['max:255'],
-                'slave_tools_flag' => ['string', 'max:255'],
-                'master_tools' => [],
-                'slave_tools' => [],
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'password' => ['required', 'string', 'min:8', 'confirmed'],
-                'g-recaptcha-response' => ['required', new ReCaptcha]
-            ]);
-        }
+        // if($data['evc_customer_id']){
+        //     return Validator::make($data, [
+        //         'name' => ['required', 'string', 'max:255'],
+        //         'phone' => ['required', 'string', 'max:255'],
+        //         'language' => ['required', 'string', 'max:255'],
+        //         'address' => ['required', 'string', 'max:255'],
+        //         'zip' => ['required', 'string', 'max:255'],
+        //         'city' => ['required', 'string', 'max:255'],
+        //         'country' => ['required', 'string', 'max:255'],
+        //         'status' => ['required', 'string', 'max:255'],
+        //         'company_name' => ['max:255'],
+        //         'company_id' => ['max:255'],
+        //         'slave_tools_flag' => ['string', 'max:255'],
+        //         'master_tools' => [],
+        //         'slave_tools' => [],
+        //         'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        //         'evc_customer_id' => ['required','unique:users', 'string'],
+        //         'password' => ['required', 'string', 'min:8', 'confirmed'],
+        //         'g-recaptcha-response' => ['required', new ReCaptcha]
+        //     ]);
+        // }
+        // else{
+
+            if($unique != NULL){
+
+                return Validator::make($data, [
+                    'name' => ['required', 'string', 'max:255'],
+                    'phone' => ['required', 'string', 'max:255'],
+                    'language' => ['required', 'string', 'max:255'],
+                    'address' => ['required', 'string', 'max:255'],
+                    'zip' => ['required', 'string', 'max:255'],
+                    'city' => ['required', 'string', 'max:255'],
+                    'country' => ['required', 'string', 'max:255'],
+                    'status' => ['required', 'string', 'max:255'],
+                    'company_name' => ['max:255'],
+                    'company_id' => ['max:255'],
+                    'slave_tools_flag' => ['string', 'max:255'],
+                    'master_tools' => [],
+                    'slave_tools' => [],
+                    'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                    'password' => ['required', 'string', 'min:8', 'confirmed'],
+                    'g-recaptcha-response' => ['required', new ReCaptcha]
+                ]);
+
+            }
+            else{
+
+                return Validator::make($data, [
+                    'name' => ['required', 'string', 'max:255'],
+                    'phone' => ['required', 'string', 'max:255'],
+                    'language' => ['required', 'string', 'max:255'],
+                    'address' => ['required', 'string', 'max:255'],
+                    'zip' => ['required', 'string', 'max:255'],
+                    'city' => ['required', 'string', 'max:255'],
+                    'country' => ['required', 'string', 'max:255'],
+                    'status' => ['required', 'string', 'max:255'],
+                    'company_name' => ['max:255'],
+                    'company_id' => ['max:255'],
+                    'slave_tools_flag' => ['string', 'max:255'],
+                    'master_tools' => [],
+                    'slave_tools' => [],
+                    'email' => ['required', 'string', 'email', 'max:255'],
+                    'password' => ['required', 'string', 'min:8', 'confirmed'],
+                    'g-recaptcha-response' => ['required', new ReCaptcha]
+                ]);
+
+            }
+        // }
     }
 
     /**
@@ -133,6 +161,8 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+
+        $alreadyThereUser = User::where('email', $data['email'])->first();
         
         if(isset( $data['slave_tools_flag'])){
             $slaveToolsFlag = $data['slave_tools_flag'];
@@ -178,7 +208,7 @@ class RegisterController extends Controller
             'company_name' => $data['company_name'],
             'company_id' => $data['company_id'],
             'front_end_id' => 3,
-            'evc_customer_id' => $data['evc_customer_id'],
+            // 'evc_customer_id' => $data['evc_customer_id'],
             'slave_tools_flag' => $slaveToolsFlag,
             'password' => Hash::make($data['password']),
         ]);
@@ -192,21 +222,21 @@ class RegisterController extends Controller
             $userTool->save();
         }
         
-        if($user->evc_customer_id){
+        // if($user->evc_customer_id){
 
-            try{
+        //     try{
 
-                $response = Http::get('https://evc.de/services/api_resellercredits.asp?apiid=j34sbc93hb90&username=161134&password=MAgWVTqhIBitL0wn&verb=addcustomer&customer='.$user->evc_customer_id);
+        //         $response = Http::get('https://evc.de/services/api_resellercredits.asp?apiid=j34sbc93hb90&username=161134&password=MAgWVTqhIBitL0wn&verb=addcustomer&customer='.$user->evc_customer_id);
 
-                $body = $response->body();
+        //         $body = $response->body();
 
-            }
+        //     }
 
-            catch(ConnectionException $e){
+        //     catch(ConnectionException $e){
                 
-            }
+        //     }
 
-        }
+        // }
 
         if(count($masterTools) > 0){
         
@@ -233,6 +263,14 @@ class RegisterController extends Controller
                
             }
         }
+
+        if($alreadyThereUser != NULL){
+            $user->zohobooks_id = $alreadyThereUser->zohobooks_id;
+            $user->elorus_id = $alreadyThereUser->elorus_id;
+            $user->save();
+        }
+
+        else{
 
         $psr6CachePool = new ArrayCachePool();
 
@@ -299,6 +337,7 @@ class RegisterController extends Controller
         catch(\Exception $e){
             
         }
+    }
         
         // try{
         
