@@ -24,7 +24,7 @@
 		<p style="font-size: 10px;">24h / 7d</p>
 		
 		<span>{{__('Automatic File Service Status')}}:</span>
-		<span class="dot @if($OnlineStatus->type == 'danger') dot-danger @else dot-success @endif""><span>@if($OnlineStatus == 0) {{'Not Online'}} @else {{'Online'}} @endif</span>
+		<span class="dot @if($OnlineStatus == 0) dot-danger @else dot-success @endif""><span>@if($OnlineStatus == 0) {{'Not Online'}} @else {{'Online'}} @endif</span>
 		
 	</div>
 	
