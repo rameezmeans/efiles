@@ -21,10 +21,10 @@
 	@endif
 
 	<div class="box @if($OnlineStatus == 0) box-danger @else box-success @endif" style="height: 80px !important;">
-		<p style="font-size: 10px;">24/7</p>
+		<p style="font-size: 10px;">24h / 7d</p>
 		
-		<span>{{__('Online Search Status')}}:</span>
-		<p>@if($OnlineStatus == 0) {{'Not Active'}} @else {{'Active'}} @endif</p>
+		<span>{{__('Automatic File Service Status')}}:</span>
+		<span class="dot @if($OnlineStatus->type == 'danger') dot-danger @else dot-success @endif""><span>@if($OnlineStatus == 0) {{'Not Online'}} @else {{'Online'}} @endif</span>
 		
 	</div>
 	
