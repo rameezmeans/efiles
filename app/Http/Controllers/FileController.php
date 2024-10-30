@@ -843,22 +843,24 @@ class FileController extends Controller
     public function fileEventsNotes(Request $request)
     {
 
+        $file = File::findOrFail($request->file_id);
+
         $validated = $request->validate([
             'events_internal_notes' => 'required|max:1024'
         ]);
 
-        $file = new FileInternalEvent();
-        $file->events_internal_notes = $request->events_internal_notes;
+        $reply = new FileInternalEvent();
+        $reply->events_internal_notes = $request->events_internal_notes;
        
         if($request->file('events_attachement')){
             $attachment = $request->file('events_attachement');
             $fileName = $attachment->getClientOriginalName();
             $attachment->move( public_path($file->file_path) ,$fileName);
-            $file->events_attachement = $fileName;
+            $reply->events_attachement = $fileName;
         }
 
-        $file->file_id = $request->file_id;
-        $file->save();
+        $reply->file_id = $request->file_id;
+        $reply->save();
         return redirect()->back()->with('success', 'Events note successfully Added!');
     }
 
