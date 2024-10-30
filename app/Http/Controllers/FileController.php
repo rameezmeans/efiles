@@ -860,6 +860,7 @@ class FileController extends Controller
         }
 
         $reply->file_id = $request->file_id;
+        $reply->request_file_id = $request->request_file_id;
         $reply->save();
         return redirect()->back()->with('success', 'Events note successfully Added!');
     }
