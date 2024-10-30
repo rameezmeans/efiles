@@ -12,11 +12,11 @@
 	  $OnlineStatus = ECUApp\SharedCode\Models\IntegerMeta::where('key', 'etf_online_status')->first()->value;
     @endphp
 	@if($feed)
-		<div class="box @if($feed->type == 'danger') box-danger @else box-success @endif" style="height: 125px !important;">
+		<div class="box @if($feed->type == 'danger') box-danger @else box-success @endif" style="height: 130px !important;">
 		<p style="font-size: 10px;">Mon-Fri: ({{ date('h:i A', strtotime($workHours[0]->start))}} - {{ date('h:i A', strtotime($workHours[0]->end)) }})</p>
 		<p style="font-size: 10px;">Sat: ({{ date('h:i A', strtotime($workHours[1]->start))}} - {{ date('h:i A', strtotime($workHours[1]->end)) }}) Sunday: (Closed)</p>
 		<span>{{__('File Service Status')}}:</span>
-		<p style="margin-top: 5px;"><span class="dot @if($feed->type == 'danger') dot-danger @else dot-success @endif""></span> @if($feed->type == 'danger') Offline @else Online @endif - <span id="MyClockDisplay"></span> (LOCAL Time)</p>
+		<p style="margin-top: 5px;"><span class="dot @if($feed->type == 'danger') dot-danger @else dot-success @endif""></span> @if($feed->type == 'danger') Offline @else Online @endif - <span id="MyClockDisplay"></span> <span style="font-size: 10px;">(LOCAL Time)</span></p>
 		</div>
 	@endif
 
