@@ -9,6 +9,10 @@
     height: 1.8rem !important;
 }
 
+.select2-container--default {
+    width: 100% !important;
+}
+
 body {
     background: #f1f5f9 !important;
 }
