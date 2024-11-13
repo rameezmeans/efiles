@@ -693,6 +693,8 @@ p.tuning-resume {
 
               }
 
+              let note = '{{__('Please Read Very Carefully')}}!!';
+
               Swal.fire(
                               note,
                               comment,
