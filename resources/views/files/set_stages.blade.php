@@ -693,20 +693,20 @@ p.tuning-resume {
 
               }
 
-              let note = '{{__('Please Read Very Carefully')}}!!';
+              // let note = '{{__('Please Read Very Carefully')}}!!';
 
-              Swal.fire(
-                              note,
-                              comment,
-                              'warning'
-                              );
+              // Swal.fire(
+              //                 note,
+              //                 comment,
+              //                 'warning'
+              //                 );
 
-                          $('.swal2-confirm').attr("disabled", true);
+              //             $('.swal2-confirm').attr("disabled", true);
 
-                          setTimeout(
-                              function() {
-                                  $('.swal2-confirm').attr("disabled", false);
-                          }, 5000);
+              //             setTimeout(
+              //                 function() {
+              //                     $('.swal2-confirm').attr("disabled", false);
+              //             }, 5000);
 
               $('.comments-area-'+service_id).removeClass('hide');
 
