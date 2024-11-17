@@ -1058,7 +1058,7 @@ div.file-type-buttons label > input + img {
                 <i class="fa fa-download top-box top-box-red"></i>
               </span>
               <h3 style="display: inline; color: #b01321; margin-left: 20px;">
-                File Rejected
+                File Canceled
               </h3>
 
               <span style="float: right; margin-top: 20px;" class="d-label">
@@ -2131,7 +2131,7 @@ div.file-type-buttons label > input + img {
                 <i class="fa fa-download top-box top-box-red"></i>
               </span>
               <h3 style="display: inline; color: #b01321; margin-left: 20px;">
-                File Rejected
+                File Canceled
               </h3>
 
               <span style="float: right; margin-top: 20px;" class="d-label">
