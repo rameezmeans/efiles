@@ -9,7 +9,7 @@
 	@if(!Auth::user()->is_admin())
     @php 
 
-	$feeds = NewsFeed::where('active', 1)
+	$feeds = ECUApp\SharedCode\Models\NewsFeed::where('active', 1)
         ->whereNull('subdealer_group_id')
         ->where('front_end_id', 3)
         ->get();
@@ -17,7 +17,7 @@
         foreach($feeds as $live){
 			$feed = $live;
         }
-		
+
 	  $OnlineStatus = ECUApp\SharedCode\Models\IntegerMeta::where('key', 'etf_online_status')->first()->value;
     @endphp
 	@if($feed)
