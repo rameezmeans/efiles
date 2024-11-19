@@ -60,8 +60,6 @@ class LoginController extends Controller
         ->where('front_end_id', 3)
         ->get();
 
-        
-        
         foreach($feeds as $feed){
             Session::put('feed', $feed);
         }
