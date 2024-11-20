@@ -3,6 +3,8 @@
 
 @section('pagespecificstyles')
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/css/intlTelInput.css">
+
 <style>
 
 .select2-search__field {
@@ -11,6 +13,14 @@
 
 .select2-container--default {
     width: 100% !important;
+}
+
+.iti{
+    display: block !important;
+}
+
+.iti__selected-country{
+    background: transparent !important;
 }
 
 body {
@@ -474,8 +484,14 @@ body {
 @endsection
 
 @section('pagespecificscripts')
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/js/intlTelInput.min.js"></script>
 <script type="text/javascript">
     $( document ).ready(function() {
+
+        const input = document.querySelector("#exampleInputPhone1");
+            window.intlTelInput(input, {
+            loadUtilsOnInit: "https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/js/utils.js",
+        });
 
         $(".select-dropdown-multi").select2({
 			closeOnSelect : false,

@@ -12,6 +12,8 @@
     })(window,document,'script','dataLayer','GTM-MB5GNJ4V');</script>
     <!-- End Google Tag Manager -->
 
+    
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="url" content="{{env('APP_URL')}}" data-user="{{Auth::user()->id}}">
@@ -33,6 +35,7 @@
 
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> --}}
     <script src="{{url('vendor/ecutech-code/js/jquery.min.js')}}"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/js/intlTelInput.min.js"></script> --}}
 
     {{-- <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script> --}}
     <script src="{{url('vendor/ecutech-code/js/dropzone.min.js')}}"></script>
