@@ -323,8 +323,6 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {   
 
-        dd($this->getCode($data['country']));
-        
         $unique = User::where('email', $data['email'])->where('front_end_id', 3)->first();
 
         // if($data['evc_customer_id']){
@@ -439,10 +437,12 @@ class RegisterController extends Controller
             Session::put('feed', $feed);
         }
 
+        $phone = $this->getCode($data['country']).$data['phone'];
+
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'phone' => $data['phone'],
+            'phone' => $phone,
             'language' => $data['language'],
             'address' => $data['address'],
             'zip' => $data['zip'],
