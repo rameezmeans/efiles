@@ -63,7 +63,7 @@ body {
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputPhone1">Phone *</label>
-                                <input type="text" value="{{old('phone')}}" id="exampleInputPhone1" name="phone" class="form-control @error('phone') is-invalid @enderror" required="required" placeholder="{{__('Phone')}}">
+                                <input type="tel" value="{{old('phone')}}" id="exampleInputPhone1" name="phone" class="form-control @error('phone') is-invalid @enderror" required="required" placeholder="{{__('Phone')}}">
                                 @error('phone')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
