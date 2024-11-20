@@ -81,6 +81,7 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {   
+        dd($data);
         $unique = User::where('email', $data['email'])->where('front_end_id', 3)->first();
 
         // if($data['evc_customer_id']){
