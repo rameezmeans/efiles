@@ -70,6 +70,7 @@ body {
                                     </span>
                                 @enderror
                             </div>
+                            <input type="hidden" id="code" name="code" value="1">
                             <div class="form-group">
                             <label for="exampleInputEmail1">Email *</label>
                                 <input type="text" value="{{old('email')}}" id="exampleInputEmail1" name="email" class="form-control @error('email') is-invalid @enderror" required="required" placeholder="{{__('Email')}}">
@@ -491,6 +492,27 @@ body {
         const input = document.querySelector("#exampleInputPhone1");
             window.intlTelInput(input, {
             loadUtilsOnInit: "https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/js/utils.js",
+        });
+
+        $('.iti__country-list li').click(function(){
+            console.log('here we are'); 
+            let code = $(this).data('dial-code');
+            console.log(code);
+            $("#code").val(code);
+        });
+
+        // $("#exampleInputPhone1").intlTelInput({
+        //     preferredCountries: ["us", "ca"],
+        //     separateDialCode: true,
+        //     initialCountry: ""
+        // }).on('countrychange', function (e, countryData) {
+        //     console.log('here we are');
+        //     $("#code").val(($("#exampleInputPhone1").intlTelInput("getSelectedCountryData").dialCode));
+
+        // });
+
+        $('.iti__selected-country').on('change', function() {
+            alert('Do stuff...');
         });
 
         $(".select-dropdown-multi").select2({
