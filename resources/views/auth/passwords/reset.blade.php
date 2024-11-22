@@ -63,9 +63,9 @@
                         <div class="form-group">
                             <label for="exampleInputEmail1">Confirm Password</label>
 
-                            <div class="col-md-6">
+                            
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                            </div>
+                            
                         </div>
 
                         <div class="row mb-0">
