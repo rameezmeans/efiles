@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use ECUApp\SharedCode\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Illuminate\Support\Str;
 
 class ResetPasswordController extends Controller
 {
@@ -32,14 +34,14 @@ class ResetPasswordController extends Controller
     {
         $this->setUserPassword($user, $password);
 
-        dd($user);
+        $userActual = User::where('email', $user->email)->where('front_end_id', 3)->first();
 
-        $user->setRememberToken(Str::random(60));
+        $userActual->setRememberToken(Str::random(60));
 
-        $user->save();
+        $userActual->save();
 
-        event(new PasswordReset($user));
+        event(new PasswordReset($userActual));
 
-        $this->guard()->login($user);
+        $this->guard()->login($userActual);
     }
 }
