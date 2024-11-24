@@ -32,7 +32,7 @@ class ResetPasswordController extends Controller
 
     protected function resetPassword($user, $password)
     {
-        $userActual = User::where('email', $user->email)->where('front_end_id', 2)->first();
+        $userActual = User::where('email', $user->email)->where('front_end_id', 3)->first();
 
         $this->setUserPassword($userActual, $password);
 

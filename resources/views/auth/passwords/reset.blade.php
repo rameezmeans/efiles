@@ -24,7 +24,7 @@
 						@if(Session::has('danger'))
 							<p class="note-danger">{{ Session::get('danger') }} </p>
 						@endif
-						<a class="black" href="#"><p><i class="fa fa-angle-left p-r-5"></i>Back to Homepage</p></a>
+						<a class="black" href="{{url('')}}"><p><i class="fa fa-angle-left p-r-5"></i>Back to Homepage</p></a>
 						<h2>Reset Your Password</h2>
 						<p>Please provide Password and Confirm it.</p>
                     <form method="POST" action="{{ route('password.update') }}">
@@ -79,12 +79,23 @@
                 </div>
             </div>
         </div>
-        <div class="grid-item" style="position: static; padding: 0px;">
+        <div class="grid-item now" style="position: static; padding: 0px;">
 
-            <div class="container-img" style="background-image:url('vendor/ecutech-code/images/login-hero-image.jpg')">
+            <div class="container-img now" style="background-image:url(vendor/ecutech-code/images/login-hero-image.jpg)">
             </div>
         </div>
         <div class="cut"></div>
     </div>
 </div>
+@endsection
+
+@section('pagespecificscripts')
+<script type="text/javascript">
+
+    // $( document ).ready(function(event) {
+    //     $(".container-img").css({background-image: 'url(vendor/ecutech-code/images/login-hero-image.jpg' });
+
+    // });
+
+</script>
 @endsection

@@ -24,7 +24,7 @@
 						@if(Session::has('danger'))
 							<p class="note-danger">{{ Session::get('danger') }} </p>
 						@endif
-						<a class="black" href="#"><p><i class="fa fa-angle-left p-r-5"></i>Back to Homepage</p></a>
+						<a class="black" href="{{url('')}}"><p><i class="fa fa-angle-left p-r-5"></i>Back to Homepage</p></a>
 						<h2>Welcome Back!</h2>
 						<p>Start managing your ECU files faster and better.</p>
 						<form action="{{ route('login') }}" method="POST" style="margin-top: 5%;">
@@ -52,10 +52,10 @@
 					</div>
 				</div>
             </div>
-            <div class="grid-item" style="position: static; padding: 0px;">
+            <div class="grid-item now" style="position: static; padding: 0px;">
 
-                <div class="container-img" style="background-image:url('vendor/ecutech-code/images/login-hero-image.jpg')">
-                </div>
+				<div class="container-img" style="background-image:url(vendor/ecutech-code/images/login-hero-image.jpg)">
+				</div>
             </div>
             <div class="cut"></div>
         </div>

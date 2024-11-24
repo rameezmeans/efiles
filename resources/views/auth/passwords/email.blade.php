@@ -28,7 +28,7 @@
                         </div>
                     @endif
 
-                    <a class="black" href="#"><p><i class="fa fa-angle-left p-r-5"></i>Back to Homepage</p></a>
+                    <a class="black" href="{{url('')}}"><p><i class="fa fa-angle-left p-r-5"></i>Back to Homepage</p></a>
 						<h2>Reset Your Password</h2>
 						<p>Please provde Email.</p>
 
@@ -62,7 +62,7 @@
         </div>
         <div class="grid-item" style="position: static; padding: 0px;">
 
-            <div class="container-img" style="background-image:url('vendor/ecutech-code/images/login-hero-image.jpg')">
+            <div class="container-img" style="background-image:url(vendor/ecutech-code/images/login-hero-image.jpg)">
             </div>
         </div>
         <div class="cut"></div>
