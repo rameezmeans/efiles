@@ -144,7 +144,7 @@ class InvoicesController extends Controller
             ->filename($invoice->invoice_id)
             ->addItems($items)
             ->notes($notes)
-            ->logo(public_path('/../../backend/public/company_logos/'.$account->companys_logo))
+            ->logo(public_path('/company_logos/'.$account->companys_logo))
             // You can additionally save generated invoice to configured disk
             ->save('public');
 
