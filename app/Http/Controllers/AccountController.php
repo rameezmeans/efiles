@@ -33,9 +33,11 @@ class AccountController extends Controller
         $user = User::findOrFail($request->user_id);
         $template = EmailTemplate::where('slug', 'delete_email')->where('front_end_id', 3)->first();
         $html = $template->html;
-        $html = str_replace("#delete_url", route('delete-acount', $user->id) ,$html);
+        $html = str_replace("#delete_url", route('delete-account', $user->id) ,$html);
 
         \Mail::to($user->email)->send(new \App\Mail\AllMails([ 'html' => $html, 'subject' => 'E-tuningFiles: Delete Account']));
+
+        return redirect()->route('account')->with('success', 'email sent, successfully!');
 
     }
 
