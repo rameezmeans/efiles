@@ -1150,7 +1150,7 @@ select {
                     <div id="delete" class="tab-pane fade">
                         <div class="col-xl-12 col-lg-12 col-md-12 m-t-20" >
                             If You want to delete Your account. Please click the button below.
-                        <form method="post" action="{{ route('delete-account') }}" class="m-t-20">
+                        <form method="post" action="{{ route('delete-account-email') }}" class="m-t-20">
                             
                             @csrf
 
