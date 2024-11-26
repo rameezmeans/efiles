@@ -44,7 +44,7 @@ class AccountController extends Controller
     public function deleleAccount($id){
         $user = User::findOrFail($id);
         $user->delete();
-        return redirect()->route('sign-up')->with('success', 'account deleted, successfully!');
+        return redirect()->route('register')->with('success', 'account deleted, successfully!');
     }
 
     public function boschECU(){
