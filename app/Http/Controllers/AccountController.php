@@ -42,8 +42,14 @@ class AccountController extends Controller
     }
 
     public function deleleAccount($id){
+        
+        $loggedInUser = Auth::user();
         $user = User::findOrFail($id);
-        $user->delete();
+
+        if($user->id == $loggedInUser){
+            $user->delete();
+        }
+
         return redirect()->route('register')->with('success', 'account deleted, successfully!');
     }
 
