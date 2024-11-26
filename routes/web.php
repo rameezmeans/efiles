@@ -173,8 +173,8 @@ Route::get('/success', [App\Http\Controllers\PaymentsController::class, 'success
 Route::get('/success_package', [App\Http\Controllers\PaymentsController::class, 'successPackage'])->name('checkout.success.package');
 Route::get('/cancel', [App\Http\Controllers\PaymentsController::class, 'cancel'])->name('checkout.cancel');
 
-Route::post('delete-account-email', [App\Http\Controllers\AccountController::class, 'deleleAccountEmail'])->name('delete-account-email');
-Route::post('delete-account', [App\Http\Controllers\AccountController::class, 'deleleAccount'])->name('delete-account');
+Route::post('delete_account_email', [App\Http\Controllers\AccountController::class, 'deleleAccountEmail'])->name('delete-account-email');
+Route::get('delete_account/{id}', [App\Http\Controllers\AccountController::class, 'deleleAccount'])->name('delete-account');
 
 Route::post('get_tool_icons', [App\Http\Controllers\AccountController::class, 'getToolsIcons'])->name('get-tool-icons');
 
