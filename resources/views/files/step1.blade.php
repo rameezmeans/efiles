@@ -396,7 +396,7 @@
                                   <label for="exampleInputCompanyLP1">Gear Box ECU Type *</label>
                                   
                                   <select name="gearbox_ecu" id="gearbox_ecu" class="select-dropdown-multi form-control">
-									  <option value=""></option>
+									                  <option value=""></option>
                                     @foreach($gearboxECUs as $ecu)
                                         <option value="{{$ecu->id}}">{{$ecu->type}}</option>
                                     @endforeach
@@ -450,29 +450,7 @@
                         </div>
                     </div>
                 </div>
-				
-				<div class="row post-row hide" id="acm_box">
-
-                  <div class="col-xl-3 col-lg-3 col-md-3 heading-column">
-                      <div class="heading-column-box">
-                          <h3>Upload ACM MCM/ECM File</h3>
-                          <p>Please upload ACM MCM/ECM file here. In Case of Form Failed, Please upload it again.</p>
-                      </div>
-                  </div>
-
-                  <div class="col-xl-6 col-lg-6 col-md-8 type-column">
-                      <div class="row">
-                          <div class="col-xl-12 col-lg-12 col-md-12 ">
-                              
-                            <input type="file" name="acm_file" id="acm_file" value="{{ old('acm_file') }}">
-                             
-                          </div>
-                      </div>
-                      
-                  </div>
-
-              </div>
-
+                
                 <div class="row post-row hide" id="acm_box">
 
                   <div class="col-xl-3 col-lg-3 col-md-3 heading-column">
@@ -811,26 +789,6 @@
             let brand = $('#brand').val();
             let model = $('#model').val();
             let version = $('#version').val();
-			
-			$.ajax({
-                url: "/get_type",
-                type: "POST",
-                headers: {
-                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    'model': model,
-                    'brand': brand,
-                    'version': version,
-                    'engine': engine,
-                },
-                success: function(response) {
-                    console.log(response);
-                    if(response.type == 'truck' || response.type == 'agri' || response.type == 'machine'){
-                      $('#acm_box').removeClass('hide');
-                    }
-                }
-            });
 
             $.ajax({
                 url: "/get_type",
