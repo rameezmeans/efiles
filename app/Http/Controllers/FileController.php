@@ -974,6 +974,29 @@ class FileController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+    public function getType(Request $request){
+        
+        $model = $request->model;
+        $brand = $request->brand;
+        $version = $request->version;
+        $engine = $request->engine;
+
+        $vehicle = Vehicle::where('Make', '=', $brand)
+        ->where('Model', '=', $model)
+        ->where('Generation', '=', $version)
+        ->where('Engine', '=', $engine)
+        ->whereNotNull('Brand_image_url')
+        ->first();
+
+        if($vehicle){
+            return response()->json( [ 'type' => $vehicle->type ]);
+        }
+        else{
+            return response()->json( [ 'type' => 'no type' ]);
+        }
+
+    }
+
     public function getECUs(Request $request)
     {
         $model = $request->model;

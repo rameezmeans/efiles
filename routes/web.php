@@ -25,6 +25,10 @@ Route::get('/info', function () {
     phpinfo();
 });
 
+Route::post('/get_type', function () {
+
+});
+
 Route::get('/test', function () {
 
     // $tempFileID = 867;
