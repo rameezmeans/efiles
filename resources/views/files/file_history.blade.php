@@ -37,7 +37,7 @@
               <th>Status</th>
               <th>Created At</th>
               <th>Credits</th>
-              <th>Vin</th>
+              <th>License Plate</th>
               <th>Customer</th>
             </tr>
           </thead>
@@ -49,11 +49,11 @@
                     {{$file->vehicle()->Name}} {{ $file->engine }} {{ $file->vehicle()->TORQUE_standard }}
                   </td>
                   <td>
-                    <span class="label @if($file->status == 'rejected') label-danger @elseif($file->status == 'completed') label-success @elseif($file->status == 'submitted') label-grey @else label-orange @endif">{{$file->status}}</span>
+                    <span class="label @if($file->status == 'rejected') label-danger @elseif($file->status == 'completed') label-success @elseif($file->status == 'submitted') label-grey @else label-orange @endif">@if($file->status == 'rejected') Canceled @else{{$file->status}}@endif</span>
                   </td>
                   <td>{{$file->created_at->diffForHumans();}}</td>
                   <td>{{$file->credits}} Credits</td>
-                  <td>@if($file->vin != ''){{$file->vin}} @else No Name @endif</td>
+                  <td>@if($file->license_plate != ''){{$file->license_plate}} @else No Name @endif</td>
                   <td>@if($file->name != ''){{$file->name}} @else No Name @endif</td>
                 </tr>
             @endforeach

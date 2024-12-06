@@ -693,18 +693,20 @@ p.tuning-resume {
 
               }
 
-              Swal.fire(
-                              note,
-                              comment,
-                              'warning'
-                              );
+              // let note = '{{__('Please Read Very Carefully')}}!!';
 
-                          $('.swal2-confirm').attr("disabled", true);
+              // Swal.fire(
+              //                 note,
+              //                 comment,
+              //                 'warning'
+              //                 );
 
-                          setTimeout(
-                              function() {
-                                  $('.swal2-confirm').attr("disabled", false);
-                          }, 5000);
+              //             $('.swal2-confirm').attr("disabled", true);
+
+              //             setTimeout(
+              //                 function() {
+              //                     $('.swal2-confirm').attr("disabled", false);
+              //             }, 5000);
 
               $('.comments-area-'+service_id).removeClass('hide');
 

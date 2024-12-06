@@ -85,7 +85,7 @@ Route::get('/login_as/{id}', [App\Http\Controllers\HomeController::class, 'login
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::post('/clear_feed', [App\Http\Controllers\HomeController::class, 'clearFeed'])->name('clear-feed');
-Route::post('/pusher/auth', [MessagesController::class, 'pusherAuth'])->name('pusher.auth');
+// Route::post('/pusher/auth', [MessagesController::class, 'pusherAuth'])->name('pusher.auth');
 
 Route::get('/account', [App\Http\Controllers\AccountController::class, 'index'])->name('account');
 Route::post('/edit_account', [App\Http\Controllers\AccountController::class, 'editAccount'])->name('edit-account');
@@ -105,6 +105,7 @@ Route::post('/get_models', [App\Http\Controllers\FileController::class, 'getMode
 Route::post('/get_versions', [App\Http\Controllers\FileController::class, 'getVersions'])->name('get-versions');
 Route::post('/get_engines', [App\Http\Controllers\FileController::class, 'getEngines'])->name('get-engines');
 Route::post('/get_ecus', [App\Http\Controllers\FileController::class, 'getECUs'])->name('get-ecus');
+Route::post('/get_type', [App\Http\Controllers\FileController::class, 'getType'])->name('get-type');
 Route::get('/stages', [App\Http\Controllers\FileController::class, 'step3'])->name('step3');
 Route::post('/post_stages', [App\Http\Controllers\FileController::class, 'postStages'])->name('post-stages');
 Route::post('get_upload_comments', [App\Http\Controllers\FileController::class, 'getUploadComments'])->name('get-upload-comments');
@@ -145,7 +146,8 @@ Route::post('/viva_payment_file', [App\Http\Controllers\PaymentsController::clas
 Route::post('offer_checkout_viva', [App\Http\Controllers\PaymentsController::class, 'offerCheckoutViva'])->name('buy.offer.viva');
 Route::post('/viva_payment', [App\Http\Controllers\PaymentsController::class, 'redirectViva'])->name('checkout.viva');
 
-Route::get('/bosch-ecu', [App\Http\Controllers\AccountController::class, 'boschECU'])->name('bosch-ecu');
+Route::get('/bosch-ecu', [App\Http\Controllers\HomeController::class, 'bosch'])->name('bosch-ecu');
+// Route::get('/bosch-ecu', [App\Http\Controllers\AccountController::class, 'boschECU'])->name('bosch-ecu');
 Route::get('/evc_credit_shop', [App\Http\Controllers\EVCPackagesController::class, 'packages'])->name('evc-credits-shop');
 Route::post('buy_evc_package', [App\Http\Controllers\EVCPackagesController::class, 'buyEVCPackage'])->name('buy.evc.package');
 Route::get('/evc_history', [App\Http\Controllers\EVCPackagesController::class, 'history'])->name('evc-history');
@@ -171,6 +173,9 @@ Route::post('/checkout_paypal', [App\Http\Controllers\PaymentsController::class,
 Route::get('/success', [App\Http\Controllers\PaymentsController::class, 'success'])->name('checkout.success');
 Route::get('/success_package', [App\Http\Controllers\PaymentsController::class, 'successPackage'])->name('checkout.success.package');
 Route::get('/cancel', [App\Http\Controllers\PaymentsController::class, 'cancel'])->name('checkout.cancel');
+
+Route::post('delete_account_email', [App\Http\Controllers\AccountController::class, 'deleleAccountEmail'])->name('delete-account-email');
+Route::get('delete_account/{id}', [App\Http\Controllers\AccountController::class, 'deleleAccount'])->name('delete-account');
 
 Route::post('get_tool_icons', [App\Http\Controllers\AccountController::class, 'getToolsIcons'])->name('get-tool-icons');
 

@@ -8,7 +8,18 @@
     </header>
 	@if(!Auth::user()->is_admin())
     @php 
-      $feed = Illuminate\Support\Facades\Session::get('feed');  
+
+	$feeds = ECUApp\SharedCode\Models\NewsFeed::where('active', 1)
+        ->whereNull('subdealer_group_id')
+        ->where('front_end_id', 3)
+        ->get();
+
+		$feed = NULL;
+
+        foreach($feeds as $live){
+			$feed = $live;
+        }
+
 	  $OnlineStatus = ECUApp\SharedCode\Models\IntegerMeta::where('key', 'etf_online_status')->first()->value;
     @endphp
 	@if($feed)
@@ -21,10 +32,10 @@
 	@endif
 
 	<div class="box @if($OnlineStatus == 0) box-danger @else box-success @endif" style="height: 100px !important;">
-		<p style="font-size: 10px;">24h / 7d</p>
+		@if($OnlineStatus == 1)<p style="font-size: 10px;">24h / 7d</p>@endif
 		
 		<p>{{__('Automatic File Service Status')}}:</p>
-		<span class="dot @if($OnlineStatus == 0) dot-danger @else dot-success @endif"></span><span>@if($OnlineStatus == 0) {{'Not Online'}} @else {{'Online'}} @endif</span>
+		<span class="dot @if($OnlineStatus == 0) dot-danger @else dot-success @endif"></span><span>@if($OnlineStatus == 0) {{'Offline'}} @else {{'Online'}} @endif</span>
 		
 	</div>
 	

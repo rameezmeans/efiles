@@ -9,8 +9,10 @@
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-W3ZKMF4C');</script>
+    })(window,document,'script','dataLayer','GTM-MB5GNJ4V');</script>
     <!-- End Google Tag Manager -->
+
+    
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -29,10 +31,13 @@
     <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-css/1.4.6/select2-bootstrap.min.css">
     {{-- <link href="{{url('/css/all.min.css')}}" rel="stylesheet"> --}}
 
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> --}}
     <script src="{{url('vendor/ecutech-code/js/jquery.min.js')}}"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/js/intlTelInput.min.js"></script> --}}
 
     {{-- <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script> --}}
     <script src="{{url('vendor/ecutech-code/js/dropzone.min.js')}}"></script>
@@ -42,6 +47,7 @@
     
     {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" type="text/css" /> --}}
     <link rel="stylesheet" href="{{ url('vendor/ecutech-code/css/datatables.css') }}" type="text/css" />
+    
 
     {{-- <script src="https://phpcoder.tech/multiselect/js/jquery.multiselect.js"></script> --}}
     {{-- <link rel="stylesheet" href="https://phpcoder.tech/multiselect/css/jquery.multiselect.css"> --}}
@@ -56,14 +62,14 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script> --}}
     <script src="{{url('vendor/ecutech-code/js/Chart.js')}}"></script>
 
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
 
     @yield('pagespecificstyles')    
 </head>
 <body>
 
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W3ZKMF4C"
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MB5GNJ4V"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 

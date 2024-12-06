@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use ECUApp\SharedCode\Models\Language;
 use ECUApp\SharedCode\Models\Credit;
+use ECUApp\SharedCode\Models\EmailTemplate;
+use ECUApp\SharedCode\Models\File;
 use ECUApp\SharedCode\Models\Tool;
 use ECUApp\SharedCode\Models\User;
 use ECUApp\SharedCode\Models\UserTool;
@@ -26,10 +28,34 @@ class AccountController extends Controller
         $this->middleware('auth');
     }
 
+    public function deleleAccountEmail(Request $request){
+
+        $user = User::findOrFail($request->user_id);
+        $template = EmailTemplate::where('slug', 'delete_email')->where('front_end_id', 3)->first();
+        $html = $template->html;
+        $html = str_replace("#delete_url", route('delete-account', $user->id) ,$html);
+
+        \Mail::to($user->email)->send(new \App\Mail\AllMails([ 'html' => $html, 'subject' => 'E-tuningFiles: Delete Account']));
+
+        return redirect()->route('account')->with('success', 'email sent, successfully!');
+
+    }
+
+    public function deleleAccount($id){
+        
+        $loggedInUser = Auth::user();
+        $user = User::findOrFail($id);
+
+        if($user->id == $loggedInUser){
+            $user->delete();
+        }
+
+        return redirect()->route('register')->with('success', 'account deleted, successfully!');
+    }
+
     public function boschECU(){
         
         $user = Auth::user();
-
         return view('bosch');
     }
 
@@ -109,6 +135,15 @@ class AccountController extends Controller
         
         $user->evc_customer_id = $request->evc_customer_id;
         $user->save();
+
+        $files = File::where('user_id', $user->id)->get();
+
+        foreach($files as $file){
+            $file->name = $user->name;
+            $file->phone = $user->phone;
+            $file->email = $user->email;
+            $file->save();
+        }
 
         $data []= ['name' => 'first_name','contents' => $user->name];
         

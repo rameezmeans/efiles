@@ -13,6 +13,7 @@ use ECUApp\SharedCode\Models\Comment;
 use ECUApp\SharedCode\Models\Credit;
 use ECUApp\SharedCode\Models\EmailReminder;
 use ECUApp\SharedCode\Models\EngineerFileNote;
+use ECUApp\SharedCode\Models\ECU;
 use ECUApp\SharedCode\Models\File;
 use ECUApp\SharedCode\Models\FileFeedback;
 use ECUApp\SharedCode\Models\FileInternalEvent;
@@ -272,6 +273,34 @@ class FileController extends Controller
         $file->customer_internal_notes = $request->customer_internal_notes;
         $file->save();
         return redirect()->back()->with('success', 'File successfully Edited!');
+    }
+	
+	    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getType(Request $request){
+        
+        $model = $request->model;
+        $brand = $request->brand;
+        $version = $request->version;
+        $engine = $request->engine;
+
+        $vehicle = Vehicle::where('Make', '=', $brand)
+        ->where('Model', '=', $model)
+        ->where('Generation', '=', $version)
+        ->where('Engine', '=', $engine)
+        ->whereNotNull('Brand_image_url')
+        ->first();
+
+        if($vehicle){
+            return response()->json( [ 'type' => $vehicle->type ]);
+        }
+        else{
+            return response()->json( [ 'type' => 'no type' ]);
+        }
+
     }
 
     /**
@@ -883,13 +912,15 @@ class FileController extends Controller
     public function step1(){
 
         $user = Auth::user();
+		
+		$gearboxECUs = ECU::all();
 
         $masterTools = $this->filesMainObj->getMasterTools($user);
         $slaveTools = $this->filesMainObj->getSlaveTools($user);
 
         $brands = $this->filesMainObj->getBrands();
 
-        return view('files.step1', ['user' => $user, 'brands' => $brands,'masterTools' => $masterTools, 'slaveTools' => $slaveTools]);
+        return view('files.step1', ['gearboxECUs' => $gearboxECUs, 'user' => $user, 'brands' => $brands,'masterTools' => $masterTools, 'slaveTools' => $slaveTools]);
     }
 
     /**
@@ -965,7 +996,13 @@ class FileController extends Controller
 
         $file = TemporaryFile::findOrFail($request->file_id);
         $vehicle = $file->vehicle();
-        $vehicleType = $vehicle->type;
+        
+        if($vehicle != NULL){
+            $vehicleType = $vehicle->type;
+        }
+        else{
+            return redirect()->route('upload')->with('success', 'There is no Vehilce with Specification you entered.');
+        }
 
         $stages = $this->filesMainObj->getStagesForStep3($this->frontendID, $vehicleType);
         $options = $this->filesMainObj->getOptionsForStep3($this->frontendID, $vehicleType);
