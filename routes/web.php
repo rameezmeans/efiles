@@ -185,6 +185,7 @@ Route::post('get_tool_icons', [App\Http\Controllers\AccountController::class, 'g
 
 Route::get('/price-list', [App\Http\Controllers\PricelistController::class, 'index'])->name('price-list');
 Route::get('/dtc_lookup', [App\Http\Controllers\HomeController::class, 'dtcLookup'])->name('dtc-lookup');
+Route::post('/get_dtc_desc', [App\Http\Controllers\HomeController::class, 'getDTCDesc'])->name('get-dtc-desc');
 
 Route::get('/create_test_customer/{id}', [App\Http\Controllers\PaymentsController::class, 'createTestElorusCustomer'])->name('create-customer-elorus');
 Route::get('/create_elorus_invoice/{user_id}/{credit_id}', [App\Http\Controllers\PaymentsController::class, 'createElorusInvoice'])->name('create-elorus-invoice');

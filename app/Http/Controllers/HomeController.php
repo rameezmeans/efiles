@@ -11,7 +11,7 @@ use ECUApp\SharedCode\Models\BoschNumber;
 use ECUApp\SharedCode\Models\File;
 use ECUApp\SharedCode\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller {
@@ -32,6 +32,15 @@ class HomeController extends Controller {
         
         return view('bosch', [
             'boschRecords' => $boschRecords, 'user' => $user]);
+    }
+
+    public function getDTCDesc(Request $request) {
+
+        $dtcCode = $request->dtc_lookup_code;
+        $record = DTCLookup::where('code', $dtcCode)->first();
+        
+        return view('dtc_lookup', [
+            'record' => $record]);
     }
 
     public function dtcLookup() {
