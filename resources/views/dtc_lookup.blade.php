@@ -29,23 +29,26 @@
             <div class="col-md-6">
 
               <div class="card">
-                @if($record)
+                
+                @if($record != NULL)
 
-                <div class="card-header">
-                  <div style="display: inline-flex;">
-                    <h4>{{$record->code}}</h4>
+                  <div class="card-header">
+                    <div style="display: inline-flex;">
+                      <h4>{{$record->code}}</h4>
+                    </div>
                   </div>
-                </div>
-                <div class="card-content">
-                  {{$record->desc}}
-                </div>
+                  <div class="card-content">
+                    {{$record->desc}}
+                  </div>
 
                 @else
+
                   <div class="card-header">
                     <div style="display: inline-flex;">
                       <h4>No Record Found!</h4>
                     </div>
                   </div>
+
                 @endif
 
               </div>
