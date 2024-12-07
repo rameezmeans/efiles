@@ -34,11 +34,11 @@
 
                   <div class="card-header">
                     <div style="display: inline-flex;">
-                      <h4>{{$record->code}}</h4>
+                      <h4>Code: {{$record->code}}</h4>
                     </div>
                   </div>
                   <div class="card-content">
-                    {{$record->desc}}
+                    Description: {{$record->desc}}
                   </div>
 
                 @else
