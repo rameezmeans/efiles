@@ -34,11 +34,11 @@
   
                     <div class="card-header">
                       <div style="display: inline-flex;">
-                        <h4>Code: {{$record->code}}</h4>
+                        <h4>Manufacturer Number: {{$record->manufacturer_number}}</h4>
                       </div>
                     </div>
                     <div class="card-content">
-                      Description: {{$record->desc}}
+                      ECU: {{$record->ecu}}
                     </div>
   
                   @elseif(is_string($record))
