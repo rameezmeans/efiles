@@ -20,7 +20,7 @@
             <div>
               <button class="btn btn-red btn-red-full text-center m-t-10" type="submit">GET DESCRIPTION</button>
             </div>
-        </form>
+          </form>
 
         @if(isset($record))
 
@@ -54,7 +54,7 @@
 
             </div>
           </div>
-          
+
         @endif
 
       </div>
