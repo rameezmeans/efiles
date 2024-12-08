@@ -21,11 +21,7 @@
               <button class="btn btn-red btn-red-full text-center m-t-10" type="submit">GET DESCRIPTION</button>
             </div>
         </form>
-
-        @php
-              dd($record);
-          @endphp
-          
+        
         @if(isset($record))
         
           @php
