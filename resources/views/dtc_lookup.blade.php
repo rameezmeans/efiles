@@ -54,29 +54,7 @@
 
             </div>
           </div>
-
-          @else
-
-          {{-- <div class="row m-t-20">
-            <div class="col-md-6">
-
-              <div class="card">
-                
-                
-
-                  <div class="card-header">
-                    <div style="display: inline-flex;">
-                      <h4>No Record Found!</h4>
-                    </div>
-                  </div>
-
-                
-
-              </div>
-
-            </div>
-          </div> --}}
-
+          
         @endif
 
       </div>
