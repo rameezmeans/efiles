@@ -22,6 +22,10 @@
             </div>
         </form>
 
+        @php
+              dd($record);
+          @endphp
+          
         @if(isset($record))
         
           @php

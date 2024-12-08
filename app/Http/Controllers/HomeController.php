@@ -38,7 +38,7 @@ class HomeController extends Controller {
 
         $dtcCode = $request->dtc_lookup_code;
         $record = DTCLookup::where('code', $dtcCode)->first();
-        
+        // dd($record);
         return view('dtc_lookup', [
             'record' => $record]);
     }
