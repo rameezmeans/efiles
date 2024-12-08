@@ -21,19 +21,15 @@
               <button class="btn btn-red btn-red-full text-center m-t-10" type="submit">GET DESCRIPTION</button>
             </div>
         </form>
-        
+
         @if(isset($record))
-        
-          @php
-              dd($record);
-          @endphp
 
           <div class="row m-t-20">
             <div class="col-md-6">
 
               <div class="card">
 
-                @if($record != NULL)
+                @if(is_object($record))
 
                   <div class="card-header">
                     <div style="display: inline-flex;">
@@ -44,7 +40,7 @@
                     Description: {{$record->desc}}
                   </div>
 
-                @elseif($record == NULL)
+                @elseif(is_string($record))
 
                   <div class="card-header">
                     <div style="display: inline-flex;">
