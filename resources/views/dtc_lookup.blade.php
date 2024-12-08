@@ -24,6 +24,9 @@
 
         @if(isset($record))
         
+          @php
+              dd($record);
+          @endphp
 
           <div class="row m-t-20">
             <div class="col-md-6">
