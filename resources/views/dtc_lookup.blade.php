@@ -41,7 +41,7 @@
                     Description: {{$record->desc}}
                   </div>
 
-                @else
+                @elseif($record == NULL)
 
                   <div class="card-header">
                     <div style="display: inline-flex;">
@@ -58,7 +58,7 @@
 
           @else
 
-          <div class="row m-t-20">
+          {{-- <div class="row m-t-20">
             <div class="col-md-6">
 
               <div class="card">
@@ -76,7 +76,7 @@
               </div>
 
             </div>
-          </div>
+          </div> --}}
 
         @endif
 
