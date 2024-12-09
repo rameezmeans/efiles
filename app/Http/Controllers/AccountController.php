@@ -46,7 +46,7 @@ class AccountController extends Controller
         $loggedInUser = Auth::user();
         $user = User::findOrFail($id);
 
-        if($user->id == $loggedInUser){
+        if($user->id == $loggedInUser->id){
             $user->delete();
         }
 
