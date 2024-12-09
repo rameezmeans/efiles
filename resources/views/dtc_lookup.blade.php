@@ -16,7 +16,7 @@
         <div class="i-content-block price-level">
           <form action="{{route('get-dtc-desc')}}" method="POST">
             @csrf
-            <input type="text" name="dtc_lookup_code" value="" class="form-control" placeholder="Enter DTC Code">
+            <input type="text" name="dtc_lookup_code" value="" class="form-control text-center" placeholder="Enter DTC Code">
             <div>
               <button class="btn btn-red btn-red-full text-center m-t-10" type="submit">GET DESCRIPTION</button>
             </div>
