@@ -612,7 +612,7 @@ class PaymentsController extends Controller
         }
 
         if($user->zohobooks_id == NULL){
-            $this->zohoMainObj->createZohoAccount($user);
+            $this->zohoMainObj->createZohoAccount($user, $invoice->id);
         }
 
         if($user->zohobooks_id){
@@ -626,7 +626,7 @@ class PaymentsController extends Controller
 
         if($user->zohobooks_id == NULL){
 
-            $this->zohoMainObj->createZohoAccount($user);
+            $this->zohoMainObj->createZohoAccount($user, $invoice->id);
         }
 
         if($type == 'stripe'){
