@@ -499,6 +499,8 @@ class PaymentsController extends Controller
 
             $file = File::findOrFail($request->file_id);
 
+            dd($request->all());
+
             $serviceCredits = $this->filesMainObj->getCredits($file);
 
             $credits = $serviceCredits - Auth::user()->credits->sum('credits');
