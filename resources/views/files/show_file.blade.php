@@ -2558,6 +2558,7 @@ div.file-type-buttons label > input + img {
                           @enderror
                       </div>
                       </div>
+                      
                       <div class="col-xl-6 col-lg-6 col-md-6">
                         <div class="form-group">
                           <label for="exampleInputName1">Plate *</label>
@@ -2569,6 +2570,7 @@ div.file-type-buttons label > input + img {
                           @enderror
                       </div>
                       </div>
+
                       <div class="col-xl-6 col-lg-6 col-md-6">
                         <div class="form-group">
                           <label for="exampleInputName1">Fuel</label>
