@@ -497,7 +497,7 @@ class PaymentsController extends Controller
 
         if($offer){ 
 
-            $file = TemporaryFile::findOrFail($request->file_id);
+            $file = File::findOrFail($request->file_id);
 
             $serviceCredits = $this->filesMainObj->getCredits($file);
 
