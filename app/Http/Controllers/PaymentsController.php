@@ -137,8 +137,8 @@ class PaymentsController extends Controller
 
         $serviceCredits = $this->filesMainObj->getCredits($file);
 
-        $creditsToBuy = $serviceCredits - Auth::user()->credits->sum('credits');
-        $creditsForFile = $serviceCredits;
+        $creditsToBuy = $request->credits_to_buy;
+        $creditsForFile =$request->credits_for_checkout;
 
         $fileID = $request->file_id;
 
@@ -267,8 +267,8 @@ class PaymentsController extends Controller
 
         $serviceCredits = $this->filesMainObj->getCredits($file);
 
-        $creditsToBuy = $request->credits_for_checkout;
-        $creditsForFile = $request->total_credits_to_submit;
+        $creditsToBuy = $request->total_credits_to_submit;
+        $creditsForFile = $request->credits_for_checkout;
 
         $fileID = $request->file_id;
 
