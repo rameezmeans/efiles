@@ -268,7 +268,7 @@ class PaymentsController extends Controller
         $serviceCredits = $this->filesMainObj->getCredits($file);
 
         $creditsToBuy = $request->credits_to_buy;
-        $creditsForCheckout =$request->credits_for_checkout;
+        $creditsForFile = $serviceCredits;
         $fileID = $request->file_id;
 
         $type = $request->type;
