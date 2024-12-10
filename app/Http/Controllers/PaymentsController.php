@@ -263,14 +263,15 @@ class PaymentsController extends Controller
 
     public function buyOffer(Request $request){
 
-        dd($request->all());
+        // dd($request->all());
 
         $file = File::findOrFail($request->file_id);
 
         $serviceCredits = $this->filesMainObj->getCredits($file);
 
         $creditsToBuy = $request->credits_to_buy;
-        $creditsForFile = $request->credits_for_checkout;
+        $creditsForFile = $request->total_credits_to_submit;
+        
         $fileID = $request->file_id;
 
         $type = $request->type;
