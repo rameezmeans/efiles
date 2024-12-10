@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Log;
 use Deyjandi\VivaWallet\VivaWallet;
 use Deyjandi\VivaWallet\Payment;
 use ECUApp\SharedCode\Models\Credit;
+use ECUApp\SharedCode\Models\File;
 use ECUApp\SharedCode\Models\TemporaryFile;
 use GuzzleHttp\Promise\Create;
 use Srmklive\PayPal\Facades\PayPal;
@@ -201,12 +202,12 @@ class PaymentsController extends Controller
 
     public function offerCheckout(Request $request) {
 
-        $file = TemporaryFile::findOrFail($request->file_id);
+        $file = File::findOrFail($request->file_id);
 
         $serviceCredits = $this->filesMainObj->getCredits($file);
 
-        $creditsToBuy = $serviceCredits - Auth::user()->credits->sum('credits');
-        $creditsForCheckout = $serviceCredits;
+        $creditsToBuy = $request->credits_to_buy;
+        $creditsForCheckout =$request->credits_for_checkout;
 
         $fileID = $request->file_id;
 
