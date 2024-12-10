@@ -408,7 +408,7 @@ class FileController extends Controller
         $proposedCredits = $this->filesMainObj->getOfferedCredits($file);
         $differece = $proposedCredits - $file->credits;
         
-        $price = Price::where('label', 'credit_price')->first();
+        $price = Price::where('label', 'credit_price')->where('front_end_id', 3)->first();
  
         $user = Auth::user();
  
