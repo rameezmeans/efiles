@@ -5,6 +5,7 @@ use ECUApp\SharedCode\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Twilio\Rest\Client;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +36,7 @@ Route::get('/test', function () {
 
     try {
 
-        $flag = \Mail::to('xrkalix@gmail.com1')->send(new \App\Mail\AllMails(['html' => "testing email", 'subject' => 'test email']));
+        $flag = Mail::to('xrkalix@gmail.com1')->send(new \App\Mail\AllMails(['html' => "testing email", 'subject' => 'test email']));
         dd($flag);
     }
     catch(\Exception $e){
