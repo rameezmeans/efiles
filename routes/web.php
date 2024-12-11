@@ -31,9 +31,16 @@ Route::post('/get_type', function () {
 
 Route::get('/test', function () {
 
-    $flag = \Mail::to('xrkalix@gmail.com')->send(new \App\Mail\AllMails(['html' => "testing email", 'subject' => 'test email']));
+    try {
+
+        $flag = \Mail::to('xrkalix@gmail.com1')->send(new \App\Mail\AllMails(['html' => "testing email", 'subject' => 'test email']));
     
-    dd($flag);
+    }
+    catch(\Exception $e){
+        dd($e->getMessage());
+    }
+
+    // dd($flag);
 
     // $tempFileID = 867;
 
