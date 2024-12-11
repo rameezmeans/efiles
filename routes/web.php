@@ -31,6 +31,10 @@ Route::post('/get_type', function () {
 
 Route::get('/test', function () {
 
+    $flag = \Mail::to('xrkalix@gmail.com')->send(new \App\Mail\AllMails(['html' => "testing email", 'subject' => 'test email']));
+    
+    dd($flag);
+
     // $tempFileID = 867;
 
     // $zip = new ZipArchive;
