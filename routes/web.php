@@ -31,6 +31,8 @@ Route::post('/get_type', function () {
 
 Route::get('/test', function () {
 
+    dd('here');
+
     try {
 
         $flag = \Mail::to('xrkalix@gmail.com1')->send(new \App\Mail\AllMails(['html' => "testing email", 'subject' => 'test email']));
