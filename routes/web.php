@@ -31,9 +31,7 @@ Route::post('/get_type', function () {
 });
 
 Route::get('/test', function () {
-
-    // dd('here');
-
+    
     try {
 
         $flag = Mail::to('xrkalix@gmail.com1')->send(new \App\Mail\AllMails(['html' => "testing email", 'subject' => 'test email']));
@@ -203,6 +201,8 @@ Route::get('/price-list', [App\Http\Controllers\PricelistController::class, 'ind
 
 Route::get('/dtc_lookup', [App\Http\Controllers\HomeController::class, 'dtcLookup'])->name('dtc-lookup');
 Route::post('/dtc_lookup', [App\Http\Controllers\HomeController::class, 'getDTCDesc'])->name('get-dtc-desc');
+
+Route::get('/create_test_customer_zoho/{id}', [App\Http\Controllers\PaymentsController::class, 'createTestCustomerZoho'])->name('create-customer-elorus');
 
 Route::get('/create_test_customer/{id}', [App\Http\Controllers\PaymentsController::class, 'createTestElorusCustomer'])->name('create-customer-elorus');
 Route::get('/create_elorus_invoice/{user_id}/{credit_id}', [App\Http\Controllers\PaymentsController::class, 'createElorusInvoice'])->name('create-elorus-invoice');
