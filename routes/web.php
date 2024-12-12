@@ -31,6 +31,20 @@ Route::post('/get_type', function () {
 });
 
 Route::get('/test', function () {
+
+    $invoiceSeq = ['sequence' => '2842182088147338435', 'ordering' => '-number'];
+
+    $res = Http::withHeaders([
+        'authorization' => 'Token 32fd4c0b90ac267da4c548ea4410b126db2eaf53',
+        'x-elorus-organization' => '1357060486331368800',
+        // 'X-elorus-demo' => true,
+    ])
+    ->get('https://api.elorus.com/v1.1/invoices/', $invoiceSeq);
+
+    $savedInvoices = json_decode($res->body())->results;
+
+    dd($savedInvoices);
+
     
     try {
 
