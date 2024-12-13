@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Twilio\Rest\Client;
 use Illuminate\Support\Facades\Mail;
+use Asciisd\Zoho\ZohoManager;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,15 @@ Route::get('/info', function () {
 });
 
 Route::post('/get_type', function () {
+
+});
+
+Route::get('/zoho_test', function () {
+
+    $response = ZohoManager::make(self::TESTING_MODULE);
+    $modules  = $response->getAllModules();
+
+    dd($modules);
 
 });
 
