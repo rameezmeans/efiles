@@ -402,6 +402,10 @@ class PaymentsController extends Controller
         $this->zohoMainObj->createTestZohoCustomer($user);
     }
 
+    public function generateAccessCode(){
+        $this->zohoMainObj->getAndSaveAccessToken();
+    }
+
     public function createTestInvoiceZoho($creditID){
 
         $invoice = Credit::findOrFail($creditID);
