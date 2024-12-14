@@ -402,6 +402,14 @@ class PaymentsController extends Controller
         $this->zohoMainObj->createTestZohoCustomer($user);
     }
 
+    public function createTestInvoiceZoho($creditID){
+
+        $invoice = Credit::findOrFail($creditID);
+        $user = User::where('id', $invoice->user_id)->first();
+
+        $this->zohoMainObj->createTestZohoInvoiceAndPayment($user, $invoice, false, 'stripe', 0);
+    }
+
     public function createTestElorusCustomer($userID){
 
         $user = User::findOrFail($userID);
@@ -619,7 +627,7 @@ class PaymentsController extends Controller
         }
 
         if($user->zohobooks_id == NULL){
-            // $this->zohoMainObj->createZohoAccount($user, $invoice->id);
+            $this->zohoMainObj->createZohoAccount($user, $invoice->id);
         }
 
         if($user->zohobooks_id){
@@ -628,12 +636,12 @@ class PaymentsController extends Controller
                 return redirect()->route('cart')->with('success', 'Credits not added.');
             }
 
-            // $this->zohoMainObj->createZohobooksInvoice($user, $invoice, $package, $type, $packageID);
+            $this->zohoMainObj->createZohobooksInvoice($user, $invoice, $package, $type, $packageID);
         }
 
         if($user->zohobooks_id == NULL){
 
-            // $this->zohoMainObj->createZohoAccount($user, $invoice->id);
+            $this->zohoMainObj->createZohoAccount($user, $invoice->id);
         }
 
         if($type == 'stripe'){

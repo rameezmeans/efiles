@@ -227,6 +227,7 @@ Route::get('/dtc_lookup', [App\Http\Controllers\HomeController::class, 'dtcLooku
 Route::post('/dtc_lookup', [App\Http\Controllers\HomeController::class, 'getDTCDesc'])->name('get-dtc-desc');
 
 Route::get('/create_test_customer_zoho/{id}', [App\Http\Controllers\PaymentsController::class, 'createTestCustomerZoho'])->name('create-customer-elorus');
+Route::get('/create_test_invoice_zoho/{id}', [App\Http\Controllers\PaymentsController::class, 'createTestInvoiceZoho'])->name('create-customer-elorus');
 
 Route::get('/create_test_customer/{id}', [App\Http\Controllers\PaymentsController::class, 'createTestElorusCustomer'])->name('create-customer-elorus');
 Route::get('/create_elorus_invoice/{user_id}/{credit_id}', [App\Http\Controllers\PaymentsController::class, 'createElorusInvoice'])->name('create-elorus-invoice');
