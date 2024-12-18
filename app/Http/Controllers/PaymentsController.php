@@ -391,9 +391,11 @@ class PaymentsController extends Controller
 
     }
 
-    public function createElorusInvoice($userID, $creditID){
-        $user = User::findOrFail($userID);
+    public function createElorusInvoice($creditID){
+
         $credit = Credit::findOrFail($creditID);
+        $user = User::findOrFail($credit->user_id);
+        
         $this->elorusMainObj->createElorusInvoice($credit, $user->elorus_id, $user, false);
     }
 
