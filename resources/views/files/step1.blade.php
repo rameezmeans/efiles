@@ -180,7 +180,7 @@
           </div>
 
           <div id="posting-file" class="@if($errors->any()) show @else hide @endif">
-            <form method="POST" action="{{ route('step2') }}" enctype="multipart/form-data">
+            <form id="step2" method="POST" action="{{ route('step2') }}" enctype="multipart/form-data">
                 <input type="hidden" name="temporary_file_id" id="temporary_file_id" value="{{ old('temporary_file_id') }}">
                 @csrf
 
@@ -843,7 +843,23 @@
         });
 
         $("#register_form_Register_Popup").click(function() {
-            console.log('popup here');
+            
+            Swal.fire(
+                  'Please Read Very Carefully.',
+                  'I understand etc etc.',
+                  'warning'
+                  );
+
+              $('.swal2-confirm').attr("disabled", true);
+
+              setTimeout(
+                
+              function() {
+
+                    document.getElementById('register_form_Register').click();
+
+              }, 2000);
+
         });
 
         $("span.file_type_area").click(function() {
