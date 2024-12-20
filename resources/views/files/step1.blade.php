@@ -853,12 +853,12 @@
               $('.swal2-confirm').attr("disabled", true);
 
               setTimeout(
-                
-              function() {
 
+              function() {
+                    console.log('okay clicked');
                     document.getElementById('register_form_Register').click();
 
-              }, 2000);
+              }, 1000);
 
         });
 
