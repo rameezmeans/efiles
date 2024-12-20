@@ -845,9 +845,8 @@
         $("#register_form_Register_Popup").click(function() {
             
           Swal.fire({
-            title: "I understand thing etc etc.?",
+            title: "I understand thing etc etc?",
             showDenyButton: true,
-            showCancelButton: true,
             confirmButtonText: "Next",
             denyButtonText: "Cancel"
           }).then((result) => {
@@ -857,7 +856,9 @@
               document.forms['step2'].submit();
 
             } else if (result.isDenied) {
-              
+            
+              window.location.href = "/home";
+
             }
 
           });
