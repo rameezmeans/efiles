@@ -850,7 +850,7 @@
                   'warning'
                   );
 
-              $('.swal2-confirm').attr("disabled", true);
+              
 
               setTimeout(
 
