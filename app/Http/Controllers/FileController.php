@@ -19,6 +19,7 @@ use ECUApp\SharedCode\Models\FileFeedback;
 use ECUApp\SharedCode\Models\FileInternalEvent;
 use ECUApp\SharedCode\Models\FileService;
 use ECUApp\SharedCode\Models\FileUrl;
+use ECUApp\SharedCode\Models\FrontEnd;
 use ECUApp\SharedCode\Models\Log;
 use ECUApp\SharedCode\Models\MagicEncryptedFile;
 use ECUApp\SharedCode\Models\Price;
@@ -897,7 +898,11 @@ class FileController extends Controller
     public function step1(){
 
         $user = Auth::user();
+
+        $frontend = FrontEnd::fineOrFail($user->front_end_id);
 		
+        $cautionText = $frontend->caution_text;
+
 		$gearboxECUs = ECU::all();
 
         $masterTools = $this->filesMainObj->getMasterTools($user);
@@ -905,7 +910,7 @@ class FileController extends Controller
 
         $brands = $this->filesMainObj->getBrands();
 
-        return view('files.step1', ['gearboxECUs' => $gearboxECUs, 'user' => $user, 'brands' => $brands,'masterTools' => $masterTools, 'slaveTools' => $slaveTools]);
+        return view('files.step1', [ 'cautionText' => $cautionText, 'gearboxECUs' => $gearboxECUs, 'user' => $user, 'brands' => $brands,'masterTools' => $masterTools, 'slaveTools' => $slaveTools]);
     }
 
     /**
