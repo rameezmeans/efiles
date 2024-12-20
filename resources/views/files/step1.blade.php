@@ -844,7 +844,7 @@
 
         $("#register_form_Register_Popup").click(function() {
             
-          swal({
+          swal.fire({
               title: "Please read Carefully.?",
               text: "I understand etc etc!",
               type: "warning",
