@@ -844,29 +844,22 @@
 
         $("#register_form_Register_Popup").click(function() {
             
-          swal.fire({
-              title: "Please read Carefully.?",
-              text: "I understand etc etc!",
-              type: "warning",
-              showCancelButton: true,
-              confirmButtonColor: '#DD6B55',
-              confirmButtonText: 'Next',
-              cancelButtonText: "Cancel",
-              closeOnConfirm: false,
-              closeOnCancel: false
-          },
-          function(isConfirm){
+          Swal.fire({
+            title: "I understand thing etc etc.?",
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Next",
+            denyButtonText: "Cancel"
+          }).then((result) => {
+            
+            if (result.isConfirmed) {
 
-            console.log(isConfirm);
-
-            if (isConfirm){
-              console.log('form thing submit');
               document.forms['step2'].submit();
 
-              } else {
+            } else if (result.isDenied) {
+              
+            }
 
-                  e.preventDefault();
-              }
           });
               
               
