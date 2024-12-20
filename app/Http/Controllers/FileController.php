@@ -592,6 +592,9 @@ class FileController extends Controller
         $flexLabel = Tool::where('label', 'Flex')->where('type', 'slave')->first();
 
         $engFile = RequestFile::where('request_file', $fileName)->where('file_id', $file->id)->first();
+
+        dd($engFile);
+        
         $engFile->downloaded_at = Carbon::now();
         $engFile->save();
         
