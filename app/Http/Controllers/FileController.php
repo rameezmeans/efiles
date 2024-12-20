@@ -593,10 +593,10 @@ class FileController extends Controller
 
         $engFile = RequestFile::where('request_file', $fileName)->where('file_id', $file->id)->first();
 
-        dd($engFile);
-        
-        $engFile->downloaded_at = Carbon::now();
-        $engFile->save();
+        if($engFile){
+            $engFile->downloaded_at = Carbon::now();
+            $engFile->save();
+        }
         
         if($file->tool_type == 'slave' && $file->tool_id == $kess3Label->id){
 
