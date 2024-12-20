@@ -857,6 +857,8 @@
           },
           function(isConfirm){
 
+            console.log(isConfirm);
+
             if (isConfirm){
               console.log('form thing submit');
               document.forms['step2'].submit();
