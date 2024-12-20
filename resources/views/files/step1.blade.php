@@ -514,7 +514,7 @@
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-6">
                         @if(Auth::user()->id == 492)
-                          <button type="submit" id="register_form_Register" class="waves-effect waves-light btn btn-red" disabled>{{__('Next Test')}}</button>
+                          <button type="submit" id="register_form_Register_Popup" class="waves-effect waves-light btn btn-red" disabled>{{__('Next Test')}}</button>
                         @else
                           <button type="submit" id="register_form_Register" class="waves-effect waves-light btn btn-red" disabled>{{__('Next')}}</button>
                         @endif
@@ -568,11 +568,13 @@
                 console.log('checked');
                 boxcounter++;
                 if (boxcounter == 3) {
+                    $("#register_form_Register_Popup").removeAttr("disabled");
                     $("#register_form_Register").removeAttr("disabled");
                 }
             } else {
                 boxcounter--;
                 if (boxcounter < 3) {
+                    $("#register_form_Register_Popup").attr("disabled", "disabled");
                     $("#register_form_Register").attr("disabled", "disabled");
                 }
             }
