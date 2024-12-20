@@ -842,6 +842,10 @@
             });
         });
 
+        $("#register_form_Register_Popup").click(function() {
+            console.log('popup here');
+        });
+
         $("span.file_type_area").click(function() {
 
             let file_type = $(this).data('type');
