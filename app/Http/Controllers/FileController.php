@@ -899,8 +899,7 @@ class FileController extends Controller
 
         $user = Auth::user();
 
-        $frontend = FrontEnd::fineOrFail($user->front_end_id);
-		
+        $frontend = FrontEnd::findOrFail($user->front_end_id);
         $cautionText = $frontend->caution_text;
 
 		$gearboxECUs = ECU::all();
