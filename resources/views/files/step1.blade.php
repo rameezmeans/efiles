@@ -844,23 +844,30 @@
 
         $("#register_form_Register_Popup").click(function() {
             
-            Swal.fire(
-                  'Please Read Very Carefully.',
-                  'I understand etc etc.',
-                  'warning'
-                  );
+          swal({
+              title: "Please read Carefully.?",
+              text: "I understand etc etc!",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonColor: '#DD6B55',
+              confirmButtonText: 'Next',
+              cancelButtonText: "Cancel",
+              closeOnConfirm: false,
+              closeOnCancel: false
+          },
+          function(isConfirm){
 
+            if (isConfirm){
               
+              document.forms['step2'].submit();
 
-              setTimeout(
+              } else {
 
-              function() {
-                    console.log('okay clicked');
-                    document.forms["step2"].submit();
-                    document.getElementById('register_form_Register').click();
-
-              }, 1000);
-
+                  e.preventDefault();
+              }
+          });
+              
+              
         });
 
         $("span.file_type_area").click(function() {
