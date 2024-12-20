@@ -597,6 +597,8 @@ class FileController extends Controller
 
             $engFile = RequestFile::where('request_file', $fileName)->where('file_id', $file->id)->first();
 
+            $engFile->downloaded_at = Carbon::now();
+
             if($engFile && $engFile->uploaded_successfully){
 
             $notProcessedAlientechFile = AlientechFile::where('file_id', $file->id)
