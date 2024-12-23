@@ -1149,7 +1149,7 @@ select {
                               <tbody>
                                 @foreach ($evcCredits as $credit)
                                     <tr>
-                                      <td>{{date('Y - m - d', strtotime( $credit->created_at))}}</td>
+                                      <td>{{date('Y - m - d h:i:s A', strtotime( $credit->created_at))}}</td>
                                       <td><span @if($credit->credits < 0) class="label-danger" @else class="label-success" @endif> {{$credit->credits}} Credits </span></td>
                                       <td>{{$credit->message_to_credit}}</td>
                                       <td>{{$credit->invoice_id}}</td>
