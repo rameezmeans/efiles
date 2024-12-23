@@ -547,7 +547,6 @@ class PaymentsController extends Controller
             $fileID = $request->file_id;
 
             $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
-            usleep( 2 * 1000 );
             $file = $this->filesMainObj->saveFile($user, $fileID, $creditsForFile, $type);
             $this->filesMainObj->notifications($file);
 
