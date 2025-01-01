@@ -531,7 +531,7 @@
                       @if(isset($feed))
 
                         @if($feed->type == 'danger')
-                          <button type="button" id="register_form_Register_Popup" class="waves-effect waves-light btn btn-red" disabled>{{__('Next Test')}}</button>
+                          <button type="button" id="register_form_Register_Popup" class="waves-effect waves-light btn btn-red" disabled>{{__('Next')}}</button>
                         @else
                           <button type="submit" id="register_form_Register" class="waves-effect waves-light btn btn-red" disabled>{{__('Next')}}</button>
                         @endif
