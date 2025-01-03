@@ -50,7 +50,7 @@ if(!function_exists('get_logo_for_stages_and_options')){
 
             // $stages = json_decode($responseStages->body(), true)['stages'];
             $stages = Service::orderBy('sorting', 'asc')
-            ->where('type', 'tunning')->where('tuningx_active', 1)->get();
+            ->where('type', 'tunning')->where('efiles_active', 1)->get();
 
             // $responseOptions = Http::get('http://backend.ecutech.gr/api/get_options');
 
@@ -61,7 +61,7 @@ if(!function_exists('get_logo_for_stages_and_options')){
             // $options = json_decode($responseOptions->body(), true)['options'];
 
             $options = Service::orderBy('sorting', 'asc')
-            ->where('type', 'option')->where('tuningx_active', 1)->get();
+            ->where('type', 'option')->where('efiles_active', 1)->get();
             
         }
         catch(ConnectionException $e){
