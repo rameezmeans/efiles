@@ -1061,9 +1061,9 @@ select {
 
                             <label class="account-label">Slave Tools</label>
 
-                                @foreach($slaveTools as $stool) 
+                                {{-- @foreach($slaveTools as $stool) 
                                 <div>{{$stool->name}}</div>
-                                @endforeach
+                                @endforeach --}}
 
                             </div>
                     
