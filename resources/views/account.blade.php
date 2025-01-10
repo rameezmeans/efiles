@@ -807,13 +807,7 @@ select {
 <div id="viewport">
     @include('layouts.sidebar')
     <!-- Content -->
-    @if(Session::has('success'))
-    <p class="note-success">{{ Session::get('success') }} <button class="close">x</button></p>
-    @endif
-
-    @if(Session::has('danger'))
-    <p class="note-danger">{{ Session::get('danger') }} <button class="close">x</button></p>
-    @endif
+    
     <div id="content" class="db-content">
       @include('layouts.header')
       <div class="container-fluid">
@@ -822,6 +816,13 @@ select {
             <p>Manage all your account information and settings.</p>
         </div>
         <div class="row">
+            @if(Session::has('success'))
+            <p class="note-success">{{ Session::get('success') }} <button class="close">x</button></p>
+            @endif
+
+            @if(Session::has('danger'))
+            <p class="note-danger">{{ Session::get('danger') }} <button class="close">x</button></p>
+            @endif
           <div class="col-xl-12 col-lg-12 col-md-12" style="margin-bottom: 100px;">
 
                   <ul class="nav nav-tabs account-nav-tabs" style="border-top: #ddd 1px solid;">
