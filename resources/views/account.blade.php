@@ -807,6 +807,13 @@ select {
 <div id="viewport">
     @include('layouts.sidebar')
     <!-- Content -->
+    @if(Session::has('success'))
+    <p class="note-success">{{ Session::get('success') }} <button class="close">x</button></p>
+    @endif
+
+    @if(Session::has('danger'))
+    <p class="note-danger">{{ Session::get('danger') }} <button class="close">x</button></p>
+    @endif
     <div id="content" class="db-content">
       @include('layouts.header')
       <div class="container-fluid">
