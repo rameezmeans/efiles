@@ -1062,7 +1062,7 @@ select {
                             <label class="account-label">Slave Tools</label>
                             
 
-                                  <select name="slave_tools[]" id="slave_tools" class="select-dropdown-multi form-control" multiple>
+                                  <select id="slave_tools" class="select-dropdown-multi form-control" multiple @readonly(true)>
   
                                       @foreach($allSlaveTools as $stool) 
                                       <option value="{{ $stool->id }}" @if( in_array($stool->id, $slaveTools)) selected @endif>{{$stool->name}}</option>
