@@ -1060,9 +1060,11 @@ select {
                             <div class="form-group m-t-20">
 
                             <label class="account-label">Slave Tools</label>
-                                    @foreach($allSlaveTools as $stool) 
-                                    <div>{{$stool->name}}</div>
-                                    @endforeach 
+
+                                @foreach($slaveTools as $stool) 
+                                <div>{{$stool->name}}</div>
+                                @endforeach
+
                             </div>
                     
     
