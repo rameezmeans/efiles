@@ -1060,16 +1060,9 @@ select {
                             <div class="form-group m-t-20">
 
                             <label class="account-label">Slave Tools</label>
-                            
-
-                                  <select id="slave_tools" class="select-dropdown-multi form-control" multiple @readonly(true)>
-  
-                                      @foreach($allSlaveTools as $stool) 
-                                      <option value="{{ $stool->id }}" @if( in_array($stool->id, $slaveTools)) selected @endif>{{$stool->name}}</option>
-                                      @endforeach
-  
-                                  </select>
-                                
+                                    @foreach($allSlaveTools as $stool) 
+                                    <label>{{$stool->name}}</label>
+                                    @endforeach 
                             </div>
                     
     
