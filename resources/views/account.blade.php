@@ -1056,6 +1056,9 @@ select {
                                     
                                 </div>
                             </div>
+
+
+                            <button type="submit" class="btn btn-info waves-effect waves-light m-sm">{{__('Save Changes')}}</button>
     
                             <div class="form-group m-t-20">
 
@@ -1068,7 +1071,7 @@ select {
                             </div>
                     
     
-                        <button type="submit" class="btn btn-info waves-effect waves-light m-sm">{{__('Save Changes')}}</button>
+                        
                       </form>
                         </div>
                       </div>
