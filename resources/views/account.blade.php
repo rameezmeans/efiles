@@ -1068,6 +1068,8 @@ select {
                                     <div style="width: fit-content;" class="label-info">{{ECUApp\SharedCode\Models\Tool::findOrFail($stool)->name}}</div>
                                 @endforeach
 
+                                <p class="text-danger">* If you want to add or update Slave tools please contact support.</p>
+
                             </div>
                     
     
