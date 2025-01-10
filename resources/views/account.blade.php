@@ -1062,7 +1062,7 @@ select {
                             <label class="account-label">Slave Tools</label>
 
                                 @foreach($slaveTools as $stool) 
-                                    <div class="label-info">{{ECUApp\SharedCode\Models\Tool::findOrFail($stool)->name}}</div>
+                                    <div style="width: fit-content;" class="label-info">{{ECUApp\SharedCode\Models\Tool::findOrFail($stool)->name}}</div>
                                 @endforeach
 
                             </div>
