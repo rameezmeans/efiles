@@ -810,12 +810,13 @@ select {
     
     <div id="content" class="db-content">
       @include('layouts.header')
-      @if(Session::has('success'))
-            <p class="note-success">{{ Session::get('success') }} <button class="close">x</button></p>
+      
+            @if(Session::has('success'))
+                <p class="note-success">{{ Session::get('success') }} <button class="close">x</button></p>
             @endif
 
             @if(Session::has('danger'))
-            <p class="note-danger">{{ Session::get('danger') }} <button class="close">x</button></p>
+                <p class="note-danger">{{ Session::get('danger') }} <button class="close">x</button></p>
             @endif
       <div class="container-fluid">
         <div class="header-block fix-header">  
