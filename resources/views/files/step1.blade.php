@@ -462,7 +462,11 @@
                                   
                                   <select id="modification" name="modification" class="select-dropdown form-control">
                                     <option value="" selected disabled>Mention Modification</option>
-                                    <option value="thing">Thing</option>
+                                    <option value="stage1">Stage1</option>
+                                    <option value="stage2">Stage2</option>
+                                    <option value="DPF">DPF</option>
+                                    <option value="EGR">EGR</option>
+                                    <option value="DTC_OFF">DTC OFF</option>
                                     <option value="other">Other (Please mention)</option>
                                   </select>
                                 
