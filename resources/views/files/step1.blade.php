@@ -21,6 +21,10 @@
     height: 100px;;
 }
 
+.select2-container{
+  width: 100% !important;
+}
+
 .hide1 {
   display: none;
 }
@@ -456,22 +460,23 @@
 
                               <div id="original_area" class="hide">
 
-                              <div class="col-xl-12 col-lg-12 col-md-12">
-                                <div class="form-group">
-                                  <label for="exampleInputCompanyLP1">Modifications</label>
+                                <div class="col-xl-12 col-lg-12 col-md-12">
+                                  <div class="form-group">
+                                    <label for="exampleInputCompanyLP1">Modifications</label>
+                                    
+                                    <select id="modification" name="modification[]" multiple class="select-dropdown-multi form-control">
+                                      
+                                      <option value="stage1">Stage1</option>
+                                      <option value="stage2">Stage2</option>
+                                      <option value="DPF">DPF</option>
+                                      <option value="EGR">EGR</option>
+                                      <option value="DTC_OFF">DTC OFF</option>
+                                      <option value="other">Other (Please mention)</option>
+
+                                    </select>
                                   
-                                  <select id="modification" name="modification" class="select-dropdown form-control">
-                                    <option value="" selected disabled>Mention Modification</option>
-                                    <option value="stage1">Stage1</option>
-                                    <option value="stage2">Stage2</option>
-                                    <option value="DPF">DPF</option>
-                                    <option value="EGR">EGR</option>
-                                    <option value="DTC_OFF">DTC OFF</option>
-                                    <option value="other">Other (Please mention)</option>
-                                  </select>
-                                
+                                  </div>
                                 </div>
-                              </div>
 
                               <div class="col-xl-12 col-lg-12 col-md-12 hide" id="mention_area">
                                 <div class="form-group">
@@ -708,6 +713,14 @@
     });
 
     $(document).ready(function(event) {
+
+      $(".select-dropdown-multi").select2({
+			closeOnSelect : false,
+			placeholder : "{{__('Select Modifications')}}",
+			// allowHtml: true,
+			allowClear: true,
+			tags: true // создает новые опции на лету
+		});
 
       $("input[name='is_original']").click(function() {
         if ($(this).val() === 'yes') {
