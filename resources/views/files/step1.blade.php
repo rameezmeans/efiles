@@ -7,20 +7,6 @@
 .select2-search__field {
     height: 1.8rem !important;
 }
-
-.select2-container--default .select2-selection--single {
-  height: 50px;
-}
-
-.select2-selection__rendered {
-  height: 50px;
-}
-
-.select2-container--default {
-    width: 100% !important;
-    height: 100px;;
-}
-
 .select2-container{
   width: 100% !important;
 }
