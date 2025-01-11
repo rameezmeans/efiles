@@ -14,6 +14,7 @@ use ECUApp\SharedCode\Models\Credit;
 use ECUApp\SharedCode\Models\EmailReminder;
 use ECUApp\SharedCode\Models\EngineerFileNote;
 use ECUApp\SharedCode\Models\ECU;
+use ECUApp\SharedCode\Models\Modification;
 use ECUApp\SharedCode\Models\File;
 use ECUApp\SharedCode\Models\FileFeedback;
 use ECUApp\SharedCode\Models\FileInternalEvent;
@@ -907,12 +908,14 @@ class FileController extends Controller
 
 		$gearboxECUs = ECU::all();
 
+        $modifications = Modification::all();
+
         $masterTools = $this->filesMainObj->getMasterTools($user);
         $slaveTools = $this->filesMainObj->getSlaveTools($user);
 
         $brands = $this->filesMainObj->getBrands();
 
-        return view('files.step1', [ 'cautionText' => $cautionText, 'gearboxECUs' => $gearboxECUs, 'user' => $user, 'brands' => $brands,'masterTools' => $masterTools, 'slaveTools' => $slaveTools]);
+        return view('files.step1', [ 'modifications' => $modifications,'cautionText' => $cautionText, 'gearboxECUs' => $gearboxECUs, 'user' => $user, 'brands' => $brands,'masterTools' => $masterTools, 'slaveTools' => $slaveTools]);
     }
 
     /**
