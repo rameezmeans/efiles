@@ -718,17 +718,17 @@
         } 
       });
 
-      $(document).on('change', '#modification', function(e) {
+      // $(document).on('change', '#modification', function(e) {
         
-        if($(this).val() == 'other'){
-          console.log($(this).val());
-          $('#mention_area').removeClass('hide');
-        }
-        else{
-          $('#mention_area').addClass('hide');
-        }
+      //   if($(this).val() == 'other'){
+      //     console.log($(this).val());
+      //     $('#mention_area').removeClass('hide');
+      //   }
+      //   else{
+      //     $('#mention_area').addClass('hide');
+      //   }
 
-      });
+      // });
 
       $(".select-dropdown-multi").select2({
 			closeOnSelect : false,
