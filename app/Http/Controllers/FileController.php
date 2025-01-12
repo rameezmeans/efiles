@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use ECUApp\SharedCode\Controllers\AlientechMainController;
+use ECUApp\SharedCode\Controllers\AutotunerMainController;
 use ECUApp\SharedCode\Controllers\FilesMainController;
 use ECUApp\SharedCode\Controllers\MagicsportsMainController;
 use ECUApp\SharedCode\Controllers\NotificationsMainController;
@@ -51,6 +52,7 @@ class FileController extends Controller
     private $frontendID;
     private $alientechMainObj;
     private $magicMainObj;
+    private $autoTunerMainObj;
 
     public function __construct(){
 
@@ -62,6 +64,7 @@ class FileController extends Controller
         $this->notificationsMainObj = new NotificationsMainController();
         $this->alientechMainObj = new AlientechMainController();
         $this->magicMainObj = new MagicsportsMainController();
+        $this->autoTunerMainObj = new AutotunerMainController();
     }
 
     public function acmFileUpload(Request $request){
@@ -1077,6 +1080,15 @@ class FileController extends Controller
             
             $path = $this->filesMainObj->getPath($file);
             $this->magicMainObj->magicDecrypt($path , $tempFile->id);
+            
+        }
+
+        $autoTunerLabel = Tool::where('label', 'Autotuner')->where('type', 'slave')->first();
+
+        if($toolType == 'slave' && $tempFile->tool_id == $autoTunerLabel->id){
+            
+            $path = $this->filesMainObj->getPath($file);
+            $this->autoTunerMainObj->autoturnerDecrypt($path , $tempFile->id);
             
         }
 

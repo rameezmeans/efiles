@@ -42,6 +42,107 @@ Route::get('/zoho_test', function () {
 
 Route::get('/test', function () {
 
+        $target_url = 'https://api.autotuner-tool.com/v2/api/v1/master/decrypt';
+
+        $slave_data = file_get_contents(public_path('/uploads/test.slave'));
+        // dd(public_path('/uploads/test.slave'));
+        $slave_base64_data = base64_encode($slave_data);
+
+        $post = array("mode" => "maps", "data" => $slave_base64_data);
+        
+        // $post = array("mode" => "maps", "data" => $cFile);
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'X-Autotuner-Id: 20220959',
+            'X-Autotuner-API-Key: AsHPN3R2tDCnFwVDHbbcZDP1shPlKRDkJMJR1Kaa3M/owhJFYRhsF7VqR7mw2T6b',
+        ));
+        curl_setopt($ch, CURLOPT_URL,$target_url);
+        curl_setopt($ch, CURLOPT_POST,1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+        $result=curl_exec($ch);
+        curl_close ($ch);
+        $response = json_decode($result);
+
+        dd($response);
+
+        $host = 'https://api.autotuner-tool.com/v2/api/v1/master/decrypt';
+
+        $slave_data = file_get_contents(public_path('/uploads/test.slave'));
+        // dd(public_path('/uploads/test.slave'));
+        $slave_base64_data = base64_encode($slave_data);
+
+        $request = array("mode" => "backup", "data" => $slave_base64_data);
+
+        $ch = curl_init($host);
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'X-Autotuner-Id: 20220959',
+            'X-Autotuner-API-Key: AsHPN3R2tDCnFwVDHbbcZDP1shPlKRDkJMJR1Kaa3M/owhJFYRhsF7VqR7mw2T6b',
+        ));
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($request));
+
+        $response = curl_exec($ch);
+
+        dd($response);
+
+        $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($response_code == 200) {
+            $json_response = json_decode($response, true);
+            dd($json_response);
+
+            $maps_data = base64_decode($json_response['data']);
+            $hash = hash('sha256', $maps_data);
+            if (strtoupper($hash) != $json_response['hash']) {
+                dd("Error: hash mismatch !\n");
+            } else {
+                file_put_contents('/tmp/maps.bin', $maps_data);
+            }
+        } else {
+            dd($response_code);
+            print("\n");
+        }
+
+        curl_close($ch);
+
+
+
+    $host ='https://api.autotuner-tool.com/v2/api/v1/master/metadata';
+
+    $request = array("type" => "slave", "slave_id" => "20220958");
+
+    $ch = curl_init($host);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json',
+        'X-Autotuner-Id: 20220959',
+        'X-Autotuner-API-Key: AsHPN3R2tDCnFwVDHbbcZDP1shPlKRDkJMJR1Kaa3M/owhJFYRhsF7VqR7mw2T6b',
+    ));
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($request));
+
+    $response = curl_exec($ch);
+
+    $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    if ($response_code == 200) {
+        dd(json_decode($response, true));
+    }
+    else{
+        dd(json_decode($response, true));
+    }
+
+    curl_close($ch);
+
+    dd('here');
+
     $invoiceSeq = ['sequence' => '2842182088147338435', 'ordering' => '-number'];
 
     $res = Http::withHeaders([
