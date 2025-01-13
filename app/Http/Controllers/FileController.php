@@ -24,6 +24,7 @@ use ECUApp\SharedCode\Models\FileUrl;
 use ECUApp\SharedCode\Models\FrontEnd;
 use ECUApp\SharedCode\Models\Log;
 use ECUApp\SharedCode\Models\MagicEncryptedFile;
+use ECUApp\SharedCode\Models\AutotunerEncrypted;
 use ECUApp\SharedCode\Models\Price;
 use ECUApp\SharedCode\Models\ProcessedFile;
 use ECUApp\SharedCode\Models\RequestFile;
@@ -621,19 +622,16 @@ class FileController extends Controller
 
         else if($file->tool_type == 'slave' && $file->tool_id == $autoTunerLabel->id){
             
-            $magicFile = MagicEncryptedFile::where('file_id', $file->id)
+            $autotunerFile = AutotunerEncrypted::where('file_id', $file->id)
             ->where('name', $fileName.'_encrypted.slave')
             ->first();
 
-            if($magicFile){
+            if($autotunerFile){
     
-                $file_path = public_path($file->file_path).$magicFile->name;
+                $file_path = public_path($file->file_path).$autotunerFile->name;
                 return response()->download($file_path);
             }
-            else{
-                $file_path = public_path($file->file_path).$fileName; // quick fix. need to work a bit more.
-                return response()->download($file_path);
-            }
+
         }
 
         else{
