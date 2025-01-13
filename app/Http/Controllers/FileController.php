@@ -577,29 +577,14 @@ class FileController extends Controller
 
                 }
                 else{
-                    abort(505);
+                    abort(404);
                 }
-
-                // }else{
-                //     $finalFileName = $fileName;
-                // }
-
-                
-
             }
         }
         else{
             $file_path = public_path($file->file_path).$fileName;
             return response()->download($file_path);
         }
-    // }
-
-    // else{
-    //     $file_path = public_path($file->file_path).$fileName;
-    //     return response()->download($file_path);
-    // }
-
-    
     }
 
     else if($file->tool_type == 'slave' && $file->tool_id == $flexLabel->id){
@@ -625,9 +610,7 @@ class FileController extends Controller
             $autotunerFile = AutotunerEncrypted::where('file_id', $file->id)
             ->where('name', $fileName.'_encrypted.slave')
             ->first();
-
-            // dd($autotunerFile);
-
+            
             if($autotunerFile){
     
                 $file_path = public_path($file->file_path).$autotunerFile->name;
