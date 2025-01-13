@@ -626,6 +626,8 @@ class FileController extends Controller
             ->where('name', $fileName.'_encrypted.slave')
             ->first();
 
+            dd($autotunerFile);
+
             if($autotunerFile){
     
                 $file_path = public_path($file->file_path).$autotunerFile->name;
