@@ -416,6 +416,7 @@ class PaymentsController extends Controller
 
     public function searchTestInvoiceZoho($userID){
         $user = User::findOrFail($userID);
+        dd($user);
         $this->elorusMainObj->searchTestZohoCustomer($user);
     }
 
