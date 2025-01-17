@@ -414,6 +414,11 @@ class PaymentsController extends Controller
         $this->zohoMainObj->getAndSaveAccessToken();
     }
 
+    public function searchTestInvoiceZoho($userID){
+        $user = User::findOrFail($userID);
+        $this->elorusMainObj->searchTestZohoCustomer($user);
+    }
+
     public function createTestInvoiceZoho($creditID){
 
         $invoice = Credit::findOrFail($creditID);

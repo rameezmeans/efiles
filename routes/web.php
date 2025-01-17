@@ -42,6 +42,8 @@ Route::get('/zoho_test', function () {
 
 Route::get('/test', function () {
 
+
+
         $target_url = 'https://api.autotuner-tool.com/v2/api/v1/master/decrypt';
 
         $slave_data = file_get_contents(public_path('/uploads/test.slave'));
@@ -328,7 +330,8 @@ Route::get('/dtc_lookup', [App\Http\Controllers\HomeController::class, 'dtcLooku
 Route::post('/dtc_lookup', [App\Http\Controllers\HomeController::class, 'getDTCDesc'])->name('get-dtc-desc');
 
 Route::get('/create_test_customer_zoho/{id}', [App\Http\Controllers\PaymentsController::class, 'createTestCustomerZoho'])->name('create-customer-zoho');
-Route::get('/create_test_invoice_zoho/{id}', [App\Http\Controllers\PaymentsController::class, 'createTestInvoiceZoho'])->name('create-invoice-elorus');
+Route::get('/create_test_invoice_zoho/{id}', [App\Http\Controllers\PaymentsController::class, 'createTestInvoiceZoho'])->name('create-invoice-zoho');
+Route::get('/search_test_customer_zoho/{id}', [App\Http\Controllers\PaymentsController::class, 'searchTestInvoiceZoho'])->name('search-customer-zoho');
 // Route::get('/generate_access_code/', [App\Http\Controllers\PaymentsController::class, 'generateAccessCode'])->name('generate-access-code');
 
 Route::get('/create_test_customer/{id}', [App\Http\Controllers\PaymentsController::class, 'createTestElorusCustomer'])->name('create-customer-elorus');
