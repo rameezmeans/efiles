@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Twilio\Rest\Client;
 use Illuminate\Support\Facades\Mail;
 use Asciisd\Zoho\ZohoManager;
+use ECUApp\SharedCode\Controllers\ZohoMainController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,14 +34,13 @@ Route::post('/get_type', function () {
 
 Route::get('/zoho_test', function () {
 
-    // $response = ZohoManager::make(self::TESTING_MODULE);
-    // $modules  = $response->getAllModules();
-
-    // dd($modules);
-
     $zohoLessCustomers = User::whereNull('zohobooks_id')->limit(10)->get();
 
-    dd($zohoLessCustomers);
+    foreach($zohoLessCustomers as $user) {
+        (new ZohoMainController())->createTestZohoCustomer($user);
+    }
+
+    dd("10 customers created");
 
 });
 
