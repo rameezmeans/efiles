@@ -34,7 +34,9 @@ Route::post('/get_type', function () {
 
 Route::get('/zoho_test', function () {
 
-    $zohoLessCustomers = User::whereNull('zohobooks_id')->limit(10)->get();
+    $zohoLessCustomers = User::whereNull('zohobooks_id')
+    ->where('role_id', 4)
+    ->limit(10)->get();
 
     foreach($zohoLessCustomers as $user) {
         (new ZohoMainController())->createTestZohoCustomer($user);
