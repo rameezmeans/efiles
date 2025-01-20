@@ -33,10 +33,14 @@ Route::post('/get_type', function () {
 
 Route::get('/zoho_test', function () {
 
-    $response = ZohoManager::make(self::TESTING_MODULE);
-    $modules  = $response->getAllModules();
+    // $response = ZohoManager::make(self::TESTING_MODULE);
+    // $modules  = $response->getAllModules();
 
-    dd($modules);
+    // dd($modules);
+
+    $zohoLessCustomers = User::whereNull('zohobooks_id')->limit(10)->get();
+
+    dd($zohoLessCustomers);
 
 });
 
