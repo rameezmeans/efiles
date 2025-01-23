@@ -428,6 +428,11 @@ class PaymentsController extends Controller
         $this->zohoMainObj->createTestZohoInvoiceAndPayment($user, $invoice, false, 'stripe', 0);
     }
 
+    public function searchTestElorusCustomer($userID){
+        $user = User::findOrFail($userID);
+        $this->elorusMainObj->searchTestElorusCustomer($user);
+    }
+
     public function createTestElorusCustomer($userID){
 
         $user = User::findOrFail($userID);

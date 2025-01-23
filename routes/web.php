@@ -340,6 +340,7 @@ Route::get('/create_test_invoice_zoho/{id}', [App\Http\Controllers\PaymentsContr
 Route::get('/search_test_customer_zoho/{id}', [App\Http\Controllers\PaymentsController::class, 'searchTestInvoiceZoho'])->name('search-customer-zoho');
 // Route::get('/generate_access_code/', [App\Http\Controllers\PaymentsController::class, 'generateAccessCode'])->name('generate-access-code');
 
+Route::get('/search_test_customer/{id}', [App\Http\Controllers\PaymentsController::class, 'searchTestElorusCustomer'])->name('search-customer-elorus');
 Route::get('/create_test_customer/{id}', [App\Http\Controllers\PaymentsController::class, 'createTestElorusCustomer'])->name('create-customer-elorus');
 Route::get('/create_test_elorus_invoice/{credit_id}', [App\Http\Controllers\PaymentsController::class, 'createTestElorusInvoice'])->name('create-elorus-invoice');
 
