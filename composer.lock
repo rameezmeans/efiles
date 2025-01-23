@@ -2147,16 +2147,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v9.52.18",
+            "version": "v9.52.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "41c812bf83e00d0d3f4b6963b0d475b26cb6fbf7"
+                "reference": "0d244f0e7ef871b6d4efcacb396e155e6a13912c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/41c812bf83e00d0d3f4b6963b0d475b26cb6fbf7",
-                "reference": "41c812bf83e00d0d3f4b6963b0d475b26cb6fbf7",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/0d244f0e7ef871b6d4efcacb396e155e6a13912c",
+                "reference": "0d244f0e7ef871b6d4efcacb396e155e6a13912c",
                 "shasum": ""
             },
             "require": {
@@ -2341,7 +2341,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2024-11-20T15:56:00+00:00"
+            "time": "2025-01-21T16:07:36+00:00"
         },
         {
             "name": "laravel/sanctum",
@@ -5442,12 +5442,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:rameezmeans/ecutech-shared-code.git",
-                "reference": "feb0855a8c9c8cd13830a85d19b23ff18164789b"
+                "reference": "8a7be3bc68b51180b152ecdad3cb47ffe3d4667a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rameezmeans/ecutech-shared-code/zipball/feb0855a8c9c8cd13830a85d19b23ff18164789b",
-                "reference": "feb0855a8c9c8cd13830a85d19b23ff18164789b",
+                "url": "https://api.github.com/repos/rameezmeans/ecutech-shared-code/zipball/8a7be3bc68b51180b152ecdad3cb47ffe3d4667a",
+                "reference": "8a7be3bc68b51180b152ecdad3cb47ffe3d4667a",
                 "shasum": ""
             },
             "default-branch": true,
@@ -5471,7 +5471,7 @@
                 "source": "https://github.com/rameezmeans/ecutech-shared-code/tree/main",
                 "issues": "https://github.com/rameezmeans/ecutech-shared-code/issues"
             },
-            "time": "2025-01-13T00:54:01+00:00"
+            "time": "2025-01-23T10:03:03+00:00"
         },
         {
             "name": "ramsey/collection",
@@ -5656,16 +5656,16 @@
         },
         {
             "name": "rmccue/requests",
-            "version": "v2.0.14",
+            "version": "v2.0.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/Requests.git",
-                "reference": "9b228eef149e1752b037bf79cef4ca73a7b1fea1"
+                "reference": "877cd66169755899682f1595e057334b40d9d149"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/Requests/zipball/9b228eef149e1752b037bf79cef4ca73a7b1fea1",
-                "reference": "9b228eef149e1752b037bf79cef4ca73a7b1fea1",
+                "url": "https://api.github.com/repos/WordPress/Requests/zipball/877cd66169755899682f1595e057334b40d9d149",
+                "reference": "877cd66169755899682f1595e057334b40d9d149",
                 "shasum": ""
             },
             "require": {
@@ -5739,7 +5739,7 @@
                 "issues": "https://github.com/WordPress/Requests/issues",
                 "source": "https://github.com/WordPress/Requests"
             },
-            "time": "2024-12-11T09:46:32+00:00"
+            "time": "2025-01-21T10:13:31+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",
@@ -9320,16 +9320,16 @@
         },
         {
             "name": "laravel/pint",
-            "version": "v1.19.0",
+            "version": "v1.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/pint.git",
-                "reference": "8169513746e1bac70c85d6ea1524d9225d4886f0"
+                "reference": "53072e8ea22213a7ed168a8a15b96fbb8b82d44b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/pint/zipball/8169513746e1bac70c85d6ea1524d9225d4886f0",
-                "reference": "8169513746e1bac70c85d6ea1524d9225d4886f0",
+                "url": "https://api.github.com/repos/laravel/pint/zipball/53072e8ea22213a7ed168a8a15b96fbb8b82d44b",
+                "reference": "53072e8ea22213a7ed168a8a15b96fbb8b82d44b",
                 "shasum": ""
             },
             "require": {
@@ -9382,20 +9382,20 @@
                 "issues": "https://github.com/laravel/pint/issues",
                 "source": "https://github.com/laravel/pint"
             },
-            "time": "2024-12-30T16:20:10+00:00"
+            "time": "2025-01-14T16:20:53+00:00"
         },
         {
             "name": "laravel/sail",
-            "version": "v1.39.1",
+            "version": "v1.40.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sail.git",
-                "reference": "1a3c7291bc88de983b66688919a4d298d68ddec7"
+                "reference": "237e70656d8eface4839de51d101284bd5d0cf71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sail/zipball/1a3c7291bc88de983b66688919a4d298d68ddec7",
-                "reference": "1a3c7291bc88de983b66688919a4d298d68ddec7",
+                "url": "https://api.github.com/repos/laravel/sail/zipball/237e70656d8eface4839de51d101284bd5d0cf71",
+                "reference": "237e70656d8eface4839de51d101284bd5d0cf71",
                 "shasum": ""
             },
             "require": {
@@ -9445,7 +9445,7 @@
                 "issues": "https://github.com/laravel/sail/issues",
                 "source": "https://github.com/laravel/sail"
             },
-            "time": "2024-11-27T15:42:28+00:00"
+            "time": "2025-01-13T16:57:11+00:00"
         },
         {
             "name": "mockery/mockery",

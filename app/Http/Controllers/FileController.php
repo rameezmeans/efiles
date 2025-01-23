@@ -997,7 +997,7 @@ class FileController extends Controller
 
         if($toolType == 'slave' && $tempFile->tool_id == $kess3Label->id){
 
-            $path = $this->filesMainObj->getPath($file);
+            $path = $this->filesMainObj->getPath($file, $tempFile);
             $this->alientechMainObj->saveGUIDandSlotIDToDownloadLater($path , $tempFile->id);
             
         }
@@ -1006,7 +1006,7 @@ class FileController extends Controller
 
         if($toolType == 'slave' && $tempFile->tool_id == $flexLabel->id){
             
-            $path = $this->filesMainObj->getPath($file);
+            $path = $this->filesMainObj->getPath($file, $tempFile);
             $this->magicMainObj->magicDecrypt($path , $tempFile->id);
             
         }
@@ -1015,7 +1015,7 @@ class FileController extends Controller
 
         if($toolType == 'slave' && $tempFile->tool_id == $autoTunerLabel->id){
             
-            $path = $this->filesMainObj->getPath($file);
+            $path = $this->filesMainObj->getPath($file, $tempFile);
             $this->autoTunerMainObj->autoturnerDecrypt($path , $tempFile->id);
             
         }
