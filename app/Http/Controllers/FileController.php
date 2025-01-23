@@ -988,6 +988,8 @@ class FileController extends Controller
         $user = Auth::user();
         $file = $request->file('file');
 
+        
+
         $toolType = $request->tool_type_for_dropzone;
         $toolID = $request->tool_for_dropzone;
 
