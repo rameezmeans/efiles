@@ -1144,6 +1144,8 @@ select {
                       </table>
                       </div>
                     </div>
+
+                    
                     <div id="evclogs" class="tab-pane fade">
                         <div class="col-xl-12 col-lg-12 col-md-12 m-t-20" >
                             <table class="table table-hover datatable">
