@@ -491,7 +491,7 @@ body {
 
         const input = document.querySelector("#exampleInputPhone1");
             window.intlTelInput(input, {
-            initialCountry: "TR",
+            initialCountry: "",
             loadUtilsOnInit: "https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/js/utils.js",
         });
 
