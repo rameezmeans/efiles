@@ -2490,8 +2490,14 @@ div.file-type-buttons label > input + img {
           @endforeach
 
           @endforeach
+
+
           
           </div>
+
+          @php
+            $file = $ofile;
+          @endphp
           
           <div class="col-xl-6 col-lg-6 col-md-6 m-t-40">
             <div class="card single-item">
