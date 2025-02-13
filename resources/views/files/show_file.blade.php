@@ -2583,6 +2583,7 @@ div.file-type-buttons label > input + img {
                       </div>
 
                       <div class="col-xl-6 col-lg-6 col-md-6">
+                        @if($vehicle)
                         <div class="form-group">
                           <label for="exampleInputName1">Fuel</label>
                           <input type="text" value="{{ $vehicle->Type_of_fuel }}" disabled class="form-control" id="exampleInputName1" aria-describedby="emailHelp" placeholder="Enter Name" name="type_of_fuel">
@@ -2592,6 +2593,7 @@ div.file-type-buttons label > input + img {
                               </span>
                           @enderror
                       </div>
+                      @endif
                       </div>
                       <div class="col-xl-6 col-lg-6 col-md-6">
                         <div class="form-group">
