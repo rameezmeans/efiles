@@ -924,7 +924,7 @@ class FileController extends Controller
         ->where('Model', '=', $model)
         ->where('Generation', '=', $version)
         ->where('Engine', '=', $engine)
-        ->whereNotNull('Brand_image_url')
+        // ->whereNotNull('Brand_image_url')
         ->first();
 
         if($vehicle){

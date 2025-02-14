@@ -28,9 +28,9 @@ Route::get('/info', function () {
     phpinfo();
 });
 
-Route::post('/get_type', function () {
+// Route::post('/get_type', function () {
 
-});
+// });
 
 Route::get('/zoho_test', function () {
 
