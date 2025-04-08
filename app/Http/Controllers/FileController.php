@@ -323,6 +323,7 @@ class FileController extends Controller
             $this->changeStatusLog($file, 'open', 'support_status', "Customer sent a message in chat");
             $file->support_status = "open";
             $file->timer = NULL;
+            $file->assigned_to = NULL;
             $file->save();
 
         }
