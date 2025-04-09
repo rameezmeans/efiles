@@ -99,7 +99,7 @@ class AccountController extends Controller
 
     function editAccount(Request $request){
 
-        dd($request->all());
+        // dd($request->all());
 
         $user = Auth::user();
         
@@ -134,7 +134,18 @@ class AccountController extends Controller
         $user->company_id = $request->company_id;
         $user->name = $request->name;
         $user->phone = $request->phone;
-        $user->status = $request->status;
+
+        if($request->company == 'on'){
+            $user->status = 'company';
+        }
+
+        if($request->private == 'on'){
+            $user->status = 'private';
+        }
+
+        if($request->entrepreneur_microentreprise == 'on'){
+            $user->status = 'entrepreneur_microentreprise';
+        }
         
         $user->evc_customer_id = $request->evc_customer_id;
         $user->save();
