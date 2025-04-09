@@ -135,17 +135,9 @@ class AccountController extends Controller
         $user->name = $request->name;
         $user->phone = $request->phone;
 
-        if($request->company == 'on'){
-            $user->status = 'company';
-        }
-
-        if($request->private == 'on'){
-            $user->status = 'private';
-        }
-
-        if($request->entrepreneur_microentreprise == 'on'){
-            $user->status = 'entrepreneur_microentreprise';
-        }
+        
+        $user->status = $request->status;
+        
         
         $user->evc_customer_id = $request->evc_customer_id;
         $user->save();
