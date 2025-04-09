@@ -132,6 +132,7 @@ class AccountController extends Controller
         $user->company_id = $request->company_id;
         $user->name = $request->name;
         $user->phone = $request->phone;
+        $user->status = $request->status;
         
         $user->evc_customer_id = $request->evc_customer_id;
         $user->save();

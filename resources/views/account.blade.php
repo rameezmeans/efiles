@@ -847,20 +847,21 @@ select {
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6">
-                              <div class="row">
-                                  <div class="col-xl-12 col-lg-12 col-md-12">
-                                    <div class="form-group" style="margin-bottom:19px">
-                                        <label for="exampleInputType1">Account Type</label>
-                                            <div>
-                                                <span class="m-r-10"><input type="radio" @if($user->status == 'company') checked @endif @disabled(true)> Company</span>
-                                                <span class="m-r-10"><input type="radio" @if($user->status == 'private') checked @endif  @disabled(true)> Private</span>
-                                                <span><input type="radio" @if($user->status == 'entrepreneur_microentreprise') checked @endif  @disabled(true)> Auto Entrepreneur / Microentreprise</span>
-                                            </div>
-                                    </div>
-                                  </div>
-                                </div>
+                              
                                 <form action="{{route('edit-account')}}" method="POST">
                                 @csrf
+                                <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-12">
+                                      <div class="form-group" style="margin-bottom:19px">
+                                          <label for="exampleInputType1">Account Type</label>
+                                              <div>
+                                                  <span class="m-r-10"><input name="status" type="radio" @if($user->status == 'company') checked @endif > Company</span>
+                                                  <span class="m-r-10"><input name="status" type="radio" @if($user->status == 'private') checked @endif  > Private</span>
+                                                  <span><input type="radio" name="status" @if($user->status == 'entrepreneur_microentreprise') checked @endif > Auto Entrepreneur / Microentreprise</span>
+                                              </div>
+                                      </div>
+                                    </div>
+                                  </div>
                                 <div class="row">
                                   <div class="col-xl-6 col-lg-6 col-md-6">
                                     <div class="form-group">
