@@ -48,6 +48,8 @@ Route::get('/zoho_test', function () {
 
 Route::get('/test', function () {
 
+        dd(Auth::user());
+
 
 
         $target_url = 'https://api.autotuner-tool.com/v2/api/v1/master/decrypt';
