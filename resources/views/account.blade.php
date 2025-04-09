@@ -855,9 +855,9 @@ select {
                                       <div class="form-group" style="margin-bottom:19px">
                                           <label for="exampleInputType1">Account Type</label>
                                               <div>
-                                                  <span class="m-r-10"><input name="status" type="radio" @if($user->status == 'company') checked @endif > Company</span>
-                                                  <span class="m-r-10"><input name="status" type="radio" @if($user->status == 'private') checked @endif  > Private</span>
-                                                  <span><input type="radio" name="status" @if($user->status == 'entrepreneur_microentreprise') checked @endif > Auto Entrepreneur / Microentreprise</span>
+                                                  <span class="m-r-10"><input name="company" type="radio" @if($user->status == 'company') checked @endif > Company</span>
+                                                  <span class="m-r-10"><input name="private" type="radio" @if($user->status == 'private') checked @endif  > Private</span>
+                                                  <span><input type="radio" name="entrepreneur_microentreprise" @if($user->status == 'entrepreneur_microentreprise') checked @endif > Auto Entrepreneur / Microentreprise</span>
                                               </div>
                                       </div>
                                     </div>

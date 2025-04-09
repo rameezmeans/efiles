@@ -99,6 +99,8 @@ class AccountController extends Controller
 
     function editAccount(Request $request){
 
+        dd($request->all());
+
         $user = Auth::user();
         
         $anyOtherUserWithSameUniqueEVCCustomerID = User::where('evc_customer_id', $request->evc_customer_id)
