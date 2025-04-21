@@ -23,7 +23,7 @@
 					<div class="login-box">
 
 						@php 
-							$etfMaintenanceMode = IntegerMeta::where('key', 'etf_maintenance_mode')->first()->value;
+							$etfMaintenanceMode = ECUApp\SharedCode\Models\IntegerMeta::where('key', 'etf_maintenance_mode')->first()->value;
 						@endphp
 
 						@if(Session::has('danger'))
