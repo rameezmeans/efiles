@@ -46,7 +46,7 @@ body {
 							$etfMaintenanceMode = ECUApp\SharedCode\Models\IntegerMeta::where('key', 'etf_maintenance_mode')->first()->value;
 						@endphp
 
-                        @if
+                        @if($etfMaintenanceMode)
 
                             <h2>We are Sorry!</h2>
 						    <p>We are down due to Maintainence. We will be back soon.</p>
