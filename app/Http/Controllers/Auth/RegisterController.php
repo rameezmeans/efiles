@@ -71,9 +71,9 @@ class RegisterController extends Controller
     public function showRegistrationForm()
     {
 
-        dd(Location::get(Request::ip())->countryCode);
+        $codeFromIP = Location::get(Request::ip())->countryCode;
 
-        $code = $this->getCode(Location::get(Request::ip())->countryCode);
+        $code = $this->getCode($codeFromIP);
 
         dd($code);
 
