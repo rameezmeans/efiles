@@ -24,6 +24,7 @@ use Request;
 use Illuminate\Support\Facades\Log;
 use MailchimpMarketing;
 use Mailchimp_Error;
+use Stevebauman\Location\Facades\Location;
 
 class RegisterController extends Controller
 {
@@ -70,7 +71,7 @@ class RegisterController extends Controller
     public function showRegistrationForm()
     {
 
-        dd(Request::ip());
+        dd(Location::get(Request::ip()));
 
         $masterTools = Tool::where('type', 'master')->get();
         $slaveTools = Tool::where('type', 'slave')->get();
