@@ -20,6 +20,7 @@ use ECUApp\SharedCode\Models\Tool;
 use ECUApp\SharedCode\Models\User;
 use ECUApp\SharedCode\Models\UserTool;
 use GuzzleHttp\Exception\ClientException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use MailchimpMarketing;
 use Mailchimp_Error;
@@ -69,8 +70,13 @@ class RegisterController extends Controller
     public function showRegistrationForm()
     {
 
+        dd(Request::ip());
+
         $masterTools = Tool::where('type', 'master')->get();
         $slaveTools = Tool::where('type', 'slave')->get();
+
+
+
         return view('auth.register', ['masterTools' => $masterTools, 'slaveTools' => $slaveTools]);
     }
 
