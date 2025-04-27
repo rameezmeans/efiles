@@ -80,7 +80,7 @@ class RegisterController extends Controller
 
 
 
-        return view('auth.register', ['code' => $code,'masterTools' => $masterTools, 'slaveTools' => $slaveTools]);
+        return view('auth.register', ['codeFromIP' => $codeFromIP,'code' => $code,'masterTools' => $masterTools, 'slaveTools' => $slaveTools]);
     }
 
     function getCode($code){
