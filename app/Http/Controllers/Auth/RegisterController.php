@@ -71,7 +71,11 @@ class RegisterController extends Controller
     public function showRegistrationForm()
     {
 
-        $code = $this->getCode(Location::get(Request::ip())->countryCode)['code'];
+        dd(Location::get(Request::ip()));
+        
+        $code = $this->getCode(Location::get(Request::ip())->countryCode);
+
+        dd($code);
 
         $masterTools = Tool::where('type', 'master')->get();
         $slaveTools = Tool::where('type', 'slave')->get();
