@@ -20,7 +20,7 @@ use ECUApp\SharedCode\Models\Tool;
 use ECUApp\SharedCode\Models\User;
 use ECUApp\SharedCode\Models\UserTool;
 use GuzzleHttp\Exception\ClientException;
-use Illuminate\Http\Request;
+use Request;
 use Illuminate\Support\Facades\Log;
 use MailchimpMarketing;
 use Mailchimp_Error;
