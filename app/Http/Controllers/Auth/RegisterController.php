@@ -75,8 +75,6 @@ class RegisterController extends Controller
 
         $code = $this->getCode($codeFromIP);
 
-        dd($code);
-
         $masterTools = Tool::where('type', 'master')->get();
         $slaveTools = Tool::where('type', 'slave')->get();
 
@@ -321,7 +319,7 @@ class RegisterController extends Controller
 
         foreach($countryArray as $k => $c){
             if($k == $code){
-                return '+'.$c['code'];
+                return $c['code'];
             }
         }
     }
