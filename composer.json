@@ -9,7 +9,6 @@
   "license": "MIT",
   "require": {
     "php": "^8.2",
-    "asciisd/zoho": "^2.0",
     "barryvdh/laravel-dompdf": "^2.0",
     "biscolab/laravel-recaptcha": "^6.0",
     "cache/array-adapter": "^1.2",
