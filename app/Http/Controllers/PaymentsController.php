@@ -865,10 +865,10 @@ class PaymentsController extends Controller
 
 
             \Cart::update(101,
-            $product->name,
+            
             $request->cart, 
-            $product->price,
-            1);
+            
+            );
 
 
             // \Cart::update(101, array(
