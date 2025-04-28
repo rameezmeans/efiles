@@ -3,6 +3,6 @@
 </div>
 
 <div>
-    <p>{{$name}}</p>
-    <p>{{$email}}</p>
+    <p>Cusotmer Name:{{$name}}</p>
+    <p>Customer Email:{{$email}}</p>
 </div>
