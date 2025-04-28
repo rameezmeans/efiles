@@ -10,7 +10,6 @@
   "require": {
     "php": "^8.4",
     "barryvdh/laravel-dompdf": "^2.0",
-    "cache/array-adapter": "^1.2",
     "cba85/eu-vat-validation": "dev-master",
     "danielebarbaro/laravel-vat-eu-validator": "^2.0",
     "drahosistvan/vatvalidation": "^1.0",
