@@ -1,3 +1,3 @@
 <div>
-here i am. {{$data['name']}}
+here i am. {{$name}}
 </div>
