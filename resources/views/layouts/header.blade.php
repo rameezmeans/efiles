@@ -64,7 +64,7 @@
     <ul class="nav navbar-nav">
       @if(!Auth::user()->is_admin())
         <li class="m-r-8">
-            <button class="btn btn-warning redirect-click" data-redirect="{{route('cart')}}"> <span style="background: #4cae4c; color: white; padding: 2px 0px 2px 5px; border-radius: 5px; margin-right: 5px;"> {{\Cart::getTotalQuantity()}} </span> <i class="fa fa-cart-shopping"></i> Cart</button>
+            <button class="btn btn-warning redirect-click" data-redirect="{{route('cart')}}"> <span style="background: #4cae4c; color: white; padding: 2px 0px 2px 5px; border-radius: 5px; margin-right: 5px;"> {{\Cart::total()}} </span> <i class="fa fa-cart-shopping"></i> Cart</button>
         </li>
         @endif
         <li>

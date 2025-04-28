@@ -34,7 +34,8 @@
     "stevebauman/location": "*",
     "stripe/stripe-php": "^16.2",
     "twilio/sdk": "^6.44",
-    "webleit/zohobooksapi": "^5.5"
+    "webleit/zohobooksapi": "^5.5",
+    "anayarojo/shoppingcart": "^4.2"
   },
   "repositories": [
     {
