@@ -14,7 +14,6 @@
     "cache/array-adapter": "^1.2",
     "cba85/eu-vat-validation": "dev-master",
     "danielebarbaro/laravel-vat-eu-validator": "^1.1",
-    "darryldecode/cart": "^4.2",
     "drahosistvan/vatvalidation": "^1.0",
     "guzzlehttp/guzzle": "^7.0",
     "laravel/cashier": "^15.0.0",
