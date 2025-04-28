@@ -74,7 +74,7 @@
     </noscript>
     <!-- End Meta Pixel Code -->
 
-    {!! htmlScriptTagJsApi() !!}
+    {{-- {!! htmlScriptTagJsApi() !!} --}}
 
     
 
