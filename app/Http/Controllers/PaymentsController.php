@@ -845,26 +845,35 @@ class PaymentsController extends Controller
 
         $empty = \Cart::total(0);
 
+        $product = Product::findOrFail(1);
+        $request->cart;
+
         if($empty == 0){
 
-            $product = Product::findOrFail(1);
-            $request->cart;
+            
 
-            \Cart::add(array(
-                'id' => 101,
-                'name' => $product->name,
-                'price' => $product->price,
-                'quantity' => 1,
-                'attributes' => array(),
-                'associatedModel' => $product
-            ));
+            \Cart::add(
+                101,
+                $product->name,
+                1,
+                $product->price,
+                1
+            );
         }
 
         else{
 
-            \Cart::update(101, array(
-                'quantity' => $request->cart, 
-              ));
+
+            \Cart::update(101,
+            $product->name,
+            $request->cart, 
+            $product->price,
+            1);
+
+
+            // \Cart::update(101, array(
+            //     'quantity' => $request->cart, 
+            //   ));
         }
 
         
