@@ -481,7 +481,7 @@ body {
                                 
                             </div> --}}
                        
-                            {!! htmlFormSnippet() !!}
+                            {{-- {!! htmlFormSnippet() !!} --}}
                         
                         <div class="form-group m-t-20">
                             <button type="submit" id="register_form_Register" name="register_form[Register]" class="form-control waves-effect waves-light btn btn-red">{{__('Register')}}</button>
