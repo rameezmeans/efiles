@@ -1,3 +1,8 @@
 <div>
-here i am. {{$name}}
+{{$text}}
+</div>
+
+<div>
+    <p>{{$name}}</p>
+    <p>{{$email}}</p>
 </div>
