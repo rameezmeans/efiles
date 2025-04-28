@@ -843,9 +843,9 @@ class PaymentsController extends Controller
     public function addToCart(Request $request)
     {
 
-        $empty = \Cart::isEmpty();
+        $empty = \Cart::total(0);
 
-        if($empty){
+        if($empty == 0){
 
             $product = Product::findOrFail(1);
             $request->cart;
