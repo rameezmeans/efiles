@@ -35,7 +35,8 @@
     "stripe/stripe-php": "^16.2",
     "twilio/sdk": "^6.44",
     "webleit/zohobooksapi": "^5.5",
-    "anayarojo/shoppingcart": "^4.2"
+    "darryldecode/cart": "^4.2.5",
+    "biscolab/laravel-recaptcha": "^6.0"
   },
   "repositories": [
     {
