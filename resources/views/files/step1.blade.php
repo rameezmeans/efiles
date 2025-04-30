@@ -967,6 +967,21 @@
             let type = $(this).find('.radio-button').data('type');
             let value = $(this).find('.radio-button').val();
 
+            $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "tool_selected",
+                    'disc': "tool "+value+" with type "+type+" is picked.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+
             $('#tool_type').val(type);
             $('#tool_type_for_dropzone').val(type);
 

@@ -844,6 +844,10 @@ class FileController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+    public function addFileLog(Request $request){
+        $this->filesMainObj->addFileLog($request->event, $request->disc);
+    }
+
     public function step1(){
 
         $user = Auth::user();
