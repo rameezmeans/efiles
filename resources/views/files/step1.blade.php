@@ -149,7 +149,7 @@
                     <div class="col-xl-4 col-lg-4 col-md-4">
                       <label class="tools stage-box" for="{{'master_'.$row->tool_id}}">
                         <span class="bl stage-image">
-                          <input type="radio" class="radio-button" id="{{'master_'.$row->tool_id}}" name="tool_selected" data-type='master' value="{{$row->tool_id}}">
+                          <input type="radio" class="radio-button" id="{{'master_'.$row->tool_id}}" name="tool_selected" data-type='master' value="{{$row->tool_id}}" data-name="{{\ECUApp\SharedCode\Models\Tool::findOrFail($row->tool_id)->name}}">
                           <img class="image-itself" width="50%" src="{{ get_dropdown_image($row->tool_id) }}" alt="{{\ECUApp\SharedCode\Models\Tool::findOrFail($row->tool_id)->name}}">
                         </span>
                         <span class="text-stage">
@@ -966,6 +966,7 @@
            
             let type = $(this).find('.radio-button').data('type');
             let value = $(this).find('.radio-button').val();
+            let tool_name = $(this).find('.radio-button').data('name');
 
             $.ajax({
                 url: "/add_file_log",
@@ -975,7 +976,7 @@
                 },
                 data: {
                     'event': "tool_selected",
-                    'disc': "tool "+value+" with type "+type+" is picked.",
+                    'disc': "tool "+tool_name+" with type "+type+" is picked.",
                 },
                 success: function(res) {
                     console.log(res);
