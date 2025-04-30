@@ -957,7 +957,7 @@
 
         $(".tools").removeClass('hide');
 
-        $("label.tools").click(function() {
+        $("label.tools").one('click',function() {
 
             $("html, body").animate({ scrollTop: $(document).height() }, 'slow');
 
