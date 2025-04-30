@@ -247,7 +247,7 @@ Route::post('get_tool_icons', [App\Http\Controllers\AccountController::class, 'g
 Route::get('pdfview',array('as'=>'pdfview','uses'=>'App\Http\Controllers\InvoicesController@makePDF'));
 
 Route::get('/upload', [App\Http\Controllers\FileController::class, 'step1'])->name('upload');
-Route::get('/add_file_log', [App\Http\Controllers\FileController::class, 'addFileLog'])->name('add-file-log');
+Route::post('/add_file_log', [App\Http\Controllers\FileController::class, 'addFileLog'])->name('add-file-log');
 Route::get('/history', [App\Http\Controllers\FileController::class, 'fileHistory'])->name('history');
 Route::post('/step2', [App\Http\Controllers\FileController::class, 'step2'])->name('step2');
 Route::get('/terms_and_conditions', [App\Http\Controllers\FileController::class, 'termsAndConditions'])->name('terms-and-conditions');
