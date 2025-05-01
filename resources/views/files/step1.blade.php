@@ -808,8 +808,6 @@
             $('#ecu').attr('disabled', 'disabled');
             $('#gear_box').attr('disabled', 'disabled');
 
-            
-
             let model = $(this).val();
             let brand = $('#brand').val();
 
@@ -860,8 +858,7 @@
             // disable_dropdowns();
             $('#engine').children().remove();
             $('#engine').append('<option selected value"engine" disabled>Engine</option>');
-
-
+            
             // $('#model').attr('disabled', 'disabled');
             // $('#version').attr('disabled', 'disabled');
             $('#engine').attr('disabled', 'disabled');
@@ -878,7 +875,7 @@
                     'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
                 },
                 data: {
-                    'event': "model_selected",
+                    'event': "version_selected",
                     'disc': "version "+version+" is picked.",
                 },
                 success: function(res) {
@@ -931,7 +928,7 @@
                     'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
                 },
                 data: {
-                    'event': "model_selected",
+                    'event': "engine_selected",
                     'disc': "engine "+engine+" is picked.",
                 },
                 success: function(res) {

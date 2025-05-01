@@ -811,6 +811,22 @@ p.tuning-resume {
               let name = $(this).data('name');
               let new_stage_id = $(this).val();
               value = parseInt($(this).data('price'));
+
+              $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "stage_selected",
+                    'disc': "stage "+name+" is picked.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+
               stages_str = '<div class="divider-light"></div><p class="tuning-resume">'+name+' <small>'+value+' credits</small></p>';
               $('#rows-for-credits').html(stages_str);
               $('#total-credits').html(value);
@@ -891,6 +907,22 @@ p.tuning-resume {
                   checkbox_credits_count +=  parseInt(price);
                   service_ids.push($(this).val());
                   let name = $(this).data('name');
+
+                  $.ajax({
+                      url: "/add_file_log",
+                      type: "POST",
+                      headers: {
+                          'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                      },
+                      data: {
+                          'event': "option_selected",
+                          'disc': "option "+name+" is picked.",
+                      },
+                      success: function(res) {
+                          console.log(res);
+                      }
+                  });
+
                   options_str += '<div class="divider-light"></div><p class="tuning-resume">'+name+' <small>'+price+' credits</small></p>';
               }
               else{

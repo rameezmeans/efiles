@@ -761,7 +761,7 @@ class FileController extends Controller
         $price = $this->paymentMainObj->getPrice();
 
         $user = Auth::user();
-
+        
         return view( 'files.pay_credits', [ 
         'file' => $file, 
         'credits' => $serviceCredits, 
