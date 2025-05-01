@@ -754,6 +754,21 @@
             disable_dropdowns();
 
             $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "brand_selected",
+                    'disc': "brand "+brand+" is picked.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+
+            $.ajax({
                 url: "/get_models",
                 type: "POST",
                 headers: {
@@ -793,8 +808,26 @@
             $('#ecu').attr('disabled', 'disabled');
             $('#gear_box').attr('disabled', 'disabled');
 
+            
+
             let model = $(this).val();
             let brand = $('#brand').val();
+
+            $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "model_selected",
+                    'disc': "model "+model+" is picked.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+
             $.ajax({
                 url: "/get_versions",
                 type: "POST",
@@ -839,6 +872,21 @@
             let model = $('#model').val();
 
             $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "model_selected",
+                    'disc': "version "+version+" is picked.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+
+            $.ajax({
                 url: "/get_engines",
                 type: "POST",
                 headers: {
@@ -875,6 +923,21 @@
             let brand = $('#brand').val();
             let model = $('#model').val();
             let version = $('#version').val();
+
+            $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "model_selected",
+                    'disc': "engine "+engine+" is picked.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
 
             $.ajax({
                 url: "/get_type",
