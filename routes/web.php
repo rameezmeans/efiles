@@ -223,9 +223,11 @@ Route::get('/test', function () {
 
 });
 
-// return redirect()->route('login');
+
 
 Auth::routes();
+
+return redirect()->route('login');
 
 // Route::get('login', [AuthController::class, 'index'])->name('login');
 // Route::post('post-login', [AuthController::class, 'postLogin'])->name('login.post'); 
