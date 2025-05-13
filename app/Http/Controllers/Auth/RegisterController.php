@@ -20,7 +20,7 @@ use ECUApp\SharedCode\Models\Tool;
 use ECUApp\SharedCode\Models\User;
 use ECUApp\SharedCode\Models\UserTool;
 use GuzzleHttp\Exception\ClientException;
-use Request;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Log;
 use MailchimpMarketing;
 use Mailchimp_Error;
@@ -71,7 +71,7 @@ class RegisterController extends Controller
     public function showRegistrationForm()
     {
 
-        dd(Request::getClientIp());
+        dd(Request::ip());
         dd(Location::get('79.129.68.101'));
 
         $codeFromIP = Location::get(Request::ip())->countryCode;
