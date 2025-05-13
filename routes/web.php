@@ -223,6 +223,8 @@ Route::get('/test', function () {
 
 });
 
+return redirect('login')->with(Auth::logout());
+
 Auth::routes();
 
 // Route::get('login', [AuthController::class, 'index'])->name('login');
