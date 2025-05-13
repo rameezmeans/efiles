@@ -223,7 +223,7 @@ Route::get('/test', function () {
 
 });
 
-return redirect('login')->with(Auth::logout());
+return redirect('login');
 
 Auth::routes();
 
