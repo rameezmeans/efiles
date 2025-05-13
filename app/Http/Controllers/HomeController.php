@@ -24,6 +24,8 @@ class HomeController extends Controller {
         $this->middleware('auth');
         $this->frontendID = 3;
         $this->authMainObj = new AuthMainController;
+
+        return redirect()->route('login');
     }
 
     public function bosch() {
