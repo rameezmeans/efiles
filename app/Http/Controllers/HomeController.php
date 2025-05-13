@@ -85,7 +85,7 @@ class HomeController extends Controller {
 
     public function index() {
 
-        return redirect()->route('login');
+        return redirect('login')->with(Auth::logout());
 
         $user = Auth::user();
         $users = User::whereNull('subdealer_group_id')->where('role_id', 4)->where('front_end_id', $this->frontendID)->get();
