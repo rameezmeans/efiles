@@ -85,7 +85,7 @@ class HomeController extends Controller {
 
     public function index() {
 
-        $etfMaintenanceMode = ECUApp\SharedCode\Models\IntegerMeta::where('key', 'etf_maintenance_mode')->first()->value;
+        $etfMaintenanceMode = \ECUApp\SharedCode\Models\IntegerMeta::where('key', 'etf_maintenance_mode')->first()->value;
 
         if($etfMaintenanceMode){
             return redirect('login')->with(Auth::logout());
