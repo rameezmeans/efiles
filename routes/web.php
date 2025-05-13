@@ -350,4 +350,9 @@ Route::get('/create_test_customer/{id}', [App\Http\Controllers\PaymentsControlle
 Route::get('/create_test_elorus_invoice/{credit_id}', [App\Http\Controllers\PaymentsController::class, 'createTestElorusInvoice'])->name('create-elorus-invoice');
 
 
+$etfMaintenanceMode = \ECUApp\SharedCode\Models\IntegerMeta::where('key', 'etf_maintenance_mode')->first()->value;
+
+if($etfMaintenanceMode){
+    return redirect('login')->with(Auth::logout());
+}
 
