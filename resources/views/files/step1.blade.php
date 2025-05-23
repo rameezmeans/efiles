@@ -874,6 +874,66 @@
             console.log('model_year in');
         }).blur(function() {
             console.log('model_year out'+ this.value);
+
+            $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "model_year_added",
+                    'disc': "model year "+this.value+" added.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+
+        });
+
+        $("input[type=text][name=license_plate]").focus(function() {
+            console.log('license_plate in');
+        }).blur(function() {
+            console.log('license_plate out'+ this.value);
+
+            $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "license_plate_added",
+                    'disc': "license plate "+this.value+" added.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+
+        });
+
+        $("input[type=text][name=vin_number]").focus(function() {
+            console.log('vin_number in');
+        }).blur(function() {
+            console.log('vin_number out'+ this.value);
+
+            $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "vin_number_added",
+                    'disc': "vin number "+this.value+" added.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+
         });
 
         $(document).on('change', '#version', function(e) {
@@ -929,6 +989,46 @@
                     });
                 }
             });
+        });
+
+        $(document).on('change', '#gearbox_ecu', function(e) {
+
+            $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "gearbox_ecu_selected",
+                    'disc': "gearbox_ecu "+this.value+" is picked.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+
+
+        });
+
+        $(document).on('change', '#gear_box', function(e) {
+
+            $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "gearbox_selected",
+                    'disc': "gearbox "+this.value+" is picked.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+
+
         });
 
         $(document).on('change', '#engine', function(e) {
@@ -1002,6 +1102,126 @@
                     });
                 }
             });
+        });
+
+        $('input[type=radio][name=is_original]').change(function() {
+
+        $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "is_original_selected",
+                    'disc': "original "+this.value+" is picked.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+
+            
+        });
+
+        $("input[type=textarea][name=additional_comments]").focus(function() {
+            console.log('additional_comments in');
+        }).blur(function() {
+            console.log('additional_comments out'+ this.value);
+
+            $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "additional_comments_added",
+                    'disc': "additional comments added.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+
+        });
+
+        $('#cgv').on('click', function() {
+          if ($(this).is(':checked')) {
+            // Checkbox is checked
+            console.log('Checkbox with ID cgv is checked');
+
+            $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "terms_checkbox_clicked",
+                    'disc': "client agreed to terms.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+
+          } else {
+            // Checkbox is not checked
+            console.log('Checkbox with ID cgv is unchecked');
+          }
+        });
+
+        $('#professional').on('click', function() {
+          if ($(this).is(':checked')) {
+            // Checkbox is checked
+            console.log('Checkbox with ID professional is checked');
+
+            $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "professional_checkbox_clicked",
+                    'disc': "client agreed that he is professional.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+
+          } else {
+            // Checkbox is not checked
+            console.log('Checkbox with ID professional is unchecked');
+          }
+        });
+
+        $('#track').on('click', function() {
+          if ($(this).is(':checked')) {
+            // Checkbox is checked
+            console.log('Checkbox with ID track is checked');
+
+            $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "acknowledge_checkbox_clicked",
+                    'disc': "client acknowledge that he is fully aware.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+
+          } else {
+            // Checkbox is not checked
+            console.log('Checkbox with ID acknowledge is unchecked');
+          }
         });
 
         $("#register_form_Register_Popup").click(function() {
