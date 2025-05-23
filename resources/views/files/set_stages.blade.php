@@ -915,7 +915,7 @@ p.tuning-resume {
                           'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
                       },
                       data: {
-                          'event': "option_selected",
+                          'event': "option_picked",
                           'disc': "option "+name+" is picked.",
                       },
                       success: function(res) {
@@ -926,6 +926,22 @@ p.tuning-resume {
                   options_str += '<div class="divider-light"></div><p class="tuning-resume">'+name+' <small>'+price+' credits</small></p>';
               }
               else{
+
+                  $.ajax({
+                      url: "/add_file_log",
+                      type: "POST",
+                      headers: {
+                          'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                      },
+                      data: {
+                          'event': "option_unpicked",
+                          'disc': "option "+name+" unpicked.",
+                      },
+                      success: function(res) {
+                          console.log(res);
+                      }
+                  });
+
                   service_ids.removeByValue($(this).val());
               }
           });
