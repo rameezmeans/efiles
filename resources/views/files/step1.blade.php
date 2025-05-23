@@ -737,6 +737,22 @@
 		  });
 
       $('input[type=radio][name=file_type]').change(function() {
+
+        $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "file_type_selected",
+                    'disc': "file type "+this.value+" is picked.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+
             if (this.value == 'ecu_file') {
                 console.log(this.value);
                 $('#ecu_box').removeClass('hide');
@@ -852,6 +868,12 @@
 
                 }
             });
+        });
+
+        $("input[type=text][name=model_year]").focus(function() {
+            console.log('model_year in');
+        }).blur(function() {
+            console.log('model_year out'+ this.value);
         });
 
         $(document).on('change', '#version', function(e) {
