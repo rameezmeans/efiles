@@ -698,6 +698,23 @@
 
     $(document).ready(function(event) {
 
+        window.onpopstate = function() {
+            $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "back_button_click",
+                    'disc': "customer clicked back button on file uploading and information page.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+        }
+
         $(document).on("contextmenu", "#content", function(e){
             $.ajax({
                 url: "/add_file_log",
