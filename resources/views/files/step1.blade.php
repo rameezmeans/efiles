@@ -698,10 +698,9 @@
 
     $(document).ready(function(event) {
 
-        $('#content').mousedown(function(event) {
-            if(event.which == 2) {
-                console.log('here we go');
-            }   
+        $(document).on("contextmenu", "#content", function(e){
+            alert('Context Menu event has fired!');
+            return false;
         });
 
       $(".select-dropdown-multi").select2({
