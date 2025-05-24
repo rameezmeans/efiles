@@ -698,8 +698,11 @@
 
     $(document).ready(function(event) {
 
-        $(window).on('popstate', function(event) {
-  alert("You are going to back page. Can work that?");
+        $(window).on('popstate', function (e) {
+    var state = e.originalEvent.state;
+    if (state !== null) {
+       console.log('here we go');
+    }
 });
 
        $(window).on('popstate', function(event) {
