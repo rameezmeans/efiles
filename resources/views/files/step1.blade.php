@@ -699,7 +699,7 @@
     $(document).ready(function(event) {
 
         $(document).on("contextmenu", "#content", function(e){
-            alert('Context Menu event has fired!');
+            console.log('here we go');
             return false;
         });
 
