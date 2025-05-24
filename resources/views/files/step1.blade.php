@@ -698,6 +698,10 @@
 
     $(document).ready(function(event) {
 
+        $(window).on('popstate', function(event) {
+  alert("You are going to back page. Can work that?");
+});
+
        $(window).on('popstate', function(event) {
             console.log('here');
             $.ajax({
