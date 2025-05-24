@@ -895,7 +895,7 @@ p.tuning-resume {
                     console.log(res);
                 }
             });
-            return true;
+            return false;
         });
 
       $(document).on('click','input[type="checkbox"]',function(){

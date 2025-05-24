@@ -137,6 +137,24 @@
 
     $( document ).ready(function(event) {
 
+        $(document).on("contextmenu", "#content", function(e){
+            $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "right_click",
+                    'disc': "customer right clicked on credits paying page.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+            return false;
+        });
+
         $('form').submit(function () {
             $(this).find(':submit').attr('disabled', 'disabled');
         });

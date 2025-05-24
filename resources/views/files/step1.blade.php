@@ -713,7 +713,7 @@
                     console.log(res);
                 }
             });
-            return true;
+            return false;
         });
 
       $(".select-dropdown-multi").select2({
