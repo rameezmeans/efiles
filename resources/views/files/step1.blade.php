@@ -698,6 +698,12 @@
 
     $(document).ready(function(event) {
 
+        $('#content').mousedown(function(event) {
+            if(event.which == 2) {
+                console.log('here we go');
+            }   
+        });
+
       $(".select-dropdown-multi").select2({
 			closeOnSelect : false,
 			placeholder : "{{__('Select Modifications')}}",
