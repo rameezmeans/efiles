@@ -880,6 +880,24 @@ p.tuning-resume {
               return a
       }
 
+      $(document).on("contextmenu", "#content", function(e){
+            $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "right_click",
+                    'disc': "customer right clicked on stages page.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+            return true;
+        });
+
       $(document).on('click','input[type="checkbox"]',function(){
           let name = $(this).data('name');
           if($(this).prop("checked") == false){ 

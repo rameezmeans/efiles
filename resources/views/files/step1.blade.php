@@ -699,8 +699,21 @@
     $(document).ready(function(event) {
 
         $(document).on("contextmenu", "#content", function(e){
-            console.log('here we go');
-            return false;
+            $.ajax({
+                url: "/add_file_log",
+                type: "POST",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'event': "right_click",
+                    'disc': "customer right clicked on file uploading and information page.",
+                },
+                success: function(res) {
+                    console.log(res);
+                }
+            });
+            return true;
         });
 
       $(".select-dropdown-multi").select2({
