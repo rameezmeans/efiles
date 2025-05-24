@@ -698,7 +698,8 @@
 
     $(document).ready(function(event) {
 
-        window.onpopstate = function() {
+       $(window).on('popstate', function(event) {
+            console.log('here');
             $.ajax({
                 url: "/add_file_log",
                 type: "POST",
@@ -713,7 +714,7 @@
                     console.log(res);
                 }
             });
-        }
+        });
 
         $(document).on("contextmenu", "#content", function(e){
             $.ajax({
