@@ -2757,7 +2757,7 @@ div.file-type-buttons label > input + img {
     $( document ).ready(function(event) {
 
     $('.btn-comments').on('click', function (e) {
-        let brand = $(this).data('brand');
+        let brand = $(this).data('make');
         let ecu = $(this).data('ecu');
         let href = $(this).attr('href');
 
