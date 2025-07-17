@@ -1135,16 +1135,16 @@ div.file-type-buttons label > input + img {
                   @if($file->showComments())
 
                     @if($row->show_comments())
-                      <button class="btn btn-info btn-download" data-make="{{$file->brand}}" data-engine="{{$file->engine}}" data-ecu="{{$file->ecu}}" data-model="{{$file->model}}" data-generation="{{$file->version}}" data-file_id="{{$file->id}}" data-path="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</button>
+                      <button class="btn btn-info btn-download btn-comments" data-make="{{$file->brand}}" data-engine="{{$file->engine}}" data-ecu="{{$file->ecu}}" data-model="{{$file->model}}" data-generation="{{$file->version}}" data-file_id="{{$file->id}}" data-path="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</button>
                     @else
-                      <a class="btn btn-info" href="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
+                      <a class="btn btn-info btn-comments" href="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
                     @endif
                   @else
-                    <a class="btn btn-info" href="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
+                    <a class="btn btn-info btn-comments" href="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
                   @endif
 
                   @else
-                    <a class="btn btn-info" href="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
+                    <a class="btn btn-info btn-comments" href="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
                   @endif
                 </span>
 
@@ -1478,16 +1478,16 @@ div.file-type-buttons label > input + img {
                 @if($file->showComments())
 
                   @if($row->show_comments())
-                    <button class="btn btn-info btn-download" data-make="{{$file->brand}}" data-engine="{{$file->engine}}" data-ecu="{{$file->ecu}}" data-model="{{$file->model}}" data-generation="{{$file->version}}" data-file_id="{{$file->id}}" data-path="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</button>
+                    <button class="btn btn-info btn-download btn-comments" data-make="{{$file->brand}}" data-engine="{{$file->engine}}" data-ecu="{{$file->ecu}}" data-model="{{$file->model}}" data-generation="{{$file->version}}" data-file_id="{{$file->id}}" data-path="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</button>
                   @else
-                    <a class="btn btn-info" href="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
+                    <a class="btn btn-info btn-comments" href="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
                   @endif
                 @else
-                  <a class="btn btn-info" href="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
+                  <a class="btn btn-info btn-comments" href="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
                 @endif
 
                 @else
-                  <a class="btn btn-info" href="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
+                  <a class="btn btn-info btn-comments" href="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
                 @endif
 
               </span>
@@ -2204,13 +2204,13 @@ div.file-type-buttons label > input + img {
 
                   @if($file->showComments())
 
-                    <button class="btn btn-info btn-download" data-make="{{$file->brand}}" data-engine="{{$file->engine}}" data-ecu="{{$file->ecu}}" data-model="{{$file->model}}" data-generation="{{$file->version}}" data-file_id="{{$file->id}}" data-path="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</button>
+                    <button class="btn btn-info btn-download btn-comments" data-make="{{$file->brand}}" data-engine="{{$file->engine}}" data-ecu="{{$file->ecu}}" data-model="{{$file->model}}" data-generation="{{$file->version}}" data-file_id="{{$file->id}}" data-path="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</button>
                   @else
-                    <a class="btn btn-info" href="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
+                    <a class="btn btn-info btn-comments" href="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
                   @endif
 
                   @else
-                    <a class="btn btn-info" href="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
+                    <a class="btn btn-info btn-comments" href="{{route('download', [$row->file_id,$row->request_file])}}" style="float: right;"><i class="fa fa-download"></i> Downloand</a>
                   @endif
 
                 </span>
@@ -2755,6 +2755,43 @@ div.file-type-buttons label > input + img {
 <script type="text/javascript">
 
     $( document ).ready(function(event) {
+
+    $('.btn-comments').on('click', function (e) {
+        e.preventDefault();
+
+        let brand = $(this).data('brand');
+        let ecu = $(this).data('ecu');
+
+        if (!brand || !ecu) return;
+
+        $.ajax({
+            url: '{{ route("get-brand-ecu-comment-download") }}',
+            type: 'POST',
+            headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
+            data: {
+                brand: brand,
+                ecu: ecu,
+            },
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire(
+                        'Note',
+                        response.comment,
+                        'warning'
+                    );
+
+                    $('.swal2-confirm').attr("disabled", true);
+
+                    setTimeout(function () {
+                        $('.swal2-confirm').attr("disabled", false);
+                    }, 5000);
+                }
+            },
+            error: function () {
+                console.error('Error fetching comment.');
+            }
+        });
+    });
 
       $(document).on('click', '#btn-accept', function(e) {
 

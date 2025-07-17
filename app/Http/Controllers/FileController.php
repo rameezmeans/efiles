@@ -849,6 +849,27 @@ class FileController extends Controller
         $this->filesMainObj->addFileLog($request->event, $request->disc);
     }
 
+    public function getCommentByBrandEcuDownloadType(Request $request){
+        $brand = $request->input('brand');
+        $ecu = $request->input('ecu');
+
+        $comment = BrandECUComments::where('brand', $brand)
+            ->where('ecu', $ecu)
+            ->where('type', 'download')
+            ->first();
+
+        if ($comment) {
+            return response()->json([
+                'success' => true,
+                'comment' => $comment->comment
+            ]);
+        }
+
+        return response()->json([
+            'success' => false
+        ]);
+    }
+    
     public function getCommentByBrandEcuUploadType(Request $request)
     {
         $brand = $request->input('brand');

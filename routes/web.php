@@ -247,6 +247,7 @@ Route::post('/update_tools', [App\Http\Controllers\AccountController::class, 'up
 Route::post('get_tool_icons', [App\Http\Controllers\AccountController::class, 'getToolsIcons'])->name('get-tool-icons');
 
 Route::post('get-brand-ecu-comment', [App\Http\Controllers\FileController::class, 'getCommentByBrandEcuUploadType'])->name('get-brand-ecu-comment');
+Route::post('get-brand-ecu-comment-download', [App\Http\Controllers\FileController::class, 'getCommentByBrandEcuDownloadType'])->name('get-brand-ecu-comment-download');
 
 Route::get('pdfview',array('as'=>'pdfview','uses'=>'App\Http\Controllers\InvoicesController@makePDF'));
 
