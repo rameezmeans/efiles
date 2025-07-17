@@ -851,8 +851,8 @@ class FileController extends Controller
 
     public function getCommentByBrandEcuDownloadType(Request $request){
 
-        dd($request->all());
-        
+        // dd($request->all());
+
         $brand = $request->input('brand');
         $ecu = $request->input('ecu');
 
