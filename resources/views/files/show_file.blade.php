@@ -2760,7 +2760,7 @@ div.file-type-buttons label > input + img {
       console.log('here we are');
         e.preventDefault();
 
-        let brand = $(this).data('brand');
+        let brand = $(this).data('make');
         let ecu = $(this).data('ecu');
 
         if (!brand || !ecu) return;
