@@ -2763,8 +2763,6 @@ div.file-type-buttons label > input + img {
         let brand = $(this).data('make');
         let ecu = $(this).data('ecu');
 
-        if (!brand || !ecu) return;
-
         $.ajax({
             url: '{{ route("get-brand-ecu-comment-download") }}',
             type: 'POST',
