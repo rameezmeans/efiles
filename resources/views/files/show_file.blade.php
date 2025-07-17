@@ -2757,6 +2757,7 @@ div.file-type-buttons label > input + img {
     $( document ).ready(function(event) {
 
     $('.btn-comments').on('click', function (e) {
+      console.log('here we are');
         e.preventDefault();
 
         let brand = $(this).data('brand');
