@@ -35,6 +35,7 @@ use ECUApp\SharedCode\Models\TemporaryFile;
 use ECUApp\SharedCode\Models\Tool;
 use ECUApp\SharedCode\Models\User;
 use ECUApp\SharedCode\Models\Vehicle;
+use ECUApp\SharedCode\Models\BrandECUComments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -846,6 +847,28 @@ class FileController extends Controller
      */
     public function addFileLog(Request $request){
         $this->filesMainObj->addFileLog($request->event, $request->disc);
+    }
+
+    public function getCommentByBrandEcuUploadType(Request $request)
+    {
+        $brand = $request->input('brand');
+        $ecu = $request->input('ecu');
+
+        $comment = BrandECUComments::where('brand', $brand)
+            ->where('ecu', $ecu)
+            ->where('type', 'upload')
+            ->first();
+
+        if ($comment) {
+            return response()->json([
+                'success' => true,
+                'comment' => $comment->comment
+            ]);
+        }
+
+        return response()->json([
+            'success' => false
+        ]);
     }
 
     public function step1(){

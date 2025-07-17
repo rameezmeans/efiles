@@ -561,6 +561,43 @@ p.tuning-resume {
 
     $(document).ready(function(){
 
+
+      const brand = "{{ $file->brand }}";
+        const ecu = "{{ $file->ecu }}";
+
+        $.ajax({
+            url: "{{ route('get-brand-ecu-comment') }}",
+            type: 'POST',
+            headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
+            data: {
+                brand: brand,
+                ecu: ecu,
+            },
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire(
+                        'Note',
+                        response.comment,
+                        'warning'
+                    );
+
+                    $('.swal2-confirm').attr("disabled", true);
+                    setTimeout(function () {
+                        $('.swal2-confirm').attr("disabled", false);
+                    }, 5000);
+                }
+                // If no comment, do nothing (silent fail)
+            },
+            error: function () {
+                Swal.fire(
+                    'Error',
+                    'Something went wrong while fetching the comment.',
+                    'error'
+                );
+            }
+        });
+
+
       let stage_id = 1;
 
       $.ajax({
