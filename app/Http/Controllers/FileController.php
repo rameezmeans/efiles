@@ -301,16 +301,19 @@ class FileController extends Controller
         $reply = new EngineerFileNote();
         $reply->egnineers_internal_notes = $request->egnineers_internal_notes;
 
-        if($request->file('engineers_attachement')){
+        if ($request->file('engineers_attachement')) {
             $attachment = $request->file('engineers_attachement');
-            $fileName = $attachment->getClientOriginalName();
+            $originalName = $attachment->getClientOriginalName();
 
-            $fileName = str_replace('/', '', $fileName);
-            $fileName = str_replace('\\', '', $fileName);
-            $fileName = str_replace('#', '', $fileName);
-            $fileName = str_replace(' ', '_', $fileName);
+            $sanitizedName = str_replace(['/', '\\', '#', ' '], ['', '', '', '_'], $originalName);
 
-            $attachment->move(public_path($file->file_path),$fileName);
+            // Add timestamp before file extension
+            $timestamp = time();
+            $extension = $attachment->getClientOriginalExtension();
+            $nameWithoutExt = pathinfo($sanitizedName, PATHINFO_FILENAME);
+            $fileName = $nameWithoutExt . '_' . $timestamp . '.' . $extension;
+
+            $attachment->move(public_path($file->file_path), $fileName);
             $reply->engineers_attachement = $fileName;
         }
 
