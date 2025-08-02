@@ -2764,7 +2764,7 @@ div.file-type-buttons label > input + img {
         // Send AJAX request
         if (brand && ecu) {
             $.ajax({
-                url: '{{ route("get-brand-ecu-comment") }}',
+                url: '{{ route("get-brand-ecu-comment-download") }}',
                 type: 'POST',
                 data: {
                     brand: brand,
@@ -2916,6 +2916,42 @@ div.file-type-buttons label > input + img {
       });
 
       $(document).on('click', '.btn-download', function() {
+
+
+        let brand = $(this).data('make');
+        let ecu = $(this).data('ecu');
+        let href = $(this).attr('href');
+
+        // Send AJAX request
+        if (brand && ecu) {
+            $.ajax({
+                url: '{{ route("get-brand-ecu-comment-download") }}',
+                type: 'POST',
+                data: {
+                    brand: brand,
+                    ecu: ecu,
+                    type: 'download',
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire(
+                            'Note',
+                            response.comment,
+                            'warning'
+                        );
+
+                        $('.swal2-confirm').attr("disabled", true);
+                        setTimeout(function () {
+                            $('.swal2-confirm').attr("disabled", false);
+                        }, 5000);
+                    }
+                },
+                error: function () {
+                    console.error('Error fetching comment.');
+                }
+            });
+        }
 
       $('#commentsPopup').modal('show');
       $('.modal-content').css('visibility', 'visible');
