@@ -2919,7 +2919,6 @@ div.file-type-buttons label > input + img {
 
 
         let brand = $(this).data('make');
-        let ecu = $(this).data('ecu');
         let href = $(this).attr('href');
 
         // Send AJAX request
