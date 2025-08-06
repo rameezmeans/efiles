@@ -591,6 +591,7 @@ p.tuning-resume {
 
     // Trigger on any input in mandatory textareas
     $(document).on('input', 'textarea.mandatory', function () {
+        console.log('here we are');
         checkMandatoryFields();
     });
 
