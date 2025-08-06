@@ -563,45 +563,34 @@ p.tuning-resume {
     $(document).ready(function(){
 
       function checkMandatoryFields() {
-        let isValid = true;
+        let allValid = true;
 
-        // Loop through each visible `.comments-area-*` div
-        $('[class^="comments-area-"]').each(function () {
+        // Select only visible .comments-area-* sections (i.e., those without 'hide' class)
+        $('[class^="comments-area-"]').not('.hide').each(function () {
             const $section = $(this);
 
-            // Skip if this section has the `hide` class
-            if ($section.hasClass('hide')) return;
-
-            // Check if any mandatory textarea inside this visible section is empty
-            $section.find('textarea.mandatory').each(function () {
-                if ($(this).val().trim() === '') {
-                    isValid = false;
-                    return false; // Exit inner each loop
-                }
+            // Check if any mandatory textarea in this section is empty
+            const hasEmpty = $section.find('textarea.mandatory').toArray().some(function (textarea) {
+                return $(textarea).val().trim() === '';
             });
 
-            if (!isValid) return false; // Exit outer each loop if any invalid
+            if (hasEmpty) {
+                allValid = false;
+                return false; // stop checking further sections
+            }
         });
 
-        // Set value based on result
-        if (isValid) {
-            $('#mandatory_field').val('1');
-        } else {
-            $('#mandatory_field').val('');
-        }
+        // Set value in hidden input
+        $('#mandatory_field').val(allValid ? '1' : '');
     }
 
-    // Trigger on any change/input in mandatory fields
+    // Trigger on input/change in any mandatory textarea
     $(document).on('input', 'textarea.mandatory', function () {
         checkMandatoryFields();
     });
 
-    // Optional: run check on page load
+    // Optional: trigger on page load
     checkMandatoryFields();
-
-    // Optionally also run on page load
-    checkMandatoryFields();
-
 
       const brand = "{{ $file->brand }}";
         const ecu = "{{ $file->ecu }}";
