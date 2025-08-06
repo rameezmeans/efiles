@@ -562,6 +562,41 @@ p.tuning-resume {
 
     $(document).ready(function(){
 
+      function checkMandatoryFields() {
+        let allFilled = true;
+        let allVisible = true;
+
+        // Loop through all textareas with class 'mandatory'
+        $('textarea.mandatory').each(function () {
+            const value = $(this).val().trim();
+            if (value === '') {
+                allFilled = false;
+                return false; // Break loop
+            }
+
+            // Check if parent comments-area div is hidden
+            const parentDiv = $(this).closest('[class^="comments-area-"]');
+            if (parentDiv.hasClass('hide')) {
+                allVisible = false;
+                return false; // Break loop
+            }
+        });
+
+        if (allFilled && allVisible) {
+            $('#mandatory_field').val('1');
+        } else {
+            $('#mandatory_field').val('');
+        }
+    }
+
+    // Trigger on any input in mandatory textareas
+    $(document).on('input', 'textarea.mandatory', function () {
+        checkMandatoryFields();
+    });
+
+    // Optionally also run on page load
+    checkMandatoryFields();
+
 
       const brand = "{{ $file->brand }}";
         const ecu = "{{ $file->ecu }}";
