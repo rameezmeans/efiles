@@ -563,37 +563,41 @@ p.tuning-resume {
     $(document).ready(function(){
 
       function checkMandatoryFields() {
-        let allFilled = true;
-        let allVisible = true;
+        let isValid = true;
 
-        // Loop through all textareas with class 'mandatory'
-        $('textarea.mandatory').each(function () {
-            const value = $(this).val().trim();
-            if (value === '') {
-                allFilled = false;
-                return false; // Break loop
-            }
+        // Loop through each visible `.comments-area-*` div
+        $('[class^="comments-area-"]').each(function () {
+            const $section = $(this);
 
-            // Check if parent comments-area div is hidden
-            const parentDiv = $(this).closest('[class^="comments-area-"]');
-            if (parentDiv.hasClass('hide')) {
-                allVisible = false;
-                return false; // Break loop
-            }
+            // Skip if this section has the `hide` class
+            if ($section.hasClass('hide')) return;
+
+            // Check if any mandatory textarea inside this visible section is empty
+            $section.find('textarea.mandatory').each(function () {
+                if ($(this).val().trim() === '') {
+                    isValid = false;
+                    return false; // Exit inner each loop
+                }
+            });
+
+            if (!isValid) return false; // Exit outer each loop if any invalid
         });
 
-        if (allFilled && allVisible) {
+        // Set value based on result
+        if (isValid) {
             $('#mandatory_field').val('1');
         } else {
             $('#mandatory_field').val('');
         }
     }
 
-    // Trigger on any input in mandatory textareas
+    // Trigger on any change/input in mandatory fields
     $(document).on('input', 'textarea.mandatory', function () {
-        console.log('here we are');
         checkMandatoryFields();
     });
+
+    // Optional: run check on page load
+    checkMandatoryFields();
 
     // Optionally also run on page load
     checkMandatoryFields();
