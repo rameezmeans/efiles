@@ -412,6 +412,7 @@ p.tuning-resume {
                     
                 </div>
                 <input type="hidden" id="total_credits_to_submit" name="total_credits_to_submit" value="@if($file->tool_type == 'master'){{$firstStage->efiles_credits}}@else{{$firstStage->efiles_slave_credits}}@endif">
+                <input type="hidden" id="mandatory_field" name="mandatory_field" value="">
                 <div class="text-center">
                     <button class="btn btn-red m-t-10" type="submit" id="btn-final-submit">
                       <i class="fa fa-arrow-right"></i> Go to Checkout
