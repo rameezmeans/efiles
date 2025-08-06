@@ -563,33 +563,40 @@ p.tuning-resume {
     $(document).ready(function(){
 
       function checkMandatoryFields() {
-        let allValid = true;
+        // Get all visible .comments-area-* sections (no 'hide' class)
+        const $visibleSections = $('[class^="comments-area-"]').not('.hide');
 
-        // Select only visible .comments-area-* sections (i.e., those without 'hide' class)
-        $('[class^="comments-area-"]').not('.hide').each(function () {
+        // If none are visible, set value to empty and stop
+        if ($visibleSections.length === 0) {
+            $('#mandatory_field').val('');
+            return;
+        }
+
+        // Loop through each visible section and check if all its .mandatory textareas are filled
+        let allFilled = true;
+
+        $visibleSections.each(function () {
             const $section = $(this);
-
-            // Check if any mandatory textarea in this section is empty
-            const hasEmpty = $section.find('textarea.mandatory').toArray().some(function (textarea) {
+            const emptyExists = $section.find('textarea.mandatory').toArray().some(function (textarea) {
                 return $(textarea).val().trim() === '';
             });
 
-            if (hasEmpty) {
-                allValid = false;
-                return false; // stop checking further sections
+            if (emptyExists) {
+                allFilled = false;
+                return false; // Exit loop early
             }
         });
 
-        // Set value in hidden input
-        $('#mandatory_field').val(allValid ? '1' : '');
+        // Set value based on condition
+        $('#mandatory_field').val(allFilled ? '1' : '');
     }
 
-    // Trigger on input/change in any mandatory textarea
+    // Check on input/change in any .mandatory textarea
     $(document).on('input', 'textarea.mandatory', function () {
         checkMandatoryFields();
     });
 
-    // Optional: trigger on page load
+    // Optional: run once on page load
     checkMandatoryFields();
 
       const brand = "{{ $file->brand }}";
