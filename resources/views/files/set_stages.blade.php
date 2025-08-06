@@ -345,7 +345,7 @@ p.tuning-resume {
         </div>
         <div class="i-content-block price-level">
 
-          @if ($errors->any())
+          @if (isset($errors) && $errors->any())
               <div class="alert alert-danger">
                   <ul class="mb-0">
                       @foreach ($errors->all() as $error)
