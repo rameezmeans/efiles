@@ -740,7 +740,9 @@ class FileController extends Controller
         $stage = Service::FindOrFail($request->stage);
         $stageName = $stage->name;
 
-        $rules = $this->filesMainObj->getStep3ValidationStage($stageName);
+        $options = $request->options;
+
+        $rules = $this->filesMainObj->getStep3ValidationStage($stageName, $options);
 
         $request->validate($rules);
         
@@ -758,7 +760,6 @@ class FileController extends Controller
 
         $serviceCredits += $this->filesMainObj->saveFileStages($file, $stage, $this->frontendID);
 
-        $options = $request->options;
 
         $serviceCredits += $this->filesMainObj->saveFileOptions($file, $stage, $options, $this->frontendID);
 
