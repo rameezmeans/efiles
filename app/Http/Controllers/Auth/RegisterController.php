@@ -460,9 +460,7 @@ class RegisterController extends Controller
         if (isset($data['ad'])) {
             $adsParams['ad'] = $data['ad'];
         }
-
-        dd($adsParams);
-
+        
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
