@@ -2764,7 +2764,7 @@ div.file-type-buttons label > input + img {
         // Send AJAX request
         if (brand && ecu) {
             $.ajax({
-                url: '{{ route("get-brand-ecu-comment-download") }}',
+                url: '{{ route("get-brand-ecu-comment") }}',
                 type: 'POST',
                 data: {
                     brand: brand,
@@ -2774,36 +2774,29 @@ div.file-type-buttons label > input + img {
                 },
                 success: function (response) {
                     if (response.success) {
-                        Swal.fire({
-                            title: 'Note',
-                            text: response.comment,
-                            icon: 'warning',
-                            confirmButtonText: 'OK'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = href;
-                            }
-                        });
+                        Swal.fire(
+                            'Note',
+                            response.comment,
+                            'warning'
+                        );
 
                         $('.swal2-confirm').attr("disabled", true);
                         setTimeout(function () {
                             $('.swal2-confirm').attr("disabled", false);
                         }, 5000);
-                    } else {
-                        // If no comment, redirect immediately
-                        window.location.href = href;
                     }
                 },
                 error: function () {
                     console.error('Error fetching comment.');
-                    // On error, redirect immediately
-                    window.location.href = href;
                 }
             });
-        } else {
-            // If no brand/ecu data, redirect immediately
-            window.location.href = href;
         }
+
+        // Let the browser follow the href shortly after AJAX begins
+        // Delay just enough to make sure request fires, but still download file
+        setTimeout(() => {
+            window.location.href = href;
+        }, 100); // 100ms is enough to initiate AJAX
 
         // Prevent default so we can control navigation manually
         return false;
@@ -2916,41 +2909,6 @@ div.file-type-buttons label > input + img {
       });
 
       $(document).on('click', '.btn-download', function() {
-
-
-        let brand = $(this).data('make');
-        let href = $(this).attr('href');
-
-        // Send AJAX request
-        if (brand && ecu) {
-            $.ajax({
-                url: '{{ route("get-brand-ecu-comment-download") }}',
-                type: 'POST',
-                data: {
-                    brand: brand,
-                    ecu: ecu,
-                    type: 'download',
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function (response) {
-                    if (response.success) {
-                        Swal.fire(
-                            'Note',
-                            response.comment,
-                            'warning'
-                        );
-
-                        $('.swal2-confirm').attr("disabled", true);
-                        setTimeout(function () {
-                            $('.swal2-confirm').attr("disabled", false);
-                        }, 5000);
-                    }
-                },
-                error: function () {
-                    console.error('Error fetching comment.');
-                }
-            });
-        }
 
       $('#commentsPopup').modal('show');
       $('.modal-content').css('visibility', 'visible');
