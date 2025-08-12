@@ -64,6 +64,22 @@ body {
                     <form method="POST" action="{{ route('register') }}" class="login-form">
                         @csrf
 
+                        {{-- Hidden fields for ads tracking parameters --}}
+                        @if(isset($adsParams) && !empty($adsParams))
+                            @if(isset($adsParams['channel']))
+                                <input type="hidden" name="channel" value="{{ $adsParams['channel'] }}">
+                            @endif
+                            @if(isset($adsParams['campaign']))
+                                <input type="hidden" name="campaign" value="{{ $adsParams['campaign'] }}">
+                            @endif
+                            @if(isset($adsParams['ad_set']))
+                                <input type="hidden" name="ad_set" value="{{ $adsParams['ad_set'] }}">
+                            @endif
+                            @if(isset($adsParams['ad']))
+                                <input type="hidden" name="ad" value="{{ $adsParams['ad'] }}">
+                            @endif
+                        @endif
+
                             <div class="form-group">
                                 <label for="exampleInputName1">Name</label>
                                 <input type="text" value="{{old('name')}}" class="form-control @error('name') is-invalid @enderror" id="exampleInputName1" aria-describedby="emailHelp" placeholder="Enter Name" name="name">

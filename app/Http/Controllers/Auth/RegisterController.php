@@ -77,9 +77,28 @@ class RegisterController extends Controller
         $masterTools = Tool::where('type', 'master')->get();
         $slaveTools = Tool::where('type', 'slave')->get();
 
+        // Capture URL parameters for ads tracking
+        $adsParams = [];
+        if (Request::has('channel')) {
+            $adsParams['channel'] = Request::get('channel');
+        }
+        if (Request::has('campaign')) {
+            $adsParams['campaign'] = Request::get('campaign');
+        }
+        if (Request::has('ad_set')) {
+            $adsParams['ad_set'] = Request::get('ad_set');
+        }
+        if (Request::has('ad')) {
+            $adsParams['ad'] = Request::get('ad');
+        }
 
-
-        return view('auth.register', ['codeFromIP' => $codeFromIP,'code' => $code,'masterTools' => $masterTools, 'slaveTools' => $slaveTools]);
+        return view('auth.register', [
+            'codeFromIP' => $codeFromIP,
+            'code' => $code,
+            'masterTools' => $masterTools, 
+            'slaveTools' => $slaveTools,
+            'adsParams' => $adsParams
+        ]);
     }
 
     function getCode($code){
@@ -427,6 +446,21 @@ class RegisterController extends Controller
 
         $phone = "+".$data['code'].$data['phone'];
 
+        // Prepare ads_params if available
+        $adsParams = [];
+        if (isset($data['channel'])) {
+            $adsParams['channel'] = $data['channel'];
+        }
+        if (isset($data['campaign'])) {
+            $adsParams['campaign'] = $data['campaign'];
+        }
+        if (isset($data['ad_set'])) {
+            $adsParams['ad_set'] = $data['ad_set'];
+        }
+        if (isset($data['ad'])) {
+            $adsParams['ad'] = $data['ad'];
+        }
+
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -441,6 +475,7 @@ class RegisterController extends Controller
             'company_id' => $data['company_id'],
             'front_end_id' => 3,
             'password' => Hash::make($data['password']),
+            'ads_params' => !empty($adsParams) ? json_encode($adsParams) : null,
         ]);
 
         
