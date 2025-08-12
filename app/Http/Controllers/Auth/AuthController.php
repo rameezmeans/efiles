@@ -92,8 +92,6 @@ class AuthController extends Controller
     public function postRegistration(Request $request)
     {   
         $data = $request->all();
-
-        dd($data);
         
         // Capture URL parameters for ads tracking
         $adsParams = [];
@@ -115,8 +113,6 @@ class AuthController extends Controller
             $data['ads_params'] = json_encode($adsParams);
         }
 
-        dd($data);
-        
         $validationArray = $this->authMainObj->getValidationRules($data);
         $request->validate($validationArray);
 
