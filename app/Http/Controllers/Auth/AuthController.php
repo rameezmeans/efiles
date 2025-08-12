@@ -112,6 +112,8 @@ class AuthController extends Controller
         if (!empty($adsParams)) {
             $data['ads_params'] = json_encode($adsParams);
         }
+
+        dd($data);
         
         $validationArray = $this->authMainObj->getValidationRules($data);
         $request->validate($validationArray);
