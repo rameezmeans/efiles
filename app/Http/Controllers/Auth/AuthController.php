@@ -92,6 +92,8 @@ class AuthController extends Controller
     public function postRegistration(Request $request)
     {   
         $data = $request->all();
+
+        dd($data);
         
         // Capture URL parameters for ads tracking
         $adsParams = [];
