@@ -446,22 +446,7 @@ class RegisterController extends Controller
 
         $phone = "+".$data['code'].$data['phone'];
 
-        // Prepare ads_params if available
-        $adsParams = [];
-        if (isset($data['channel'])) {
-            $adsParams['channel'] = $data['channel'];
-        }
-        if (isset($data['campaign'])) {
-            $adsParams['campaign'] = $data['campaign'];
-        }
-        if (isset($data['ad_set'])) {
-            $adsParams['ad_set'] = $data['ad_set'];
-        }
-        if (isset($data['ad'])) {
-            $adsParams['ad'] = $data['ad'];
-        }
-        
-        $user = User::create([
+            $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'phone' => $phone,
@@ -475,7 +460,10 @@ class RegisterController extends Controller
             'company_id' => $data['company_id'],
             'front_end_id' => 3,
             'password' => Hash::make($data['password']),
-            'ads_params' => !empty($adsParams) ? json_encode($adsParams) : null,
+            'channel' => $data['channel'] ?? null,
+            'campaign' => $data['campaign'] ?? null,
+            'ad_set' => $data['ad_set'] ?? null,
+            'ad' => $data['ad'] ?? null,
         ]);
 
         

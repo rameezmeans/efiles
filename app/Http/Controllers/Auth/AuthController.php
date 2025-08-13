@@ -108,12 +108,13 @@ class AuthController extends Controller
             $adsParams['ad'] = $request->get('ad');
         }
         
-        // Add ads_params to the data array if we have any parameters
+        // Add individual ads tracking fields to the data array if we have any parameters
         if (!empty($adsParams)) {
-            $data['ads_params'] = json_encode($adsParams);
+            $data['channel'] = $adsParams['channel'] ?? null;
+            $data['campaign'] = $adsParams['campaign'] ?? null;
+            $data['ad_set'] = $adsParams['ad_set'] ?? null;
+            $data['ad'] = $adsParams['ad'] ?? null;
         }
-
-        dd($data);
 
         $validationArray = $this->authMainObj->getValidationRules($data);
         $request->validate($validationArray);
