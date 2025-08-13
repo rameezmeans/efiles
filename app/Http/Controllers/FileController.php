@@ -742,9 +742,9 @@ class FileController extends Controller
 
         $options = $request->options;
 
-        $rules = $this->filesMainObj->getStep3ValidationStage($stageName, $options);
+        $validation['rules'] = $this->filesMainObj->getStep3ValidationStage($stageName, $options);
 
-        $request->validate($rules);
+        $request->validate($validation['rules']);
         
         $fileID = $request->file_id;
         // $DTCComments = $request->dtc_off_comments;
