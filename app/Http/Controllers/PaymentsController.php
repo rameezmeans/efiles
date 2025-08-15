@@ -530,6 +530,9 @@ class PaymentsController extends Controller
 
             
         }
+        else{
+            $sessionID = $request->get('t');
+        }
 
         if($offer){ 
 
