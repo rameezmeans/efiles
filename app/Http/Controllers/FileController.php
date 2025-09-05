@@ -290,8 +290,21 @@ class FileController extends Controller
      */
     public function fileEngineersNotes(Request $request)
     {
+        // Validate inputs
         $validated = $request->validate([
-            'egnineers_internal_notes' => 'required|max:1024'
+            'events_internal_notes' => [
+                'required',
+                'max:1024',
+                // Prevent PHP or JS code in notes
+                'not_regex:/<\s*script/i',
+                'not_regex:/<\?php/i',
+            ],
+            'events_attachement' => [
+                'nullable',
+                'file',
+                'max:20480', // 20 MB
+                'mimes:bin,ori,zip,rar,txt,pdf,jpg,jpeg,png',
+            ],
         ]);
 
         $file = File::findOrFail($request->file_id);
@@ -814,8 +827,21 @@ class FileController extends Controller
 
         $file = File::findOrFail($request->file_id);
 
+       // Validate inputs
         $validated = $request->validate([
-            'events_internal_notes' => 'required|max:1024'
+            'events_internal_notes' => [
+                'required',
+                'max:1024',
+                // Prevent PHP or JS code in notes
+                'not_regex:/<\s*script/i',
+                'not_regex:/<\?php/i',
+            ],
+            'events_attachement' => [
+                'nullable',
+                'file',
+                'max:20480', // 20 MB
+                'mimes:bin,ori,zip,rar,txt,pdf,jpg,jpeg,png',
+            ],
         ]);
 
         $reply = new FileInternalEvent();
@@ -1056,6 +1082,24 @@ class FileController extends Controller
 
         $user = Auth::user();
         $file = $request->file('file');
+
+        // Validate file extension
+        $allowedExtensions = ['bin', 'ori', 'zip', 'rar', 'txt']; // add all extensions you allow
+        $extension = strtolower($file->getClientOriginalExtension());
+
+        if (in_array($extension, ['php', 'js'])) {
+            return response()->json([
+                'error' => 'Invalid file type. PHP and JS files are not allowed.'
+            ], 400);
+        }
+
+        if (!in_array($extension, $allowedExtensions)) {
+            return response()->json([
+                'error' => 'Invalid file type. Allowed types: ' . implode(', ', $allowedExtensions)
+            ], 400);
+        }
+
+        // Now safe to continue
         
         $toolType = $request->tool_type_for_dropzone;
         $toolID = $request->tool_for_dropzone;
