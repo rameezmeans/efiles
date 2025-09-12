@@ -579,8 +579,7 @@ body {
     });
 </script>
 
-{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
-<script type="text/javascript">
+<script type="text/javascript" data-cf-async="false">
 $(document).ready(function() {
     var urlParams = new URLSearchParams(window.location.search);
     var referrer = document.referrer;
