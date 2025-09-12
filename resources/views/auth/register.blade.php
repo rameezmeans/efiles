@@ -580,25 +580,25 @@ body {
 </script>
 
 {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
-<script>
-$(document ).ready(function() {
+<script type="text/javascript">
+$(document).ready(function() {
     var urlParams = new URLSearchParams(window.location.search);
     var referrer = document.referrer;
     
     var trackingData = {
-        channel: urlParams.get('channel') || 
-                 (urlParams.get('gclid') ? 'google' : 
-                  urlParams.get('fbclid') ? 'meta' : 
+        channel: urlParams.get('channel') ||
+                 (urlParams.get('gclid') ? 'google' :
+                  urlParams.get('fbclid') ? 'meta' :
                   referrer ? 'referral' : 'direct'),
         
-        campaign: urlParams.get('campaign') || 
+        campaign: urlParams.get('campaign') ||
                   (urlParams.get('gclid') ? 'unknown_google_campaign' :
                    urlParams.get('fbclid') ? 'unknown_facebook_campaign' : 
-                   referrer ? new URL(referrer).hostname : 'organic'),
+                   referrer ? referrer : 'organic'),
         
-        ad_set: urlParams.get('ad_set') || 
+        ad_set: urlParams.get('ad_set') ||
                 (urlParams.get('gclid') ? 'unknown_google_adgroup' :
-                 urlParams.get('fbclid') ? 'unknown_facebook_adset' : 
+                 urlParams.get('fbclid') ? 'unknown_facebook_adset' :
                  referrer ? 'referral' : 'direct'),
                  
         ad: urlParams.get('ad') || urlParams.get('gclid') || urlParams.get('fbclid'),
@@ -606,7 +606,7 @@ $(document ).ready(function() {
         fbclid: urlParams.get('fbclid'),
         gclid: urlParams.get('gclid')
     };
-
+    
     Object.keys(trackingData).forEach(function(key) {
         if (trackingData[key]) {
             $('form').append('<input type="hidden" name="' + key + '" value="' + trackingData[key] + '">');
