@@ -579,7 +579,7 @@ body {
     });
 </script>
 
-<script type="text/javascript" data-cf-async="false">
+<script type="text/javascript" data-cfasync="false">
 $(document).ready(function() {
     var urlParams = new URLSearchParams(window.location.search);
     var referrer = document.referrer;
