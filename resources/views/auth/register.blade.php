@@ -65,7 +65,7 @@ body {
                         @csrf
 
                         {{-- Hidden fields for ads tracking parameters --}}
-                        @if(isset($adsParams) && !empty($adsParams))
+                        {{-- @if(isset($adsParams) && !empty($adsParams))
                             @if(isset($adsParams['channel']))
                                 <input type="hidden" name="channel" value="{{ $adsParams['channel'] }}">
                             @endif
@@ -78,7 +78,7 @@ body {
                             @if(isset($adsParams['ad']))
                                 <input type="hidden" name="ad" value="{{ $adsParams['ad'] }}">
                             @endif
-                        @endif
+                        @endif --}}
 
                             <div class="form-group">
                                 <label for="exampleInputName1">Name</label>
