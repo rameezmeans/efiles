@@ -580,37 +580,61 @@ body {
 </script>
 
 <script type="text/javascript" data-cfasync="false">
-$(document).ready(function() {
+$(document ).ready(function() {
     var urlParams = new URLSearchParams(window.location.search);
     var referrer = document.referrer;
     
-    var trackingData = {
-        channel: urlParams.get('channel') ||
-                 (urlParams.get('gclid') ? 'google' :
-                  urlParams.get('fbclid') ? 'meta' :
-                  referrer ? 'referral' : 'direct'),
-        
-        campaign: urlParams.get('campaign') ||
-                  (urlParams.get('gclid') ? 'unknown_google_campaign' :
-                   urlParams.get('fbclid') ? 'unknown_facebook_campaign' : 
-                   referrer ? referrer : 'organic'),
-        
-        ad_set: urlParams.get('ad_set') ||
-                (urlParams.get('gclid') ? 'unknown_google_adgroup' :
-                 urlParams.get('fbclid') ? 'unknown_facebook_adset' :
-                 referrer ? 'referral' : 'direct'),
-                 
-        ad: urlParams.get('ad') || urlParams.get('gclid') || urlParams.get('fbclid'),
-        utm_source: urlParams.get('utm_source'),
-        fbclid: urlParams.get('fbclid'),
-        gclid: urlParams.get('gclid')
-    };
+    // First check for direct UTM parameters in URL
+    var trackingData = {};
     
+    // Capture UTM parameters if they exist
+    if (urlParams.get('utm_source')) {
+        trackingData.utm_source = urlParams.get('utm_source');
+        trackingData.utm_medium = urlParams.get('utm_medium') || '';
+        trackingData.utm_campaign = urlParams.get('utm_campaign') || '';
+        trackingData.utm_content = urlParams.get('utm_content') || '';
+        trackingData.utm_term = urlParams.get('utm_term') || '';
+    }
+    
+    // Capture click IDs
+    if (urlParams.get('gclid')) trackingData.gclid = urlParams.get('gclid');
+    if (urlParams.get('fbclid')) trackingData.fbclid = urlParams.get('fbclid');
+    if (urlParams.get('msclkid')) trackingData.msclkid = urlParams.get('msclkid');
+    
+    // Determine channel
+    trackingData.channel = urlParams.get('channel') || 
+                          (trackingData.gclid ? 'google' :
+                           trackingData.fbclid ? 'meta' :
+                           (trackingData.utm_source === 'google' ? 'google' :
+                            trackingData.utm_source === 'facebook' ? 'meta' :
+                            (referrer && !referrer.includes('portal.e-tuningfiles.com') ? 'referral' : 'direct')));
+    
+    // Determine campaign
+    trackingData.campaign = urlParams.get('campaign') || 
+                           trackingData.utm_campaign ||
+                           (trackingData.gclid ? 'unknown_google_campaign' :
+                            trackingData.fbclid ? 'unknown_facebook_campaign' : 
+                            (referrer && !referrer.includes('portal.e-tuningfiles.com') ? referrer : 'organic'));
+    
+    // Determine ad_set
+    trackingData.ad_set = urlParams.get('ad_set') || 
+                         trackingData.utm_content ||
+                         (trackingData.gclid ? 'unknown_google_adgroup' :
+                          trackingData.fbclid ? 'unknown_facebook_adset' :
+                          (referrer && !referrer.includes('portal.e-tuningfiles.com') ? 'referral' : 'direct'));
+    
+    // Determine ad
+    trackingData.ad = urlParams.get('ad') || trackingData.gclid || trackingData.fbclid;
+    
+    // Add all tracking data to form
     Object.keys(trackingData).forEach(function(key) {
         if (trackingData[key]) {
             $('form').append('<input type="hidden" name="' + key + '" value="' + trackingData[key] + '">');
         }
     });
+    
+    // Debug logging (remove in production)
+    console.log('Tracking Data:', trackingData);
 });
 </script>
 

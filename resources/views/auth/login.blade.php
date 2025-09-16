@@ -71,4 +71,19 @@
             <div class="cut"></div>
         </div>
     </div>
+
+	<script type="text/javascript" data-cfasync="false">
+$(document).ready(function() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var signupLinks = $('a[href*="/register"]');
+    
+    if (urlParams.toString()) {
+        signupLinks.each(function() {
+            var href = $(this).attr('href');
+            var separator = href.includes('?') ? '&' : '?';
+            $(this).attr('href', href + separator + urlParams.toString());
+        });
+    }
+});
+</script>
 @endsection
