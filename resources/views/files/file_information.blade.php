@@ -478,20 +478,9 @@ p.tuning-resume {
 $(function () {
   const $btn = $('#next_step');
 
-  function isSet(sel){
-    const $el = $(sel);
-    const v = $el.val();
-    // Treat placeholder values equal to the element id (brand/model/...) as empty
-    return v && v !== $el.attr('id') && v !== 'brand' && v !== 'model' && v !== 'version' && v !== 'engine' && v !== 'ecu';
-  }
-
   function validateForm() {
     const ok =
-      isSet('#brand') &&
-      isSet('#model') &&
-      isSet('#version') &&
-      isSet('#engine') &&
-      isSet('#ecu') &&
+      ($('#brand').val() && $('#brand').val() !== 'brand') &&
       $.trim($('#license_plate').val()) !== '';
 
     $btn.prop('disabled', !ok);
@@ -500,11 +489,11 @@ $(function () {
   // Run once on load
   validateForm();
 
-  // Re-validate on every change/input
-  $(document).on('change', '#brand,#model,#version,#engine,#ecu', validateForm);
-  $(document).on('input',  '#license_plate', validateForm);
+  // Re-validate on changes
+  $(document).on('change', '#brand', validateForm);
+  $(document).on('input', '#license_plate', validateForm);
 
-  // Extra safety: block submit if somehow invalid
+  // Extra safety: block submit if disabled
   $('#file-upload-tuning-form').on('submit', function(e){
     validateForm();
     if ($btn.prop('disabled')) e.preventDefault();
