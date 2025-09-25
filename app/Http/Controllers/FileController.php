@@ -1184,8 +1184,20 @@ class FileController extends Controller
         $file->license_plate = $request->license_plate;
         $file->vin_number    = $request->vin_number;
         $file->brand         = $request->brand;
-        $file->model         = $request->model;
-        $file->engine        = $request->engine;
+
+        if($request->model){
+            $file->model       = $request->model;
+        }
+        else{
+            $file->model       = "Not Provided";
+        }
+
+        if($request->engine){
+            $file->engine       = $request->engine;
+        }
+        else{
+            $file->engine       = "Not Provided";
+        }
 
         if($request->version){
             $file->version       = $request->version;
