@@ -1206,11 +1206,16 @@ class FileController extends Controller
             $file->version       = "Not Provided";
         }
 
+        if($request->ecu){
+            $file->ecu       = $request->ecu;
+        }
+        else{
+            $file->ecu       = "Not Provided";
+        }
+
         if($request->file_type == 'ECU'){
-            $file->ecu = $request->file_type;
             $file->gearbox_ecu = NULL;
         }else{
-            $file->ecu = null;
             $file->gearbox_ecu = $request->file_type;
         }
 
