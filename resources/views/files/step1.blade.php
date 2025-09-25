@@ -187,6 +187,77 @@
 
           </div>
 
+          <div id="show-files" class="hide">
+            <form method="POST" action="{{ route('next-step') }}" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" id="show_temporary_file_id" name="temporary_file_id" value="">
+                
+                <!-- selected car payload -->
+                <input type="hidden" name="selected[id]" id="sel_id">
+                <input type="hidden" name="selected[brand]" id="sel_brand">
+                <input type="hidden" name="selected[model]" id="sel_model">
+                <input type="hidden" name="selected[version]" id="sel_version">
+                <input type="hidden" name="selected[engine]" id="sel_engine">
+                <input type="hidden" name="selected[ecu_type]" id="sel_ecu_type">
+                <input type="hidden" name="selected[vehicle_model_year]" id="sel_year">
+                <input type="hidden" name="selected[file_type]" id="sel_file_type">
+                <input type="hidden" name="selected[output_file_url]" id="sel_output">
+                <input type="hidden" name="selected[is_100_matched]" id="sel_is100">
+
+                <div id="carSelection" class="car-selection row"></div>
+
+                <div id="original_area" class="hide">
+
+                <div class="col-xl-6 col-lg-6 col-md-6">
+                  <div class="form-group">
+                      <label for="is_original">Is the file original? *</label>
+                      <select name="is_original" id="is_original" class="select-dropdown form-control">
+                          <option value="1" selected>File is original</option>
+                          <option value="-1">I don’t know if file is original</option>
+                          <option value="0">File is not original</option>
+                      </select>
+                      </div>
+                  </div>
+
+                  <div class="col-xl-6 col-lg-6 col-md-6">
+                  <div id="ecu_mods" class="form-group hide">
+                      <label for="is_original">Modification *</label>
+                      <select name="modification" id="modification" class="select-dropdown form-control">
+                         <option value="" selected disabled>Select Modification</option>  
+                        <option value="Stage 1">Stage 1</option>
+                          <option value="Stage 2" >Stage 2</option>
+                          <option value="Gearbox" >Gearbox</option>
+                          <option value="DPF" >DPF</option>
+                          <option value="EGR" >EGR</option>
+                          <option value="ADBLUE" >ADBLUE</option>
+                          <option value="POPS" >POPS</option>
+                          <option value="Back to Stock" >Back to Stock</option>
+                          
+                      </select>
+                      </div>
+
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6">
+                      <div id="gearbox_mods" class="form-group hide">
+                      <label for="is_original">Modification *</label>
+                      <select name="modification" id="modification" class="select-dropdown form-control">
+                          <option value="" selected disabled>Select Modification</option>
+                          <option value="Stage 1" >Stage 1</option>
+                          <option value="Stage 2" >Stage 2</option>
+                          <option value="Back to Stock" >Back to Stock</option>
+                          
+                      </select>
+                      </div>
+
+                  </div>
+
+                </div>
+
+                <button type="submit" id="next_step" class="waves-effect waves-light btn btn-red" disabled>{{__('Next')}}</button>
+            
+            </form>
+          </div>
+
           <div id="posting-file" class="@if($errors->any()) show @else hide @endif">
             <form id="step2" name="step2" method="POST" action="{{ route('step2') }}" enctype="multipart/form-data">
                 <input type="hidden" name="temporary_file_id" id="temporary_file_id" value="{{ old('temporary_file_id') }}">
@@ -658,16 +729,30 @@
         //   acceptedFiles: "'',.cod,.bin",
 
         success: function(file, response) {
-            console.log(response);
-            $('#step').html('Step 2/4');
-            $('#upload-area').addClass('hide');
-            $('#file-name').html('(File Attached)');
-            $('#temporary_file_id').val(response.tempFileID);
-            $('#file-name').removeClass('hide');
-            $('#posting-file').removeClass('hide');
-            $('.master-tools').addClass('hide');
-            $('.slave-tools').addClass('hide');
-            $('.i-content-block').addClass('level2');
+            
+            if(response.next_step == false){
+                $('#step').html('Step 2/4');
+                $('#upload-area').addClass('hide');
+                $('#file-name').html('(File Attached)');
+                $('#temporary_file_id').val(response.tempFileID);
+                $('#file-name').removeClass('hide');
+                $('#posting-file').removeClass('hide');
+                $('.master-tools').addClass('hide');
+                $('.slave-tools').addClass('hide');
+                $('.i-content-block').addClass('level2');
+            }
+            else{
+                console.log(response);
+                $('#show_temporary_file_id').val(response.tempFileID);
+                renderCars(response.api_response.FILES || []);
+                $('#show-files').removeClass('hide');
+                $('.master-tools').addClass('hide');
+                $('.slave-tools').addClass('hide');
+                $('.i-content-block').addClass('level2');
+                $('#step').html('Step 2/5');
+                $('#upload-area').addClass('hide');
+
+            }
         },
         error: function(file) {
             
@@ -1339,6 +1424,136 @@
         });
 
     });
+
+    function slugBrand(brand){
+  const b = (brand||'').trim().toLowerCase().replace(/\s+/g,'-');
+  return b || 'generic';
+}
+
+function htmlEscape(str) {
+  return String(str || '')
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function renderCars(files){
+  const $wrap = $('#carSelection').empty();
+
+  (files||[]).forEach((f,i)=>{
+    const brand = (f.brand||'').trim();
+    const model = (f.model||'').trim();
+    const engine = (f.engine||'').trim();
+    const ecu    = (f.ecu_type||'').trim();
+    const file_type    = (f.file_type||'').trim();
+    const year   = (f.vehicle_model_year||'').trim();
+    const ver    = (f.version||'').trim();
+
+    const title = [brand, model].filter(Boolean).join(' ') || 'Unknown';
+    const fromLine = (year || ver) ? `From ${year}${ver?` - ${ver}`:''}` : '';
+    const imgPath = `https://backend.ecutech.gr/icons/logos/${slugBrand(brand)}.png`;
+
+    $wrap.append(`
+      <div class="col-xl-6 col-lg-6 col-md-6">
+        <label class="card car-card" style="display:block; cursor:pointer;">
+            <!-- radio -->
+          <div class="card-action center-align">
+            <input type="radio"
+                   name="matched_choice"
+                   class="matched-radio"
+                   value="${htmlEscape(f.id)}"
+                   data-id="${htmlEscape(f.id)}"
+                   data-brand="${htmlEscape(brand)}"
+                   data-model="${htmlEscape(model)}"
+                   data-version="${htmlEscape(ver)}"
+                   data-engine="${htmlEscape(engine)}"
+                   data-ecu_type="${htmlEscape(ecu)}"
+                   data-year="${htmlEscape(year)}"
+                   data-file_type="${htmlEscape(f.file_type||'')}"
+                   data-output="${htmlEscape(f.OUTPUT_FILE_URL||'')}"
+                   data-is100="${htmlEscape(f.is_100_matched||'')}">
+            <span>Select</span>
+          </div>
+
+          <div class="card-image center-align">
+            <img src="${imgPath}" alt="${htmlEscape(title)}" style="max-width:100%;">
+          </div>
+          <div class="card-content center-align">
+            <h6><strong>${htmlEscape(title)}</strong></h6>
+            ${engine?`<p>${htmlEscape(engine)}</p>`:''}
+            ${ecu?`<p>${htmlEscape(ecu)}</p>`:''}
+            ${file_type?`<p>File Type: ${htmlEscape(file_type)}</p>`:''}
+            ${fromLine?`<p>${htmlEscape(fromLine)}</p>`:''}
+          </div>
+
+          
+        </label>
+      </div>
+    `);
+  });
+
+  $wrap.append(`
+    <div class="col-xl-6 col-lg-6 col-md-6">
+      <label class="card car-card manual-car" style="display:block; cursor:pointer; border:2px dashed #ccc;">
+        
+        <div class="card-action center-align">
+          <input type="radio"
+                 name="matched_choice"
+                 class="matched-radio"
+                 value="manual"
+                 data-manual="true">
+          <span>Select</span>
+        </div>
+
+        <div class="card-image center-align">
+        
+        </div>
+        <div class="card-content center-align">
+          <h6><strong>Add My Car Manually</strong></h6>
+          <p>Click here if your car does not appear in the list.</p>
+        </div>
+        
+      </label>
+    </div>
+  `);
+
+    $wrap.on('change', '.matched-radio', function () {
+    const el = this.dataset;
+
+    // fill hidden inputs
+    $('#sel_id').val(el.id);
+    $('#sel_brand').val(el.brand);
+    $('#sel_model').val(el.model);
+    $('#sel_version').val(el.version);
+    $('#sel_engine').val(el.engine);
+    $('#sel_ecu_type').val(el.ecu_type);
+    $('#sel_year').val(el.year);
+    $('#sel_file_type').val(el.file_type);
+    $('#sel_output').val(el.output);
+    $('#sel_is100').val(el.is100);
+
+    // enable next button
+    $('#next_step').prop('disabled', false);
+
+    // reset/hide conditional areas
+    $('#original_area').addClass('hide');
+    $('#ecu_mods').addClass('hide');
+    $('#gearbox_mods').addClass('hide');
+
+    // check matching rules
+    if (el.is100 === "False") {
+        $('#original_area').removeClass('hide');
+
+        if ((el.file_type || "").toUpperCase() === "ECU") {
+            $('#ecu_mods').removeClass('hide');
+        } else {
+            $('#gearbox_mods').removeClass('hide');
+        }
+    }
+});
+}
 
 </script>
 

@@ -254,6 +254,9 @@ Route::get('pdfview',array('as'=>'pdfview','uses'=>'App\Http\Controllers\Invoice
 Route::get('/upload', [App\Http\Controllers\FileController::class, 'step1'])->name('upload');
 Route::post('/add_file_log', [App\Http\Controllers\FileController::class, 'addFileLog'])->name('add-file-log');
 Route::get('/history', [App\Http\Controllers\FileController::class, 'fileHistory'])->name('history');
+Route::post('/download_file', [App\Http\Controllers\FileController::class, 'downloadFile'])->name('download-file');
+Route::post('/set_mods', [App\Http\Controllers\FileController::class, 'setMods'])->name('set-mods');
+Route::post('/next_step', [App\Http\Controllers\FileController::class, 'nextStep'])->name('next-step');
 Route::post('/step2', [App\Http\Controllers\FileController::class, 'step2'])->name('step2');
 Route::get('/terms_and_conditions', [App\Http\Controllers\FileController::class, 'termsAndConditions'])->name('terms-and-conditions');
 Route::get('/norefund_policy', [App\Http\Controllers\FileController::class, 'norefundPolicy'])->name('norefund-policy');
@@ -273,6 +276,9 @@ Route::get('auto_download', [App\Http\Controllers\FileController::class, 'autoDo
 Route::post('/file_checkout', [App\Http\Controllers\PaymentsController::class, 'fileCart'])->name('checkout-file');
 Route::post('/checkout_file', [App\Http\Controllers\PaymentsController::class, 'checkoutFile'])->name('checkout.file');
 Route::post('get_comments', [App\Http\Controllers\FileController::class, 'getComments'])->name('get-comments');
+
+Route::post('/check-stage-availability', [\App\Http\Controllers\FileController::class, 'checkAutoFile'])
+     ->name('check-stage-availability');
 
 Route::post('get_change_status', [App\Http\Controllers\FileController::class, 'changeCheckingStatus'])->name('get-change-status');
 Route::post('get_auto_download_button', [App\Http\Controllers\FileController::class, 'getDownloadButton'])->name('get-download-button');

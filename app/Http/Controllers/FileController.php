@@ -39,6 +39,11 @@ use ECUApp\SharedCode\Models\BrandECUComments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Log as FacadesLog;
+
+use Illuminate\Support\Facades\Http;
+
+
 use Pusher\Pusher;
 
 class FileController extends Controller
@@ -748,7 +753,7 @@ class FileController extends Controller
         $user = Auth::user();
         $file = $this->filesMainObj->saveFile($user, $tempFileID, $credits);
         
-        $this->filesMainObj->notifications($file);
+        // $this->filesMainObj->notifications($file);
         
         return redirect()->route('auto-download',['id' => $file->id]);
         
@@ -1085,6 +1090,258 @@ class FileController extends Controller
         return $this->filesMainObj->addStep1InforIntoTempFile($data, $fileUploaded);
     }
 
+    public function downloadFile(Request $request){
+
+        dd($request->all());
+    }
+
+    public function checkAutoFile(Request $request){
+
+        // dd($request->all());
+        
+        $foundFilID = $request->found_file_id;
+        $mod = strtolower(str_replace(' ', '_', $request->stage_name));
+
+        // dd($foundFilID);
+
+        $timeout = 10;
+        $enableMaxDiffArea = "off";
+        $maxDiffArea = 2000;
+        $enableMaxDiffBytes = "on";
+        $maxDiffBytes = 10000;
+        $minSimilarityDiffThreshold = 0.85;
+        $loop = 10;
+
+        $arguments = [
+                'FILE_ID' => $foundFilID,
+                'MOD' => 'DPF',
+                'ENABLE_MAX_DIFF_AREA' => $enableMaxDiffArea,
+                'MAX_DIFF_AREA' => $maxDiffArea,
+                'ENABLE_MAX_DIFF_BYTES' => $enableMaxDiffBytes,
+                'MAX_DIFF_BYTES' => $maxDiffBytes,
+                'MIN_SIMILARITY_DIFF_THRESHOLD' => $minSimilarityDiffThreshold,
+                'TIMEOUT' => $timeout,
+                'LOOP' => $loop,
+        ];
+
+        // dd($arguments);
+
+        $autoDeliverable = null;
+
+        // returns JSON: { available: bool, message: string }
+            return response()->json([
+            'available' => false,                 // true => Download, false => Checkout
+            'message'   => $autoDeliverable
+                            ? 'This modification can be delivered automatically.'
+                            : 'This modification will be delivered manually (delayed).'
+            ]);
+
+        try {
+            
+            $response = Http::timeout(10)
+                ->withHeaders([
+                    'Content-Type' => 'application/json',
+                ])
+                ->withBody(json_encode($arguments), 'application/json')
+                ->post('http://212.205.214.152:5000/external-api2');
+        
+            if ($response->successful()) {
+                // Success! Handle response
+                $data = $response->json();
+
+                // dd($data);
+                return response()->json($data);
+
+            } elseif ($response->clientError()) {
+                // 4xx errors
+                FacadesLog::error('Client error', ['response' => $response->body()]);
+                return response()->json(['status' => 400 ,'error' => '400: Client Error', 'response' => $response->body()], 400);
+            } elseif ($response->serverError()) {
+                // 5xx errors
+                FacadesLog::error('Server error', ['response' => $response->body()]);
+                return response()->json(['status' => 500 ,'error' => '500: Server Error', 'response' => $response->body()], 500);
+            }
+        } catch (\Exception $e) {
+            FacadesLog::error('Request failed', ['message' => $e->getMessage()]);
+            return response()->json(['error' => 'Request failed: ' . $e->getMessage()], 500);
+        }
+
+
+
+    }
+
+    public function setMods(Request $request){
+
+        // dd($request->all());
+
+        $file = TemporaryFile::findOrFail($request->file_id);
+
+        $file->name          = $request->name;
+        $file->email         = $request->email;
+        $file->phone         = $request->phone;
+        $file->model_year    = $request->model_year;
+        $file->file_type     = $request->file_type;
+        $file->license_plate = $request->license_plate;
+        $file->vin_number    = $request->vin_number;
+        $file->brand         = $request->brand;
+        $file->model         = $request->model;
+        $file->engine        = $request->engine;
+        $file->version       = $request->version;
+
+        if($request->file_type == 'ECU'){
+            $file->ecu = $request->file_type;
+            $file->gearbox_ecu = NULL;
+        }else{
+            $file->ecu = null;
+            $file->gearbox_ecu = $request->file_type;
+        }
+
+        if(isset($data['modification'])){
+            $file->modification = $request->modification;
+        }
+
+        // $file->is_original = $request->is_original;
+        
+        $file->credits = 0;
+
+        $file->save();
+
+        $mods = [];
+
+        $stages = [];
+
+        if($this->frontendID == 2){
+
+            $stagesFromLive = Service::orderBy('sorting', 'asc')
+            ->where('type', 'tunning')
+            ->whereNull('subdealer_group_id')
+            ->where('tuningx_active', 1)->get();
+
+            foreach($stagesFromLive as $stage ){
+                
+                    $stages []= $stage;
+                
+            }
+
+        }
+
+        else if($this->frontendID == 3){
+
+            $stagesFromLive = Service::orderBy('sorting', 'asc')
+            ->where('type', 'tunning')
+            ->whereNull('subdealer_group_id')
+            ->where('efiles_active', 1)->get();
+
+            foreach($stagesFromLive as $stage ){
+                
+                    $stages []= $stage;
+                
+            }
+
+        }
+
+        else{
+
+            $stagesFromLive = Service::orderBy('sorting', 'asc')
+            ->where('type', 'tunning')
+            ->whereNull('subdealer_group_id')
+            ->where('active', 1)->get();
+
+            foreach($stagesFromLive as $stage ){
+                
+                    $stages []= $stage;
+                
+            }
+
+        }
+
+        $options = [];
+
+        if($this->frontendID == 2){
+
+            $optionsFromLive = Service::orderBy('sorting', 'asc')
+            ->whereNull('subdealer_group_id')
+            ->where('type', 'option')->where('tuningx_active', 1)->get();
+            
+            foreach($optionsFromLive as $option ){
+                
+                    $options []= $option;
+                
+            }
+        }
+
+        else if($this->frontendID == 3){
+
+            $optionsFromLive = Service::orderBy('sorting', 'asc')
+            ->whereNull('subdealer_group_id')
+            ->where('type', 'option')->where('efiles_active', 1)->get();
+            
+            foreach($optionsFromLive as $option ){
+                
+                    $options []= $option;
+                
+            }
+        }
+
+        else{
+
+            $optionsFromLive = Service::orderBy('sorting', 'asc')
+            ->whereNull('subdealer_group_id')
+            ->where('type', 'option')->where('active', 1)->get();
+            
+            foreach($optionsFromLive as $option ){
+                
+                    $options []= $option;
+                
+            }
+
+        }
+
+        
+        $firstStage = $stages[0];
+
+        // dd($firstStage);
+
+        return view('files.apply_modes', [ 
+            
+            'file' => $file, 
+            'foundFileID' => $request->found_file_id, 
+            'mods' => $mods, 
+            'stages' => $stages, 
+            'options' => $options, 
+            'firstStage' => $firstStage, 
+            
+        ]);
+
+        
+    }
+
+    public function nextStep(Request $request){
+        
+        $tempFileID = $request->temporary_file_id;
+        $file = TemporaryFile::findOrFail($tempFileID);
+        $selected = $request->selected;
+        $matchedChoice = $request->matched_choice;
+        $file->modification = $request->modification;
+        
+        $file->is_original = $request->is_original;
+
+        $file->save();
+
+        // dd($file);
+
+        // dd($selected);
+
+        $brands = $this->filesMainObj->getBrands();
+
+        return view('files.file_information', [ 
+            'brands' => $brands, 
+            'file' => $file, 
+            'selected' => $selected, 
+            'matchedChoice' => $matchedChoice 
+        ]);
+    }
+
     /**
      * Show the application dashboard.
      *
@@ -1138,8 +1395,110 @@ class FileController extends Controller
             
         }
 
-        return response()->json(['tempFileID' => $tempFile->id]);
+        // Path to the file you want to upload
+        // $filePath = '/Users/polybit/Downloads/24587';
+        $filePath = $this->filesMainObj->getPath($file, $tempFile);
 
+        // Ensure the file exists before proceeding
+        if (!file_exists($filePath)) {
+            die('File not found: ' . $filePath);
+        }
+        
+        // Prepare the file for uploading
+        $fileContents = file_get_contents($filePath);
+
+        $threshold = 0.05;
+        $timeout = 10;
+        $fileSizeFilter = 'on';
+        
+        // Prepare the POST data (Multipart)
+        $boundary = uniqid('---', true);
+        $delimiter = '--' . $boundary;
+        $eol = "\r\n";
+        
+        $postData = "";
+        $postData .= $delimiter . $eol;
+        $postData .= 'Content-Disposition: form-data; name="input_file"; filename="24587"' . $eol;
+        $postData .= 'Content-Type: application/octet-stream' . $eol . $eol;
+        $postData .= $fileContents . $eol;
+        
+        $postData .= $delimiter . $eol;
+        $postData .= 'Content-Disposition: form-data; name="FILE_MATCHING_THRESHOLD"' . $eol . $eol;
+        $postData .= $threshold . $eol;
+        
+        $postData .= $delimiter . $eol;
+        $postData .= 'Content-Disposition: form-data; name="TIMEOUT"' . $eol . $eol;
+        $postData .= $timeout . $eol;
+        
+        $postData .= $delimiter . $eol;
+        $postData .= 'Content-Disposition: form-data; name="FILE_SIZE_FILTER"' . $eol . $eol;
+        $postData .= $fileSizeFilter . $eol;
+        
+        $postData .= '--' . $boundary . '--' . $eol; // End boundary
+        
+        // Create a stream context
+        $options = [
+            'http' => [
+                'method'  => 'POST',
+                'header'  => 'Content-Type: multipart/form-data; boundary=' . $boundary . $eol .
+                            'Content-Length: ' . strlen($postData) . $eol,
+                'content' => $postData,
+                'timeout' => 10 // Timeout in seconds
+            ]
+        ];
+        
+        $context = stream_context_create($options);
+
+        try{
+        
+            // Send the request and get the response
+            $response = file_get_contents('http://212.205.214.152:5000/external-api1', false, $context);
+            
+            // Check if the request was successful
+            if ($response === FALSE) {
+                return response()->json([
+
+                    'tempFileID' => $tempFile->id, 
+                    'next_step' => false, 
+                    'api_response' => [], 
+
+                ], 201);
+            
+            }
+
+        }
+        catch (\Exception $e) {
+            
+            Log::error("External API request failed: " . $e->getMessage());
+
+            return response()->json([
+
+                'tempFileID' => $tempFile->id, 
+                'next_step' => false, 
+                'api_response' => [], 
+
+            ], 201);
+        }
+        
+        // Output the response
+        $apiResponse = json_decode($response);
+        
+        if($apiResponse->STATUS != "FILE_NOT_FOUND"){
+
+            return response()->json([
+                'next_step' => true, 
+                'api_response' => $apiResponse, 
+                'tempFileID' => $tempFile->id,
+            ], 201);
+            
+        }
+        else{
+            return response()->json([
+                'next_step' => false, 
+                'api_response' => [], 
+                'tempFileID' => $tempFile->id,
+            ], 201);
+        }
 
     }
 
