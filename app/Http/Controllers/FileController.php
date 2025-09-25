@@ -753,9 +753,9 @@ class FileController extends Controller
         $user = Auth::user();
         $file = $this->filesMainObj->saveFile($user, $tempFileID, $credits);
         
-        // $this->filesMainObj->notifications($file);
+        $this->filesMainObj->notifications($file);
         
-        return redirect()->route('auto-download',['id' => $file->id]);
+        return redirect()->route('history');
         
     }
 
@@ -1186,7 +1186,13 @@ class FileController extends Controller
         $file->brand         = $request->brand;
         $file->model         = $request->model;
         $file->engine        = $request->engine;
-        $file->version       = $request->version;
+
+        if($request->version){
+            $file->version       = $request->version;
+        }
+        else{
+            $file->version       = "Not Provided";
+        }
 
         if($request->file_type == 'ECU'){
             $file->ecu = $request->file_type;
