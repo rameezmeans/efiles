@@ -912,12 +912,14 @@ p.tuning-resume {
             _token: $('meta[name="csrf-token"]').attr('content')
           });
 
+          console.log('here we are');
+
           try {
             const res = await $.ajax({
               url: "{{ route('check-stage-availability') }}",
               type: "POST",
               headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
-              data: { stage_id: newStageId, file_id: fileId }
+              data: { stage_name: stageName, found_file_id: foundFileId }
             });
 
             if (res.available) {
@@ -935,6 +937,7 @@ p.tuning-resume {
             }
           } catch (e) {
             // On error, fall back to checkout
+            // console.log(e.message);
             showStatus('Could not verify availability. Proceed to checkout.', 'danger');
             $('#delivery_mode').val('manual');
             $('#btn-download').addClass('hide');

@@ -1113,36 +1113,43 @@ class FileController extends Controller
         $loop = 10;
 
         $arguments = [
-                'FILE_ID' => $foundFilID,
-                'MOD' => 'DPF',
+                'input_file_path' => 'undefined',
+                'mode' => 'Stage 1',
                 'ENABLE_MAX_DIFF_AREA' => $enableMaxDiffArea,
-                'MAX_DIFF_AREA' => $maxDiffArea,
+                'max_diff_area' => $maxDiffArea,
                 'ENABLE_MAX_DIFF_BYTES' => $enableMaxDiffBytes,
-                'MAX_DIFF_BYTES' => $maxDiffBytes,
+                'max_diff_byte' => $maxDiffBytes,
                 'MIN_SIMILARITY_DIFF_THRESHOLD' => $minSimilarityDiffThreshold,
-                'TIMEOUT' => $timeout,
-                'LOOP' => $loop,
+                'timeout' => $timeout,
+                'loop' => $loop,
         ];
 
         // dd($arguments);
 
-        $autoDeliverable = null;
+        // $autoDeliverable = null;
 
-        // returns JSON: { available: bool, message: string }
-            return response()->json([
-            'available' => false,                 // true => Download, false => Checkout
-            'message'   => $autoDeliverable
-                            ? 'This modification can be delivered automatically.'
-                            : 'This modification will be delivered manually (delayed).'
-            ]);
+        // // returns JSON: { available: bool, message: string }
+        //     return response()->json([
+        //     'available' => false,                 // true => Download, false => Checkout
+        //     'message'   => $autoDeliverable
+        //                     ? 'This modification can be delivered automatically.'
+        //                     : 'This modification will be delivered manually (delayed).'
+        //     ]);
 
         try {
+
+            $safeArguments = array_map(function($v) {
+                return $v === null ? "" : $v;
+            }, $arguments);
+            
+
+            // dd($safeArguments);
             
             $response = Http::timeout(10)
                 ->withHeaders([
                     'Content-Type' => 'application/json',
                 ])
-                ->withBody(json_encode($arguments), 'application/json')
+                ->withBody(json_encode($safeArguments), 'application/json')
                 ->post('http://212.205.214.152:5000/external-api2');
         
             if ($response->successful()) {
