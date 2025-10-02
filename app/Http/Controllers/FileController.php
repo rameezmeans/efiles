@@ -755,7 +755,8 @@ class FileController extends Controller
         
         // $this->filesMainObj->notifications($file);
         
-        return redirect()->route('history');
+        return redirect()->route('auto-download');
+        // return redirect()->route('history');
         
     }
 
@@ -1435,7 +1436,7 @@ class FileController extends Controller
 
                 ], 201);
 
-                
+
 
         // Path to the file you want to upload
         // $filePath = '/Users/polybit/Downloads/24587';
