@@ -1112,9 +1112,9 @@ class FileController extends Controller
         $loop = 10;
 
         $arguments = [
-                'file_id' => $foundFilID,
-                // 'input_file_path' => 'undefined',
-                'input_file_path' => $foundFilPath,
+                // 'file_id' => $foundFilID,
+                'input_file_path' => 'undefined',
+                // 'input_file_path' => $foundFilPath,
                 'mode' => 'Stage 1',
                 'ENABLE_MAX_DIFF_AREA' => $enableMaxDiffArea,
                 'max_diff_area' => $maxDiffArea,
@@ -1447,8 +1447,8 @@ class FileController extends Controller
         // Prepare the file for uploading
         $fileContents = file_get_contents($filePath);
 
-        $threshold = 0.05;
-        $timeout = 10;
+        $threshold = 0.85;
+        $timeout = 20;
         $fileSizeFilter = 'on';
         
         // Prepare the POST data (Multipart)
