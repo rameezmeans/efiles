@@ -1435,6 +1435,8 @@ class FileController extends Controller
 
                 ], 201);
 
+                
+
         // Path to the file you want to upload
         // $filePath = '/Users/polybit/Downloads/24587';
         $filePath = $this->filesMainObj->getPath($file, $tempFile);
