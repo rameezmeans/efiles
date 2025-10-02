@@ -753,9 +753,9 @@ class FileController extends Controller
         $user = Auth::user();
         $file = $this->filesMainObj->saveFile($user, $tempFileID, $credits);
         
-        // $this->filesMainObj->notifications($file);
+        $this->filesMainObj->notifications($file);
         
-        return redirect()->route('auto-download');
+        return redirect()->route('auto-download',['id' => $file->id]);
         // return redirect()->route('history');
         
     }
