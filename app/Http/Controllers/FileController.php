@@ -1100,9 +1100,8 @@ class FileController extends Controller
         // dd($request->all());
         
         $foundFilID = $request->found_file_id;
+        $foundFilPath = $request->found_file_path;
         $mod = strtolower(str_replace(' ', '_', $request->stage_name));
-
-        // dd($foundFilID);
 
         $timeout = 10;
         $enableMaxDiffArea = "off";
@@ -1113,7 +1112,9 @@ class FileController extends Controller
         $loop = 10;
 
         $arguments = [
-                'input_file_path' => 'undefined',
+                'file_id' => $foundFilID,
+                // 'input_file_path' => 'undefined',
+                'input_file_path' => $foundFilPath,
                 'mode' => 'Stage 1',
                 'ENABLE_MAX_DIFF_AREA' => $enableMaxDiffArea,
                 'max_diff_area' => $maxDiffArea,
@@ -1336,6 +1337,7 @@ class FileController extends Controller
             
             'file' => $file, 
             'foundFileID' => $request->found_file_id, 
+            'foundFilePath' => $request->found_file_path, 
             'mods' => $mods, 
             'stages' => $stages, 
             'options' => $options, 
@@ -1424,6 +1426,14 @@ class FileController extends Controller
             $this->autoTunerMainObj->autoturnerDecrypt($path , $tempFile->id);
             
         }
+
+        return response()->json([
+
+                    'tempFileID' => $tempFile->id, 
+                    'next_step' => false, 
+                    'api_response' => [], 
+
+                ], 201);
 
         // Path to the file you want to upload
         // $filePath = '/Users/polybit/Downloads/24587';

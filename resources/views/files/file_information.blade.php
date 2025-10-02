@@ -458,6 +458,13 @@ p.tuning-resume {
                                             value="{{ $selected['id'] }}" 
                                             >
 
+                                            <input type="hidden" 
+                                            id="found_file_id" 
+                                            name="found_file_path" 
+                                            
+                                            value="{{ $selected['output_file_url'] }}" 
+                                            >
+
              
              <div class="col-xl-12 col-lg-12 col-md-12">
             <button type="submit" id="next_step" class="waves-effect waves-light btn btn-red">{{__('Next')}}</button>

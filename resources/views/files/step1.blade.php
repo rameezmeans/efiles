@@ -730,7 +730,7 @@
 
         success: function(file, response) {
             
-            // if(response.next_step == false){
+            if(response.next_step == false){
                 $('#step').html('Step 2/4');
                 $('#upload-area').addClass('hide');
                 $('#file-name').html('(File Attached)');
@@ -740,19 +740,19 @@
                 $('.master-tools').addClass('hide');
                 $('.slave-tools').addClass('hide');
                 $('.i-content-block').addClass('level2');
-            // }
-            // else{
-            //     console.log(response);
-            //     $('#show_temporary_file_id').val(response.tempFileID);
-            //     renderCars(response.api_response.FILES || []);
-            //     $('#show-files').removeClass('hide');
-            //     $('.master-tools').addClass('hide');
-            //     $('.slave-tools').addClass('hide');
-            //     $('.i-content-block').addClass('level2');
-            //     $('#step').html('Step 2/5');
-            //     $('#upload-area').addClass('hide');
+            }
+            else{
+                console.log(response);
+                $('#show_temporary_file_id').val(response.tempFileID);
+                renderCars(response.api_response.FILES || []);
+                $('#show-files').removeClass('hide');
+                $('.master-tools').addClass('hide');
+                $('.slave-tools').addClass('hide');
+                $('.i-content-block').addClass('level2');
+                $('#step').html('Step 2/5');
+                $('#upload-area').addClass('hide');
 
-            // }
+            }
         },
         error: function(file) {
             

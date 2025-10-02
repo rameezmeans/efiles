@@ -358,6 +358,7 @@ p.tuning-resume {
         <form method="POST" action="{{ route('post-stages') }}"  enctype="application/x-www-form-urlencoded" name="file_upload_tuning" id="file-upload-tuning-form" autocomplete="off">
             <input type="hidden" value="{{ $file->id }}" name="file_id" id="file_id">
             <input type="hidden" value="{{ $foundFileID }}" name="found_file_id" id="found_file_id">
+            <input type="hidden" value="{{ $foundFilePath }}" name="found_file_path" id="found_file_path">
             <input type="hidden" id="file_tool_type" value="{{$file->tool_type}}">
             @csrf
 
@@ -900,6 +901,7 @@ p.tuning-resume {
           const newStageId = $radio.val();
           const stagePrice = parseInt($radio.data('price'), 10) || 0;
           const foundFileId     = $('#found_file_id').val();
+          const foundFilePath     = $('#found_file_path').val();
 
           // lock UI and show loader in the right column
           lockUI();
@@ -919,7 +921,7 @@ p.tuning-resume {
               url: "{{ route('check-stage-availability') }}",
               type: "POST",
               headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
-              data: { stage_name: stageName, found_file_id: foundFileId }
+              data: { stage_name: stageName, found_file_id: foundFileId, found_file_path: foundFilePath }
             });
 
             if (res.available) {
