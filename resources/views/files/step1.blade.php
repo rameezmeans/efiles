@@ -206,7 +206,7 @@
 
                 <div id="carSelection" class="car-selection row"></div>
 
-                <div id="original_area" class="hide">
+                <div id="original_area_new" class="hide">
 
                 <div class="col-xl-6 col-lg-6 col-md-6">
                   <div class="form-group">
@@ -1538,13 +1538,13 @@ function renderCars(files){
     $('#next_step').prop('disabled', false);
 
     // reset/hide conditional areas
-    $('#original_area').addClass('hide');
-    $('#ecu_mods').addClass('hide');
-    $('#gearbox_mods').addClass('hide');
+    // $('#original_area').addClass('hide');
+    // $('#ecu_mods').addClass('hide');
+    // $('#gearbox_mods').addClass('hide');
 
     // check matching rules
     if (el.is100 === "False") {
-        $('#original_area').removeClass('hide');
+        // $('#original_area').removeClass('hide');
 
         if ((el.file_type || "").toUpperCase() === "ECU") {
             $('#ecu_mods').removeClass('hide');
