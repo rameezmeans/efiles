@@ -285,6 +285,61 @@ class PaymentsController extends Controller
     }
 
 
+    public function fileCartDownlaod(Request $request){
+
+        // dd($request->all());
+        
+        $file = TemporaryFile::findOrFail($request->file_id);
+
+        $outputFileUrl = $request->outputFileUrl;
+
+        $serviceCredits = $this->filesMainObj->getCredits($file);
+
+        $creditsToBuy = $serviceCredits - Auth::user()->credits->sum('credits');
+        $creditsForFile = $serviceCredits;
+
+        $fileID = $request->file_id;
+        $mode = $request->mode;
+
+        $user = Auth::user();
+
+        $price = $this->paymenttMainObj->getPrice();
+        $packages = $this->paymenttMainObj->getPackages($this->frontendID);
+
+        if($user->exclude_vat_check) {
+
+            if(!$user->group_id){
+                $vat0Group = Group::where('slug', 'VAT0')->first();
+                $user->group_id = $vat0Group->id;
+                $user->save();
+            }
+        }
+
+        else{
+
+            $this->authMainObj->VATCheckPolicy($user);
+            
+        }
+        
+        $factor = 0;
+        $tax = 0;
+
+        if($user->group->tax > 0){
+            $tax = (float) $user->group->tax;
+        }
+
+        if($user->group->raise > 0){
+            $factor = (float)  ($user->group->raise / 100) * $price->value;
+        }
+
+        if($user->group->discount > 0){
+            $factor =  -1* (float) ($user->group->discount / 100) * $price->value;
+        }
+
+        return view('files.file_cart_download', ['mode'=>$mode, 'outputFileUrl' => $outputFileUrl,'user' => $user, 'file_id' => $fileID,'creditsToBuy' => $creditsToBuy, 'creditsForFile' => $creditsForFile, 'packages' => $packages, 'price' => $price, 'tax' => $tax, 'factor' => $factor, 'group' => $user->group] );
+
+    }
+
     public function fileCart(Request $request){
 
         $file = TemporaryFile::findOrFail($request->file_id);
@@ -437,6 +492,307 @@ class PaymentsController extends Controller
 
         $user = User::findOrFail($userID);
         $this->elorusMainObj->createTestElorusCustomer($user);
+
+    }
+
+    public function successDownload(Request $request){
+
+        // dd($request->all());
+        
+        $this->vivaCreds();
+
+        $package = false;
+        $offer = false;
+        $fileFlag = false;
+        $viva = false;
+        $packageID = 0;
+
+        if(isset($request->purpose) && $request->purpose == 'offer'){
+            $offer = true;
+            $fileID = $request->file_id;
+        }
+
+        if(isset($request->eventId)){
+            $viva = true;
+        }
+
+        if(!$offer) {
+            
+            if(isset($request->file_id)){
+                $fileFlag = true;
+                $fileID = $request->file_id;
+            }
+
+        }
+
+        $user = Auth::user();
+        $type = $request->type;
+
+        if($type == 'stripe'){
+            $sessionID = $request->get('session_id');
+        }
+        else if($type == 'paypal'){
+
+            $arr = [];
+
+            $arr['PayerID'] = $request->input('PayerID');
+            $arr['paymentId'] = $request->input('paymentId');
+            
+            $sessionID = $arr;
+
+            // $this->gateway->setClientId($user->paypal_payment_account()->key);
+            // $this->gateway->setSecret($user->paypal_payment_account()->secret);
+            // // $this->gateway->setTestMode(false);
+            // $this->gateway->setTestMode(true);
+
+            // if ($request->input('paymentId') && $request->input('PayerID')) {
+            //     $transaction = $this->gateway->completePurchase(array(
+            //         'payer_id' => $request->input('PayerID'),
+            //         'transactionReference' => $request->input('paymentId')
+            //     ));
+    
+            //     $response = $transaction->send();
+
+            //     if ($response->isSuccessful()) {
+    
+            //         $arr = $response->getData();
+
+            //         Log::info(json_encode($arr));
+
+            //         $sessionID = $arr['id'];
+
+            //     }
+
+            // }
+
+            // $configArr = config('paypal');
+
+            // $configArr['live']['client_id'] = $user->paypal_payment_account()->key;
+            // $configArr['live']['client_secret'] = $user->paypal_payment_account()->secret;
+
+            // // $sessionID = $request->get('PayerID');
+            // PayPal::setProvider();
+            // $paypalProvider = PayPal::getProvider();
+            // $paypalProvider->setApiCredentials($configArr);
+            // $paypalProvider->setAccessToken($paypalProvider->getAccessToken());   
+            // $token = $request->get('token');
+
+            // $orderInfo = $paypalProvider->showOrderDetails($token);
+            // $response = $paypalProvider->capturePaymentOrder($token);
+
+            // Log::info(json_encode($orderInfo));
+            // Log::info(json_encode($response));
+
+            // dd($response);
+
+            
+        }
+        else{
+            $sessionID = $request->get('t');
+        }
+
+        if($offer){ 
+
+            $file = File::findOrFail($request->file_id);
+            
+            $serviceCredits = $this->filesMainObj->getCredits($file);
+
+            $credits = $request->creditsToBuy;
+            $creditsForFile = $request->creditsForFile;
+
+            $fileID = $request->file_id;
+
+            $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
+            // $file = $this->filesMainObj->acceptOfferFinalise($user, $fileID, $creditsForFile, $this->frontendID);
+        }
+
+        if($fileFlag){
+
+            $file = TemporaryFile::findOrFail($request->file_id);
+
+            $serviceCredits = $this->filesMainObj->getCredits($file);
+
+            $credits = $serviceCredits - Auth::user()->credits->sum('credits');
+            $creditsForFile = $serviceCredits;
+
+            $fileID = $request->file_id;
+
+            $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
+            // $file = $this->filesMainObj->saveFile($user, $fileID, $creditsForFile, $type);
+            // $this->filesMainObj->notifications($file);
+
+        }
+
+        else{
+
+            if($viva){
+
+                $type = 'viva';
+                $sessionID = $request->get('t');
+                $transaction = VivaWallet::retrieveTransaction($request->get('t'));
+
+                $merchantTrns = json_decode($transaction['merchantTrns']);
+
+                if(isset($merchantTrns->package_id)) {
+
+                    $package = true;
+                    $packageObj = Package::findOrFail($merchantTrns->package_id);
+                    $packageID = $packageObj->id;
+                    $credits = $packageObj->credits;
+                    $invoice = $this->paymenttMainObj->addCreditsPackage($user, $sessionID, $packageObj, $type);
+
+                }
+                else if(isset($merchantTrns->file_id)){
+
+                    if(isset($merchantTrns->type) && $merchantTrns->type == 'offer'){
+
+                        $offer = true;
+                        $creditsForFile = $merchantTrns->credits_for_file;
+                        $credits = $merchantTrns->credits_to_buy;
+                        $fileID = $merchantTrns->file_id;
+                        $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
+                        // $file = $this->filesMainObj->acceptOfferFinalise($user, $fileID, $creditsForFile, $this->frontendID);
+
+                    }
+                    else{
+                    
+                        $fileFlag = true;
+                        $fileID = $merchantTrns->file_id;
+
+                        $file = TemporaryFile::findOrFail($request->file_id);
+                        $serviceCredits = $this->filesMainObj->getCredits($file);
+                        $credits = $serviceCredits - Auth::user()->credits->sum('credits');
+                        $creditsForFile = $serviceCredits;
+
+                        $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
+                        // $file = $this->filesMainObj->saveFile($user, $fileID, $creditsForFile, $type);
+                        // $this->filesMainObj->notifications($file);
+                    }
+
+                }
+                else{
+                    $amount = $transaction['amount'];
+                    $price = $this->paymenttMainObj->getPrice()->value;
+                    $tax = (float) $user->group->tax;
+                    $amountWithoutTax =  $amount;
+                    $taxAmount = 0;
+
+                    if($tax>0){
+                        $taxAmount = $amount * $tax/100;
+                        $amountWithoutTax = $amount - $taxAmount;
+                    }
+
+                    $credits = (float) $amountWithoutTax / $price;
+                    $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
+                }
+                
+            }
+            else{
+
+                if($offer == false){ 
+
+                    if($request->packageID == 0){
+
+                        $credits = $request->credits;
+                        $invoice = $this->paymenttMainObj->addCredits($user, $sessionID, $credits, $type);
+                    }
+                    else{
+
+                        $package = true;
+                        $packageID = $request->packageID;
+                        $package = Package::findOrFail($packageID);
+                        $credits = $package->credits;
+                        $invoice = $this->paymenttMainObj->addCreditsPackage($user, $sessionID, $package, $type);
+                        
+                    }
+                }
+            }
+        }
+
+        if($user->zohobooks_id == NULL){
+            $this->zohoMainObj->createZohoAccount($user, $invoice->id);
+        }
+
+        if($user->zohobooks_id){
+
+            if($invoice == NULL){
+                return redirect()->route('cart')->with('success', 'Credits not added.');
+            }
+
+            $this->zohoMainObj->createZohobooksInvoice($user, $invoice, $package, $type, $packageID);
+        }
+
+        if($user->zohobooks_id == NULL){
+
+            $this->zohoMainObj->createZohoAccount($user, $invoice->id);
+        }
+
+        if($type == 'stripe'){
+            $account = $user->stripe_payment_account();
+            
+        }
+        else if($type == 'viva'){
+            $account = $user->viva_payment_account();
+            
+        }
+        else{
+            $account = $user->paypal_payment_account();
+        }
+
+        if($account->elorus){
+
+            $clientID = null;
+
+            if($user->elorus_id == null){
+                
+                $clientID = $this->elorusMainObj->createElorusCustomer($user);
+            }
+            else{
+                $clientID = $user->elorus_id;
+            }
+            
+            if(country_to_continent($user->country) == 'Europe'){
+
+                $this->elorusMainObj->createElorusInvoice($invoice, $clientID, $user, $package);
+
+            }
+        }
+
+        \Cart::remove(101);
+
+        if($offer){
+            return redirect()->route('file', $file->id)->with('success', 'Offer is accepted!');
+        }
+
+        if($fileFlag){
+
+        $mode = $request->mode;
+        $outputFileUrl = $request->fileURL;
+        $price = $this->paymenttMainObj->getPrice();
+
+        // dd($file);
+
+        return redirect()->route('pay-credits-download-file', [
+                'file' => $file->id,
+                'fileURL' => $outputFileUrl,
+                'mode' => $mode,
+            ]);
+
+        // return view( 'files.pay_credits_download_file', [ 
+        //     'file' => $file, 
+        //     'outputFileUrl' => $outputFileUrl, 
+        //     'mode' => $mode, 
+        //     'credits' => $serviceCredits, 
+        //     'price' => $price,
+        //     'factor' => 0,
+        //     'tax' => 0,
+        //     'group' =>  $user->group,
+        //     'user' =>  $user
+        // ] );
+            // return redirect()->route('auto-download',['id' => $file->id]);
+        }
+
+        return redirect()->route('shop-product')->with('success', 'Credits are added!');
 
     }
 
@@ -787,6 +1143,62 @@ class PaymentsController extends Controller
 
     }
     
+    public function payCreditsDownloadFile(Request $request, $file)
+    {
+        // dd($request->all());
+        // dd($file);
+        $file = TemporaryFile::findOrFail($file);
+        // dd($file);
+        $user = Auth::user();
+
+        $mode = $request->mode;
+        $outputFileUrl = $request->fileURL;
+        $price = $this->paymenttMainObj->getPrice();
+        $serviceCredits = $this->filesMainObj->getCredits($file);
+        // $serviceCredits = $this->calculateServiceCredits($file, $mode);
+
+        return view('files.pay_credits_download_file', [
+            'file' => $file,
+            'outputFileUrl' => $outputFileUrl,
+            'mode' => $mode,
+            'credits' => $serviceCredits,
+            'price' => $price,
+            'factor' => 0,
+            'tax' => 0,
+            'group' => $user->group,
+            'user' => $user,
+        ]);
+    }
+
+    public function checkoutFileDownload(Request $request){
+
+        // dd($request->all());
+
+        $outputFileUrl = $request->output_file_url;
+        $mode = $request->mode;
+
+        $file = TemporaryFile::findOrFail($request->file_id);
+
+        $serviceCredits = $this->filesMainObj->getCredits($file);
+
+        $creditsToBuy = $serviceCredits - Auth::user()->credits->sum('credits');
+        $creditsForFile = $serviceCredits;
+
+        $fileID = $request->file_id;
+
+        $type = $request->type;
+        $user = Auth::user();
+        $unitPrice =  $this->paymenttMainObj->getPrice()->value;
+        
+        if($type == 'stripe'){
+            return $this->paymenttMainObj->redirectStripeFileDownload($user, $unitPrice, $creditsToBuy, $creditsForFile, $fileID, $mode, $outputFileUrl);
+        }
+        else{
+            return $this->paymenttMainObj->redirectPaypalFile($user, $unitPrice, $creditsToBuy, $creditsForFile, $fileID);
+        }
+        
+    }
+
     public function checkoutFile(Request $request){
 
         $file = TemporaryFile::findOrFail($request->file_id);

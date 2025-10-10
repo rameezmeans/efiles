@@ -419,11 +419,20 @@ p.tuning-resume {
                     <i class="fa fa-arrow-right"></i> Go to Checkout Page
                   </button>
 
+                  {{-- <form method="POST" id="file-upload-tuning-form" action="{{ route('download-file') }}"> --}}
+                    <input type="hidden" name="mode" id="mode">
+                    <input type="hidden" name="output_file_url" id="output_file_url">
+
+                    <button class="btn btn-red m-t-10 hide" 
+                            type="submit" 
+                            id="btn-download"
+                            formaction="{{ route('download-file') }}">
+                      <i class="fa fa-arrow-right"></i> Go to Download Page
+                    </button>
+
+                  {{-- </form> --}}
                   <!-- Download (hidden by default) -->
-                  <button class="btn btn-red m-t-10 hide" type="submit" id="btn-download"
-                          formaction="{{ route('download-file') }}">
-                    <i class="fa fa-arrow-right"></i> Go to Download Page
-                  </button>
+                  
                 </div>
 
               </div>
@@ -588,6 +597,21 @@ p.tuning-resume {
     // };
 
     $(document).ready(function(){
+
+    //   $('#btn-download').on('click', function (e) {
+
+    //   e.preventDefault(); // make sure we fill fields first
+    //   // if (!lastStagePayload || !lastStagePayload.output) {
+    //   //   alert('File not ready for download yet.');
+    //   //   return;
+    //   // }
+     
+    //   // $('#mode').val(lastStagePayload.mode);
+    //   // $('#output_file_url').val(lastStagePayload.output);
+
+    //   // submit the parent form to the button's formaction
+    //   this.form.submit();
+    // });
 
       function checkMandatoryFields() {
         // Get all visible .comments-area-* sections (no 'hide' class)
@@ -921,7 +945,7 @@ p.tuning-resume {
               url: "{{ route('check-stage-availability') }}",
               type: "POST",
               headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
-              data: { stage_name: stageName, found_file_id: foundFileId, found_file_path: foundFilePath }
+              data: { stage_id: newStageId, found_file_id: foundFileId, found_file_path: foundFilePath }
             });
 
             if (res.available) {
@@ -930,6 +954,13 @@ p.tuning-resume {
               $('#delivery_mode').val('auto');
               $('#btn-checkout').addClass('hide');
               $('#btn-download').removeClass('hide');
+
+              // set fields needed by download-file route
+              // server may send res.mode; if missing, derive from stageName
+              
+              $('#mode').val(res.mode);
+              $('#output_file_url').val(res.output_file_url || '');
+
             } else {
               // MANUAL delivery → show Checkout, hide Download
               showStatus(res.message || 'This modification will be delivered manually (delayed).', 'danger');

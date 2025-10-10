@@ -36,6 +36,7 @@ use ECUApp\SharedCode\Models\Tool;
 use ECUApp\SharedCode\Models\User;
 use ECUApp\SharedCode\Models\Vehicle;
 use ECUApp\SharedCode\Models\BrandECUComments;
+use ECUApp\SharedCode\Models\FileReplySoftwareService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -753,10 +754,10 @@ class FileController extends Controller
         $user = Auth::user();
         $file = $this->filesMainObj->saveFile($user, $tempFileID, $credits);
         
-        $this->filesMainObj->notifications($file);
+        // $this->filesMainObj->notifications($file);
         
-        return redirect()->route('auto-download',['id' => $file->id]);
-        // return redirect()->route('history');
+        // return redirect()->route('auto-download',['id' => $file->id]);
+        return redirect()->route('history');
         
     }
 
@@ -1093,10 +1094,181 @@ class FileController extends Controller
 
     public function downloadFile(Request $request){
 
-        dd($request->all());
+        $mode = $request->mode;
+        // dd($mode);
+        $stage = Service::FindOrFail($request->stage);
+        // $stageName = $stage->name;
+        $outputFileUrl = $request->output_file_url;
+
+        // $options = $request->options;
+        // $validation = $this->filesMainObj->getStep3ValidationStage($stageName, $options);
+        // $request->validate($validation['rules'], $validation['messages']);
+        
+        $fileID = $request->file_id;
+        // $DTCComments = $request->dtc_off_comments;
+        // $vmaxComments = $request->vmax_off_comments;
+
+        $optionComments = $request->option_comments;
+        $file = $this->filesMainObj->saveStagesInfo($fileID, $optionComments);
+        FileService::where('service_id', $stage->id)->where('temporary_file_id', $file->id)->delete();
+        
+        $serviceCredits = 0;
+        $serviceCredits += $this->filesMainObj->saveFileStages($file, $stage, $this->frontendID);
+        // $serviceCredits += $this->filesMainObj->saveFileOptions($file, $stage, $options, $this->frontendID);
+
+        $price = $this->paymentMainObj->getPrice();
+        $user = Auth::user();
+        
+        return view( 'files.pay_credits_download_file', [ 
+        'file' => $file, 
+        'outputFileUrl' => $outputFileUrl, 
+        'mode' => $mode, 
+        'credits' => $serviceCredits, 
+        'price' => $price,
+        'factor' => 0,
+        'tax' => 0,
+        'group' =>  $user->group,
+        'user' =>  $user
+        ] );
     }
 
+    public function downloadAutoFileAndCreateTask(Request $request){
+
+        // dd($request->all());
+
+        $tempFileID = $request->file_id;
+        $credits = $request->credits;
+        $outputFileUrl = $request->outputFileUrl;
+        
+        $user = Auth::user();
+        $file = $this->filesMainObj->saveFile($user, $tempFileID, $credits);
+
+        
+
+        // Ensure folder path exists
+    $destinationFolder = public_path(trim($file->file_path, '/')); // e.g. public/uploads/Porsche/Turbo/9865
+    // Get filename from URL
+    $fileName = basename(parse_url($outputFileUrl, PHP_URL_PATH));
+    
+
+    $engineerFile = new RequestFile();
+    $engineerFile->request_file = $fileName;
+    $engineerFile->old_name = $fileName;
+    $engineerFile->file_type = 'engineer_file';
+    $engineerFile->tool_type = 'not_relevant';
+    $engineerFile->master_tools = 'not_relevant';
+    $engineerFile->file_id = $file->id;
+    $engineerFile->user_id = Auth::user()->id;
+    $engineerFile->engineer = true;
+
+    $engineerFile->save();
+
+    $newRecord = new FileReplySoftwareService();
+    $newRecord->file_id = $file->id;
+    $newRecord->service_id = $file->stage_services->service_id;
+    $newRecord->software_id = 9;
+    $newRecord->reply_id = $engineerFile->id;
+    $newRecord->save();
+
+    $middleName = $file->id;
+        $middleName .= date("dmy");
+        
+        // dd($file->softwares);
+
+        foreach($file->softwares as $s){
+            if($s->service_id != 1){
+                if($s->reply_id == $engineerFile->id){
+                    $middleName .= $s->service_id.$s->software_id;
+                }
+            }
+        }
+
+    $newFileName = $file->brand.'_'.$file->model.'_'.$middleName.'_v'.$file->files->count();
+        
+        $newFileName = str_replace('/', '', $newFileName);
+        $newFileName = str_replace('\\', '', $newFileName);
+        $newFileName = str_replace('#', '', $newFileName);
+        $newFileName = str_replace(' ', '_', $newFileName);
+
+        $destinationPath = $destinationFolder . '/' . $newFileName;
+
+    try{
+            $fileContents = file_get_contents($outputFileUrl);
+
+            // dd($fileContents);
+
+            if ($fileContents === false) {
+
+                dd("404");
+                return back()->with('error', 'Failed to download file from remote server.');
+            }
+
+            // dd($destinationFolder);
+
+            // Save the file to target folder
+            file_put_contents($destinationPath, $fileContents);
+
+            $engineerFile->request_file = $newFileName;
+            $engineerFile->save();
+
+            if($file->status == 'submitted'){
+                $file->status = 'completed';
+                $file->status = 'completed';
+                $file->support_status = "closed";
+                $file->checked_by = 'engineer';
+                $file->save();
+            }
+
+            $file->reupload_time = Carbon::now();
+            $file->response_time = $this->getResponseTimeAutoAPI($file);
+            $file->automatic = 1;
+            $file->save();
+
+
+            return response()->view('files.download_then_redirect', [
+                'downloadUrl' => asset(str_replace(public_path(), '', $destinationPath)),
+                'redirectUrl' => route('file', $file->id),
+            ]);
+
+            // return redirect()->route('file', $file->id);
+
+        } catch (\Exception $e) {
+
+            dd($e->getMessage());
+            return back()->with('error', 'Error: ' . $e->getMessage());
+        }
+
+        // dd($engineerFile);
+
+        return redirect()->route('file', $file->id);
+
+    }
+
+    public function getResponseTimeAutoAPI($file){
+        
+        $fileAssignmentDateTime = Carbon::parse($file->created_at);
+        $carbonUploadDateTime = Carbon::parse($file->reupload_time);
+
+        $responseTime = $carbonUploadDateTime->diffInSeconds( $fileAssignmentDateTime );
+
+        return $responseTime;
+    }
+    
     public function checkAutoFile(Request $request){
+
+        $stageName = Service::findOrFail( $request->stage_id )->name;
+
+        $mode = strtolower(str_replace(' ', '_', $stageName));
+
+        // dd($mode);
+
+        // 🔹 Temporary fake response for testing
+        return response()->json([
+            'available' => true, // true => Go to Download Page, false => Checkout
+            'mode' => $request->stage_id,
+            'message'   => 'This modification can be delivered automatically.',
+            'output_file_url' => "https://raw.githubusercontent.com/mdn/learning-area/main/javascript/introduction-to-js-1/assessment-start/raw-text.txt"
+        ]);
 
         // dd($request->all());
         
@@ -1130,13 +1302,13 @@ class FileController extends Controller
 
         // $autoDeliverable = null;
 
-        // // returns JSON: { available: bool, message: string }
-        //     return response()->json([
-        //     'available' => false,                 // true => Download, false => Checkout
-        //     'message'   => $autoDeliverable
-        //                     ? 'This modification can be delivered automatically.'
-        //                     : 'This modification will be delivered manually (delayed).'
-        //     ]);
+        // returns JSON: { available: bool, message: string }
+            return response()->json([
+            'available' => false,                 // true => Download, false => Checkout
+            'message'   => $autoDeliverable
+                            ? 'This modification can be delivered automatically.'
+                            : 'This modification will be delivered manually (delayed).'
+            ]);
 
         try {
 
@@ -1428,13 +1600,13 @@ class FileController extends Controller
             
         }
 
-        return response()->json([
+        // return response()->json([
 
-                    'tempFileID' => $tempFile->id, 
-                    'next_step' => false, 
-                    'api_response' => [], 
+        //             'tempFileID' => $tempFile->id, 
+        //             'next_step' => false, 
+        //             'api_response' => [], 
 
-                ], 201);
+        //         ], 201);
 
 
 

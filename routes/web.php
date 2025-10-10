@@ -274,11 +274,15 @@ Route::post('/add_credits_to_file', [App\Http\Controllers\FileController::class,
 Route::get('/file/{id}', [App\Http\Controllers\FileController::class, 'showFile'])->name('file');
 Route::get('auto_download', [App\Http\Controllers\FileController::class, 'autoDownload'])->name('auto-download');
 Route::post('/file_checkout', [App\Http\Controllers\PaymentsController::class, 'fileCart'])->name('checkout-file');
+Route::post('/file_checkout_download', [App\Http\Controllers\PaymentsController::class, 'fileCartDownlaod'])->name('checkout-file-download');
+Route::post('/checkout_file_download', [App\Http\Controllers\PaymentsController::class, 'checkoutFileDownload'])->name('checkout.file.download');
+Route::get('/files/pay-credits-download-file/{file}', [App\Http\Controllers\PaymentsController::class, 'payCreditsDownloadFile'])
+    ->name('pay-credits-download-file');
 Route::post('/checkout_file', [App\Http\Controllers\PaymentsController::class, 'checkoutFile'])->name('checkout.file');
 Route::post('get_comments', [App\Http\Controllers\FileController::class, 'getComments'])->name('get-comments');
 
-Route::post('/check-stage-availability', [\App\Http\Controllers\FileController::class, 'checkAutoFile'])
-     ->name('check-stage-availability');
+Route::post('/check-stage-availability', [\App\Http\Controllers\FileController::class, 'checkAutoFile'])->name('check-stage-availability');
+Route::post('/download-auto-file-and-create-task', [\App\Http\Controllers\FileController::class, 'downloadAutoFileAndCreateTask'])->name('download-auto-file-and-create-task');
 
 Route::post('get_change_status', [App\Http\Controllers\FileController::class, 'changeCheckingStatus'])->name('get-change-status');
 Route::post('get_auto_download_button', [App\Http\Controllers\FileController::class, 'getDownloadButton'])->name('get-download-button');
@@ -336,6 +340,7 @@ Route::post('checkout_packages_paypal', [App\Http\Controllers\PaymentsController
 Route::post('/checkout_stripe', [App\Http\Controllers\PaymentsController::class, 'stripeCheckout'])->name('checkout.stripe');
 Route::post('/checkout_paypal', [App\Http\Controllers\PaymentsController::class, 'paypalCheckout'])->name('checkout.paypal');
 Route::get('/success', [App\Http\Controllers\PaymentsController::class, 'success'])->name('checkout.success');
+Route::get('/success_download', [App\Http\Controllers\PaymentsController::class, 'successDownload'])->name('checkout.success.download');
 Route::get('/success_package', [App\Http\Controllers\PaymentsController::class, 'successPackage'])->name('checkout.success.package');
 Route::get('/cancel', [App\Http\Controllers\PaymentsController::class, 'cancel'])->name('checkout.cancel');
 
