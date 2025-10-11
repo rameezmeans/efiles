@@ -37,8 +37,10 @@ use ECUApp\SharedCode\Models\User;
 use ECUApp\SharedCode\Models\Vehicle;
 use ECUApp\SharedCode\Models\BrandECUComments;
 use ECUApp\SharedCode\Models\FileReplySoftwareService;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 use Illuminate\Support\Facades\Log as FacadesLog;
 
@@ -1254,107 +1256,235 @@ class FileController extends Controller
         return $responseTime;
     }
 
-    public function checkAutoFile(Request $request){
+    public function checkAutoFile(Request $request)
+{
+    // 1) Resolve stage -> mode
+    $stage = Service::findOrFail($request->stage_id);
+    $modeSlug = $stage->id; // for our UI
+    $apiMode  = (string) Str::of($stage->name)->replace(' ', '_');          // for remote API (keeps case)
 
-        // Resolve stage -> mode slug
-        $stage = Service::findOrFail($request->stage_id);
-        $mode  = Str::of($stage->name)->lower()->replace(' ', '_'); // e.g. "Stage 1" -> "stage_1"
+    // 2) Build POST fields (as the cURL snippet you provided)
+    $postFields = [
+        // 'input_file_path' => $request->found_file_path ?? '', // include if your API needs it
+        // 'mode'                           => $apiMode ?: 'Stage_1',
+        'mode'                           => 'Stage_1',
+        'ENABLE_MAX_DIFF_AREA'           => 'off',
+        'MAX_DIFF_AREA'                  => '2000',
+        'ENABLE_MAX_DIFF_BYTES'          => 'on',
+        'MAX_DIFF_BYTE'                  => '10000',
+        'MIN_SIMILARITY_DIFF_THRESHOLD'  => '0.85',
+        'timeout'                        => '10',
+        'loop'                           => '10',
+    ];
 
-        // Build arguments expected by the external service
-        $arguments = [
-            // 'file_id'         => $request->found_file_id,   // <- uncomment if your API needs it
-            // 'input_file_path' => $request->found_file_path, // <- uncomment if your API needs it
-            'input_file_path'             => 'undefined',
-            'mode'                        => $mode, // keep as-is if your API expects this literal
-            'ENABLE_MAX_DIFF_AREA'        => 'off',
-            'max_diff_area'               => 2000,
-            'ENABLE_MAX_DIFF_BYTES'       => 'on',
-            'max_diff_byte'               => 10000,
-            'MIN_SIMILARITY_DIFF_THRESHOLD' => 0.85,
-            'timeout'                     => 10,
-            'loop'                        => 10,
-        ];
+    $curl = curl_init();
+    curl_setopt_array($curl, [
+        CURLOPT_URL            => 'http://212.205.214.152:5000/external-api2',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING       => '',
+        CURLOPT_MAXREDIRS      => 10,
+        CURLOPT_TIMEOUT        => 15,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST  => 'POST',
+        CURLOPT_POSTFIELDS     => $postFields, // array => multipart/form-data
+        // If your API insists on JSON, swap to:
+        // CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
+        // CURLOPT_POSTFIELDS     => json_encode($postFields),
+    ]);
 
-        try {
-            // Normalize nulls
-            $safe = array_map(fn($v) => $v ?? '', $arguments);
+    $raw = curl_exec($curl);
+    $curlErrNo = curl_errno($curl);
+    $curlErr   = curl_error($curl);
+    $httpCode  = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    curl_close($curl);
 
-            $response = Http::timeout(15)
-                ->withHeaders(['Content-Type' => 'application/json'])
-                ->withBody(json_encode($safe), 'application/json')
-                ->post('http://212.205.214.152:5000/external-api2');
+    // 3) Network/HTTP errors → manual flow
+    if ($curlErrNo !== 0 || $httpCode >= 400 || $raw === false) {
+        Log::warning('Auto-check cURL failure', [
+            'errno' => $curlErrNo, 'error' => $curlErr, 'code' => $httpCode, 'body' => $raw,
+        ]);
+        return response()->json([
+            'available' => false,
+            'mode'      => $modeSlug,
+            'message'   => 'Automatic delivery unavailable (remote service error).',
+        ]);
+    }
 
-            // HTTP-level failures
-            if ($response->failed()) {
-                FacadesLog::warning('Auto-check HTTP failure', [
-                    'status' => $response->status(),
-                    'body'   => $response->body(),
-                ]);
+    // 4) Parse JSON safely
+    $data = json_decode($raw, true);
 
-                return response()->json([
-                    'available' => false,
-                    'mode'      => (string) $mode,
-                    'message'   => 'Automatic delivery unavailable (remote service error).',
-                ]);
-            }
+    // dd($data);
+    
+    if (!is_array($data)) {
+        FacadesLog::warning('Auto-check non-JSON response', ['body' => $raw]);
+        return response()->json([
+            'available' => false,
+            'mode'      => $modeSlug,
+            'message'   => 'Automatic delivery unavailable (invalid response).',
+        ]);
+    }
 
-            // Parse and normalize the remote payload
-            $data = $response->json() ?? [];
+    // 5) Normalize remote payloads:
+    //    a) { available: bool, output_file_url?: "...", message?: "..." }
+    //    b) { STATUS: "SUCCESS", OUTPUT_FILE_URL: "..." }
+    $availableFlag = $data['available'] ?? null;
+    $status        = strtoupper((string)($data['STATUS'] ?? ''));
+    $fileUrl       = $data['output_file_url'] ?? $data['OUTPUT_FILE_URL'] ?? null;
+    $msg           = $data['message'] ?? null;
 
-            // Accept a few possible shapes:
-            // 1) { STATUS: "SUCCESS", OUTPUT_FILE_URL: "http://..." }
-            // 2) { available: true/false, output_file_url?: "http://...", message?: "..." }
-            // 3) Anything else -> treat as manual
-            $status          = strtoupper((string)($data['STATUS'] ?? ''));
-            $availableFlag   = $data['available'] ?? null; // may not exist
-            $remoteUrl       = $data['OUTPUT_FILE_URL'] ?? $data['output_file_url'] ?? null;
-            $remoteMessage   = $data['message'] ?? null;
-
-            // Case A: explicit boolean from API
-            if (is_bool($availableFlag)) {
-                if ($availableFlag && $remoteUrl) {
-                    return response()->json([
-                        'available'       => true,
-                        'mode'            => (string) $mode,
-                        'message'         => $remoteMessage ?: 'This modification can be delivered automatically.',
-                        'output_file_url' => $remoteUrl,
-                    ]);
-                }
-
-                return response()->json([
-                    'available' => false,
-                    'mode'      => (string) $mode,
-                    'message'   => $remoteMessage ?: 'Automatic delivery not available for this selection.',
-                ]);
-            }
-
-            // Case B: STATUS contract
-            if ($status === 'SUCCESS' && $remoteUrl) {
-                return response()->json([
-                    'available'       => true,
-                    'mode'            => (string) $mode,
-                    'message'         => 'This modification can be delivered automatically.',
-                    'output_file_url' => $remoteUrl,
-                ]);
-            }
-
-            // Fallback: treat as manual (no URL)
+    // a) Explicit boolean
+    if (is_bool($availableFlag)) {
+        if ($availableFlag && $fileUrl) {
             return response()->json([
-                'available' => false,
-                'mode'      => (string) $mode,
-                'message'   => $remoteMessage ?: 'Automatic delivery not available (no file returned).',
-            ]);
-
-        } catch (\Throwable $e) {
-            FacadesLog::error('Auto-check exception', ['error' => $e->getMessage()]);
-
-            return response()->json([
-                'available' => false,
-                'mode'      => (string) $mode,
-                'message'   => 'Automatic delivery unavailable (exception).',
+                'available'       => true,
+                'mode'            => $modeSlug,
+                'message'         => $msg ?: 'This modification can be delivered automatically.',
+                'output_file_url' => $fileUrl,
             ]);
         }
+        return response()->json([
+            'available' => false,
+            'mode'      => $modeSlug,
+            'message'   => $msg ?: 'Automatic delivery not available for this selection.',
+        ]);
     }
+
+    // b) STATUS contract
+    if ($status === 'SUCCESS' && $fileUrl) {
+        return response()->json([
+            'available'       => true,
+            'mode'            => $modeSlug,
+            'message'         => 'This modification can be delivered automatically.',
+            'output_file_url' => $fileUrl,
+        ]);
+    }
+
+    // Fallback → manual (no URL)
+    return response()->json([
+        'available' => false,
+        'mode'      => $modeSlug,
+        'message'   => $msg ?: 'Automatic delivery not available (no file returned).',
+    ]);
+
+    // return response()->json([
+    //     'available' => true, // even if API succeeds, we force demo mode
+    //     'mode' => $modeSlug,
+    //     'message' => 'This modification can be delivered automatically (API success).',
+    //     'output_file_url' => $data['output_file_url'] ?? 
+    //         "https://raw.githubusercontent.com/mdn/learning-area/main/html/multimedia-and-embedding/images-in-html/rhino.jpg",
+    // ]);
+}
+
+    // public function checkAutoFile(Request $request){
+
+    //     // Resolve stage -> mode slug
+    //     $stage = Service::findOrFail($request->stage_id);
+    //     $mode  = Str::of($stage->name)->lower()->replace(' ', '_'); // e.g. "Stage 1" -> "stage_1"
+
+    //     // Build arguments expected by the external service
+    //     $arguments = [
+    //         // 'file_id'         => $request->found_file_id,   // <- uncomment if your API needs it
+    //         // 'input_file_path' => $request->found_file_path, // <- uncomment if your API needs it
+    //         // 'input_file_path'             => 'undefined',
+    //         'mode'                        => 'Stage_1', // keep as-is if your API expects this literal
+    //         'ENABLE_MAX_DIFF_AREA'        => 'off',
+    //         'MAX_DIFF_AREA'               => 2000,
+    //         'ENABLE_MAX_DIFF_BYTES'       => 'on',
+    //         'MAX_DIFF_BYTE'               => 10000,
+    //         'MIN_SIMILARITY_DIFF_THRESHOLD' => 0.85,
+    //         'timeout'                     => 10,
+    //         'loop'                        => 10,
+    //     ];
+
+    //     // dd($arguments);
+
+    //     try {
+    //         // Normalize nulls
+    //         $safe = array_map(fn($v) => $v ?? '', $arguments);
+
+    //         $response = Http::timeout(10)
+    //             ->withHeaders([
+    //                 'Content-Type' => 'application/json',
+    //             ])
+    //             ->withBody(json_encode($safe), 'application/json')
+    //             ->post('http://212.205.214.152:5000/external-api2');
+
+    //         dd($response->json());
+
+    //         // HTTP-level failures
+    //         if ($response->failed()) {
+    //             FacadesLog::warning('Auto-check HTTP failure', [
+    //                 'status' => $response->status(),
+    //                 'body'   => $response->body(),
+    //             ]);
+
+                
+
+    //             return response()->json([
+    //                 'available' => false,
+    //                 'mode'      => (string) $mode,
+    //                 'message'   => 'Automatic delivery unavailable (remote service error).',
+    //             ]);
+    //         }
+
+    //         // Parse and normalize the remote payload
+    //         $data = $response->json() ?? [];
+
+    //         // Accept a few possible shapes:
+    //         // 1) { STATUS: "SUCCESS", OUTPUT_FILE_URL: "http://..." }
+    //         // 2) { available: true/false, output_file_url?: "http://...", message?: "..." }
+    //         // 3) Anything else -> treat as manual
+    //         $status          = strtoupper((string)($data['STATUS'] ?? ''));
+    //         $availableFlag   = $data['available'] ?? null; // may not exist
+    //         $remoteUrl       = $data['OUTPUT_FILE_URL'] ?? $data['output_file_url'] ?? null;
+    //         $remoteMessage   = $data['message'] ?? null;
+
+    //         // Case A: explicit boolean from API
+    //         if (is_bool($availableFlag)) {
+    //             if ($availableFlag && $remoteUrl) {
+    //                 return response()->json([
+    //                     'available'       => true,
+    //                     'mode'            => (string) $mode,
+    //                     'message'         => $remoteMessage ?: 'This modification can be delivered automatically.',
+    //                     'output_file_url' => $remoteUrl,
+    //                 ]);
+    //             }
+
+    //             return response()->json([
+    //                 'available' => false,
+    //                 'mode'      => (string) $mode,
+    //                 'message'   => $remoteMessage ?: 'Automatic delivery not available for this selection.',
+    //             ]);
+    //         }
+
+    //         // Case B: STATUS contract
+    //         if ($status === 'SUCCESS' && $remoteUrl) {
+    //             return response()->json([
+    //                 'available'       => true,
+    //                 'mode'            => (string) $mode,
+    //                 'message'         => 'This modification can be delivered automatically.',
+    //                 'output_file_url' => $remoteUrl,
+    //             ]);
+    //         }
+
+    //         // Fallback: treat as manual (no URL)
+    //         return response()->json([
+    //             'available' => false,
+    //             'mode'      => (string) $mode,
+    //             'message'   => $remoteMessage ?: 'Automatic delivery not available (no file returned).',
+    //         ]);
+
+    //     } catch (\Throwable $e) {
+    //         FacadesLog::error('Auto-check exception', ['error' => $e->getMessage()]);
+
+    //         return response()->json([
+    //             'available' => false,
+    //             'mode'      => (string) $mode,
+    //             'message'   => 'Automatic delivery unavailable (exception).',
+    //         ]);
+    //     }
+    // }
 
     // public function checkAutoFile(Request $request){
 
@@ -1438,6 +1568,29 @@ class FileController extends Controller
     
     // public function checkAutoFile(Request $request){
 
+    //     $curl = curl_init();
+
+    //     curl_setopt_array($curl, array(
+    //     CURLOPT_URL => 'http://212.205.214.152:5000/external-api2',
+    //     CURLOPT_RETURNTRANSFER => true,
+    //     CURLOPT_ENCODING => '',
+    //     CURLOPT_MAXREDIRS => 10,
+    //     CURLOPT_TIMEOUT => 0,
+    //     CURLOPT_FOLLOWLOCATION => true,
+    //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //     CURLOPT_CUSTOMREQUEST => 'POST',
+    //     CURLOPT_POSTFIELDS => array('mode' => 'Stage_1','ENABLE_MAX_DIFF_AREA' => 'off','MAX_DIFF_AREA' => '2000','ENABLE_MAX_DIFF_BYTES' => 'on','MAX_DIFF_BYTE' => '10000','MIN_SIMILARITY_DIFF_THRESHOLD' => '0.85','timeout' => '10','loop' => '10'),
+    //     ));
+
+    //     $response = curl_exec($curl);
+
+    //     curl_close($curl);
+    //     dd( $response );
+
+    // }
+
+    // public function checkAutoFile(Request $request){
+
     //     $stageName = Service::findOrFail( $request->stage_id )->name;
 
     //     $mode = strtolower(str_replace(' ', '_', $stageName));
@@ -1466,19 +1619,30 @@ class FileController extends Controller
     //     $minSimilarityDiffThreshold = 0.85;
     //     $loop = 10;
 
-    //     $arguments = [
-    //             // 'file_id' => $foundFilID,
-    //             'input_file_path' => 'undefined',
-    //             // 'input_file_path' => $foundFilPath,
-    //             'mode' => 'Stage 1',
-    //             'ENABLE_MAX_DIFF_AREA' => $enableMaxDiffArea,
-    //             'max_diff_area' => $maxDiffArea,
-    //             'ENABLE_MAX_DIFF_BYTES' => $enableMaxDiffBytes,
-    //             'max_diff_byte' => $maxDiffBytes,
-    //             'MIN_SIMILARITY_DIFF_THRESHOLD' => $minSimilarityDiffThreshold,
-    //             'timeout' => $timeout,
-    //             'loop' => $loop,
-    //     ];
+    //     // $arguments = [
+    //     //         'file_id' => $foundFilID,
+    //     //         'input_file_path' => 'undefined',
+    //     //         // 'input_file_path' => $foundFilPath,
+    //     //         'MODE' => 'Stage_1',
+    //     //         'ENABLE_MAX_DIFF_AREA' => $enableMaxDiffArea,
+    //     //         'max_diff_area' => $maxDiffArea,
+    //     //         'ENABLE_MAX_DIFF_BYTES' => $enableMaxDiffBytes,
+    //     //         'max_diff_byte' => $maxDiffBytes,
+    //     //         'MIN_SIMILARITY_DIFF_THRESHOLD' => $minSimilarityDiffThreshold,
+    //     //         'timeout' => $timeout,
+    //     //         'loop' => $loop,
+    //     // ];
+
+    //     // $arguments = array(
+    //     //     'mode' => 'Stage_1',
+    //     //     'ENABLE_MAX_DIFF_AREA' => 'off',
+    //     //     'MAX_DIFF_AREA' => '2000',
+    //     //     'ENABLE_MAX_DIFF_BYTES' => 'on',
+    //     //     'MAX_DIFF_BYTE' => '10000',
+    //     //     'MIN_SIMILARITY_DIFF_THRESHOLD' => '0.85',
+    //     //     'timeout' => '10',
+    //     //     'loop' => '10'
+    //     // );
 
     //     // dd($arguments);
 
