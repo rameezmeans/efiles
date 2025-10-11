@@ -1299,7 +1299,7 @@ class FileController extends Controller
     $httpCode  = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     curl_close($curl);
 
-    dd(json_decode($raw, true));
+    // dd(json_decode($raw, true));
 
     // 3) Network/HTTP errors → manual flow
     if ($curlErrNo !== 0 || $httpCode >= 400 || $raw === false) {
