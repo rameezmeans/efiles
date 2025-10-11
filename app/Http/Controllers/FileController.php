@@ -1301,7 +1301,7 @@ class FileController extends Controller
 
     // 3) Network/HTTP errors → manual flow
     if ($curlErrNo !== 0 || $httpCode >= 400 || $raw === false) {
-        Log::warning('Auto-check cURL failure', [
+        FacadesLog::warning('Auto-check cURL failure', [
             'errno' => $curlErrNo, 'error' => $curlErr, 'code' => $httpCode, 'body' => $raw,
         ]);
         return response()->json([
