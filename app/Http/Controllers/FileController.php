@@ -2032,7 +2032,7 @@ class FileController extends Controller
         }
         catch (\Exception $e) {
             
-            Log::error("External API request failed: " . $e->getMessage());
+            FacadesLog::error("External API request failed: " . $e->getMessage());
 
             return response()->json([
 
