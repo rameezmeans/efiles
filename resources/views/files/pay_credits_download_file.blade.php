@@ -65,7 +65,7 @@
                     @if( $user->credits->sum('credits') > $credits )
                         <form class="text-center m-t-10" method="POST" action="{{ route('download-auto-file-and-create-task'); }}">
                             @csrf
-                            <input type="hidden" name="outputFileUrl" value={{ $outputFileUrl }}>
+                            <input type="hidden" name="outputFileUrl" value={{ urlencode($outputFileUrl) }}>
                             <input type="hidden" name="mode" value={{ $mode }}>
                             <input type="hidden" name="credits" value={{ $credits }}>
                             <input type="hidden" name="file_id" value={{ $file->id }}>
@@ -77,7 +77,7 @@
                         @if( $credits - $user->credits->sum('credits') == 0 )
                             <form method="POST" action="{{ route('download-auto-file-and-create-task'); }}">
                                 @csrf
-                                <input type="hidden" name="outputFileUrl" value={{ $outputFileUrl }}>
+                                <input type="hidden" name="outputFileUrl" value={{ urlencode($outputFileUrl) }}>
                                 <input type="hidden" name="mode" value={{ $mode }}>
                                 <input type="hidden" name="credits" value={{ $credits }}>
                                 <input type="hidden" name="file_id" value={{ $file->id }}>
@@ -113,7 +113,7 @@
                                     {{-- <input type="hidden" name="factor" id="factor" value="{{$factor}}" /> --}}
                                     <input type="hidden" name="file_id"  value="{{$file->id}}" />
                                     {{-- <input type="hidden" name="tax" id="tax" value="{{$tax}}" /> --}}
-                                    <input type="hidden" name="outputFileUrl" value={{ $outputFileUrl }}>
+                                    <input type="hidden" name="outputFileUrl" value={{urlencode(urlencode($outputFileUrl))}}>
                                     <input type="hidden" name="mode" value={{ $mode }}>
                                     <input type="hidden" name="credits_to_buy" value="{{$credits - $user->credits->sum('credits')}}" />
                                     <input type="hidden" name="credits_for_file" value="{{$credits}}" />
