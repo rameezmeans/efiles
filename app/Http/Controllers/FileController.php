@@ -1915,7 +1915,7 @@ class FileController extends Controller
         
         $firstStage = $stages[0];
 
-        // dd($firstStage);
+        // dd($options);
 
         return view('files.apply_modes', [ 
             

@@ -4,7 +4,19 @@
 <style>
 
   /* make the main content not clip children */
-#content { height: 100vh; overflow: hidden; }
+/* allow inner scroll, not top-level content */
+#content { height: auto; overflow: visible; }
+
+/* make only the big content block scroll */
+.i-content-block.price-level {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 10px;
+}
+
+
 
 /* scroll INSIDE the row */
 .row.post-row{
@@ -563,6 +575,55 @@ p.tuning-resume {
 
 <script type="text/javascript">
 
+function renderStageHeader() {
+  const $sel   = $('.with-gap:checked');
+  const name   = ($sel.data('name') || '').toString();
+  const price  = parseInt($sel.data('price'), 10) || 0;
+  return `<div class="divider-light"></div>
+          <p class="tuning-resume">${name} <small>${price} credits</small></p>`;
+}
+
+// Helpers
+function anyOptionsSelected(){
+  return $('.options-checkbox:checked').length > 0;
+}
+function showCheckoutOnly(){
+  $('#delivery_mode').val('manual');
+  $('#btn-download').addClass('hide');
+  $('#btn-checkout').removeClass('hide');
+  hideStatus(); // optional
+}
+async function runAvailability(stageId, stageName, foundFileId, foundFilePath){
+  lockUI();
+  showStatus('Checking availability… please wait.', 'info');
+
+  try {
+    const res = await $.ajax({
+      url: "{{ route('check-stage-availability') }}",
+      type: "POST",
+      headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
+      data: { stage_id: stageId, found_file_id: foundFileId, found_file_path: foundFilePath }
+    });
+
+    if (res.available) {
+      showStatus(res.message || 'This modification can be delivered automatically.', 'success');
+      $('#delivery_mode').val('auto');
+      $('#btn-checkout').addClass('hide');
+      $('#btn-download').removeClass('hide');
+      $('#mode').val(res.mode);
+      $('#output_file_url').val(res.output_file_url || '');
+    } else {
+      showStatus(res.message || 'This modification will be delivered manually (delayed).', 'danger');
+      showCheckoutOnly();
+    }
+  } catch (e) {
+    showStatus('Could not verify availability. Proceed to checkout.', 'danger');
+    showCheckoutOnly();
+  } finally {
+    unlockUI();
+  }
+}
+
   function showStatus(msg, type) {
     const $box = $('#stage-status');
     $box.removeClass('hide alert-info alert-success alert-danger')
@@ -776,144 +837,195 @@ p.tuning-resume {
         let stages_str = '<div class="bb-light"></div><p class="tuning-resume">'+firstStageName+' <small>'+stage_0_credits+' credits</small></p>';
         $('#rows-for-credits').html(stages_str);
 
-      $(document).on('change', '.options-checkbox', function(){
+        // when options change
+$(document).on('click change','input.options-checkbox',function(){
+  let options_str = '';
+  let checkbox_credits_count = 0;
+
+  // start with the CURRENT stage header (not Stage 0)
+  $('#rows-for-credits').html(renderStageHeader());
+
+  $('input.options-checkbox:checked').each(function(){
+    const optionId = $(this).val();
+    let price = 0;
+    $.each(valuesArray || [], function(_, v){
+      if (v.option_id == optionId) {
+        price = (file_type === 'slave') ? parseInt(v.slave_credits,10) : parseInt(v.master_credits,10);
+        return false;
+      }
+    });
+    checkbox_credits_count += price;
+    const name = $(this).data('name');
+    options_str += `<div class="divider-light"></div>
+                    <p class="tuning-resume">${name} <small>${price} credits</small></p>`;
+  });
+
+  $('#rows-for-credits').append(options_str);
+
+  const stagePrice = parseInt($('.with-gap:checked').data('price'),10) || 0;
+  const total = stagePrice + checkbox_credits_count;
+  $('#total-credits').html(total);
+  $('#total_credits_to_submit').val(total);
+});
+        
+
+        // === OPTIONS: whenever options change, force Checkout if any are selected ===
+        $(document).on('change', '.options-checkbox', function(){
+          // ... keep your existing comment/alerts logic above ...
+
+          // After your existing pricing/credits code runs, add:
+          if (anyOptionsSelected()) {
+            // Any option selected => skip auto, force checkout
+            showCheckoutOnly();
+          } else {
+            // No options selected => re-evaluate auto availability for current stage
+            const $sel      = $('.with-gap:checked');
+            const stageId   = $sel.val();
+            const stageName = $sel.data('name');
+            const foundFileId   = $('#found_file_id').val();
+            const foundFilePath = $('#found_file_path').val();
+            runAvailability(stageId, stageName, foundFileId, foundFilePath);
+          }
+        });
+
+      // $(document).on('change', '.options-checkbox', function(){
           
-          let get_upload_comments_url = '{{route('get-upload-comments')}}';
-          let checked = $(this).is(':checked');
+      //     let get_upload_comments_url = '{{route('get-upload-comments')}}';
+      //     let checked = $(this).is(':checked');
 
-          let locale = '{{Session::get('locale') }}';
+      //     let locale = '{{Session::get('locale') }}';
 
-          let file_id = $('#file_id').val();
-          let service_id = $(this).val();
+      //     let file_id = $('#file_id').val();
+      //     let service_id = $(this).val();
 
-          if(checked){
+      //     if(checked){
 
-              // let file_id = $('#file_id').val();
-              // let service_id = $(this).val();
+      //         // let file_id = $('#file_id').val();
+      //         // let service_id = $(this).val();
 
-              if(service_id == 113 || service_id == 147 || service_id == 151){
+      //         if(service_id == 113 || service_id == 147 || service_id == 151){
 
-                Swal.fire(
-                    'Please Read Very Carefully',
-                    'You have select to remove the DPF. Please remember to clear the DTC and reset the DPF (soot mass value) before writing the modified file. If the solution does not work immediately, try removing the DPF pressure sensor and the EGT sensor, and then clear the DTC before submitting a support ticket.',
-                    'warning'
-                    );
+      //           Swal.fire(
+      //               'Please Read Very Carefully',
+      //               'You have select to remove the DPF. Please remember to clear the DTC and reset the DPF (soot mass value) before writing the modified file. If the solution does not work immediately, try removing the DPF pressure sensor and the EGT sensor, and then clear the DTC before submitting a support ticket.',
+      //               'warning'
+      //               );
 
-                $('.swal2-confirm').attr("disabled", true);
+      //           $('.swal2-confirm').attr("disabled", true);
 
-                setTimeout(
-                    function() {
-                        $('.swal2-confirm').attr("disabled", false);
-                }, 5000);
+      //           setTimeout(
+      //               function() {
+      //                   $('.swal2-confirm').attr("disabled", false);
+      //           }, 5000);
 
 
-              }
+      //         }
 
-              if(service_id == 114 || service_id == 146 || service_id == 150){
+      //         if(service_id == 114 || service_id == 146 || service_id == 150){
 
-                Swal.fire(
-                    'Please Read Very Carefully',
-                    'You have select to remove the EGR. Please ensure that you clear the DTC, reset the EGR, and mechanically block the valve. If the solution does not work immediately, try removing the EGR actuator plug and then clear the DTC before submitting a support ticket.',
-                    'warning'
-                    );
+      //           Swal.fire(
+      //               'Please Read Very Carefully',
+      //               'You have select to remove the EGR. Please ensure that you clear the DTC, reset the EGR, and mechanically block the valve. If the solution does not work immediately, try removing the EGR actuator plug and then clear the DTC before submitting a support ticket.',
+      //               'warning'
+      //               );
 
-                $('.swal2-confirm').attr("disabled", true);
+      //           $('.swal2-confirm').attr("disabled", true);
 
-                setTimeout(
-                    function() {
-                        $('.swal2-confirm').attr("disabled", false);
-                }, 5000);
+      //           setTimeout(
+      //               function() {
+      //                   $('.swal2-confirm').attr("disabled", false);
+      //           }, 5000);
 
-            }
+      //       }
 
-            if(service_id == 118 || service_id == 145 || service_id == 152){
+      //       if(service_id == 118 || service_id == 145 || service_id == 152){
 
-              Swal.fire(
-                  'Please Read Very Carefully',
-                  'You have chosen to remove the AdBlue system. Please remember to clear the DTC and reset the AdBlue before writing the modified file. If the solution does not work immediately, try removing the AdBlue unit and/or pump, then clear the DTC before submitting a support ticket.',
-                  'warning'
-                  );
+      //         Swal.fire(
+      //             'Please Read Very Carefully',
+      //             'You have chosen to remove the AdBlue system. Please remember to clear the DTC and reset the AdBlue before writing the modified file. If the solution does not work immediately, try removing the AdBlue unit and/or pump, then clear the DTC before submitting a support ticket.',
+      //             'warning'
+      //             );
 
-              $('.swal2-confirm').attr("disabled", true);
+      //         $('.swal2-confirm').attr("disabled", true);
 
-              setTimeout(
-                  function() {
-                      $('.swal2-confirm').attr("disabled", false);
-              }, 5000);
+      //         setTimeout(
+      //             function() {
+      //                 $('.swal2-confirm').attr("disabled", false);
+      //         }, 5000);
 
-              }
+      //         }
 
-              // let note = '{{__('Please Read Very Carefully')}}!!';
+      //         // let note = '{{__('Please Read Very Carefully')}}!!';
 
-              // Swal.fire(
-              //                 note,
-              //                 comment,
-              //                 'warning'
-              //                 );
+      //         // Swal.fire(
+      //         //                 note,
+      //         //                 comment,
+      //         //                 'warning'
+      //         //                 );
 
-              //             $('.swal2-confirm').attr("disabled", true);
+      //         //             $('.swal2-confirm').attr("disabled", true);
 
-              //             setTimeout(
-              //                 function() {
-              //                     $('.swal2-confirm').attr("disabled", false);
-              //             }, 5000);
+      //         //             setTimeout(
+      //         //                 function() {
+      //         //                     $('.swal2-confirm').attr("disabled", false);
+      //         //             }, 5000);
 
-              $('.comments-area-'+service_id).removeClass('hide');
+      //         $('.comments-area-'+service_id).removeClass('hide');
 
-              $('#btn-final-submit').attr("disabled", true);
+      //         $('#btn-final-submit').attr("disabled", true);
 
-              $.ajax({
-                  url: get_upload_comments_url,
-                  data: {
-                      service_id: service_id,
-                      file_id: file_id,
-                      locale, locale
-                  },
-                  type: "POST",
-                  headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
-                  success: function(response) {
+      //         $.ajax({
+      //             url: get_upload_comments_url,
+      //             data: {
+      //                 service_id: service_id,
+      //                 file_id: file_id,
+      //                 locale, locale
+      //             },
+      //             type: "POST",
+      //             headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
+      //             success: function(response) {
 
-                      $('#btn-final-submit').attr("disabled", false); 
+      //                 $('#btn-final-submit').attr("disabled", false); 
                       
-                      let note = '{{__('Please Read Very Carefully')}}!!';
+      //                 let note = '{{__('Please Read Very Carefully')}}!!';
 
-                      console.log(response.comment.comments);
-                      let comment = response.comment.comments
+      //                 console.log(response.comment.comments);
+      //                 let comment = response.comment.comments
 
-                      if(comment != undefined){
+      //                 if(comment != undefined){
 
-                          Swal.fire(
-                              note,
-                              comment,
-                              'warning'
-                              );
+      //                     Swal.fire(
+      //                         note,
+      //                         comment,
+      //                         'warning'
+      //                         );
 
-                          $('.swal2-confirm').attr("disabled", true);
+      //                     $('.swal2-confirm').attr("disabled", true);
 
-                          setTimeout(
-                              function() {
-                                  $('.swal2-confirm').attr("disabled", false);
-                          }, 5000);
-                      }
-                      else{
-                          console.log('no comments found');
-                      }
+      //                     setTimeout(
+      //                         function() {
+      //                             $('.swal2-confirm').attr("disabled", false);
+      //                     }, 5000);
+      //                 }
+      //                 else{
+      //                     console.log('no comments found');
+      //                 }
                       
-                  },
-                  error: function(XMLHttpRequest, textStatus, errorThrown) { 
+      //             },
+      //             error: function(XMLHttpRequest, textStatus, errorThrown) { 
 
-                      $('#btn-final-submit').attr("disabled", false);
-                      console.log("Status: " + textStatus); 
-                      console.log("Error: " + errorThrown); 
-                  } 
-              });
+      //                 $('#btn-final-submit').attr("disabled", false);
+      //                 console.log("Status: " + textStatus); 
+      //                 console.log("Error: " + errorThrown); 
+      //             } 
+      //         });
 
-          }
-          else{
+      //     }
+      //     else{
 
-            $('.comments-area-'+service_id).addClass('hide');
-          }
-      });
+      //       $('.comments-area-'+service_id).addClass('hide');
+      //     }
+      // });
 
       // $(document).on('change', '#dtc_off', function(){
 
@@ -944,101 +1056,181 @@ p.tuning-resume {
 
       });
 
-      $(document).on('change', '.with-gap', async function () {
-          const $radio     = $(this);
-          const stageName  = $radio.data('name');
-          const newStageId = $radio.val();
-          const stagePrice = parseInt($radio.data('price'), 10) || 0;
-          const foundFileId     = $('#found_file_id').val();
-          const foundFilePath     = $('#found_file_path').val();
 
-          // lock UI and show loader in the right column
-          lockUI();
-          showStatus('Checking availability… please wait.', 'info');
+      // === STAGES: only run auto search when NO options are selected ===
+$(document).on('change', '.with-gap', async function () {
+  const $radio       = $(this);
+  const stageName    = $radio.data('name');
+  const newStageId   = $radio.val();
+  const stagePrice   = parseInt($radio.data('price'), 10) || 0;
+  const foundFileId   = $('#found_file_id').val();
+  const foundFilePath = $('#found_file_path').val();
 
-          // log (as you already do)
-          $.post("/add_file_log", {
-            event: "stage_selected",
-            disc: "stage " + stageName + " is picked.",
-            _token: $('meta[name="csrf-token"]').attr('content')
-          });
+  // log
+  $.post("/add_file_log", {
+    event: "stage_selected",
+    disc: "stage " + stageName + " is picked.",
+    _token: $('meta[name="csrf-token"]').attr('content')
+  });
 
-          console.log('here we are');
+  $('#rows-for-credits').html(renderStageHeader());   // <-- use helper
+  $('#total-credits').html(parseInt($(this).data('price'),10) || 0);
 
-          try {
-            const res = await $.ajax({
-              url: "{{ route('check-stage-availability') }}",
-              type: "POST",
-              headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
-              data: { stage_id: newStageId, found_file_id: foundFileId, found_file_path: foundFilePath }
-            });
+  // refresh credits (your existing UI updates)
+  let stages_str = `<div class="divider-light"></div>
+    <p class="tuning-resume">${stageName} <small>${stagePrice} credits</small></p>`;
+  $('#rows-for-credits').html(stages_str);
+  $('#total-credits').html(stagePrice);
+  $('#total_credits_to_submit').val(stagePrice);
 
-            if (res.available) {
-              // AUTO delivery → show Download, hide Checkout
-              showStatus(res.message || 'This modification can be delivered automatically.', 'success');
-              $('#delivery_mode').val('auto');
-              $('#btn-checkout').addClass('hide');
-              $('#btn-download').removeClass('hide');
+  // Reset option selections/extra UIs as you already do
+  $(".options-checkbox").prop('checked', false);
+  $('.dtc-off-textarea, .vmax-off-textarea').addClass('hide');
 
-              // set fields needed by download-file route
-              // server may send res.mode; if missing, derive from stageName
+  // Reload option credits for this stage (keep your existing AJAX)
+  valuesArray = null;
+  await $.ajax({
+    url: 'get_options_for_stage',
+    data: { stage_id: newStageId },
+    async: false,
+    type: "POST",
+    headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
+    success: function (options) {
+      valuesArray = $.parseJSON(options);
+      $.each(valuesArray, function (i, v) {
+        if (file_type === 'slave') {
+          $('#option-credits-'+v.option_id).html(v.slave_credits);
+          $('.option-credits-'+v.option_id).attr('data-price', v.slave_credits)
+                                          .attr('data-default-price', v.slave_credits);
+        } else {
+          $('#option-credits-'+v.option_id).html(v.master_credits);
+          $('.option-credits-'+v.option_id).attr('data-price', v.master_credits)
+                                          .attr('data-default-price', v.master_credits);
+        }
+      });
+    }
+  });
+
+  // *** Core rule: only auto-check when NO options are selected ***
+  if (anyOptionsSelected()) {
+    showCheckoutOnly();
+  } else {
+    runAvailability(newStageId, stageName, foundFileId, foundFilePath);
+  }
+});
+
+// === On load: first stage is checked; run availability if no options selected ===
+$(function(){
+  if (!anyOptionsSelected()) {
+    const $sel      = $('.with-gap:checked');
+    if ($sel.length) {
+      runAvailability(
+        $sel.val(),
+        $sel.data('name'),
+        $('#found_file_id').val(),
+        $('#found_file_path').val()
+      );
+    }
+  } else {
+    showCheckoutOnly();
+  }
+});
+
+      // $(document).on('change', '.with-gap', async function () {
+      //     const $radio     = $(this);
+      //     const stageName  = $radio.data('name');
+      //     const newStageId = $radio.val();
+      //     const stagePrice = parseInt($radio.data('price'), 10) || 0;
+      //     const foundFileId     = $('#found_file_id').val();
+      //     const foundFilePath     = $('#found_file_path').val();
+
+      //     // lock UI and show loader in the right column
+      //     lockUI();
+      //     showStatus('Checking availability… please wait.', 'info');
+
+      //     // log (as you already do)
+      //     $.post("/add_file_log", {
+      //       event: "stage_selected",
+      //       disc: "stage " + stageName + " is picked.",
+      //       _token: $('meta[name="csrf-token"]').attr('content')
+      //     });
+
+      //     console.log('here we are');
+
+      //     try {
+      //       const res = await $.ajax({
+      //         url: "{{ route('check-stage-availability') }}",
+      //         type: "POST",
+      //         headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
+      //         data: { stage_id: newStageId, found_file_id: foundFileId, found_file_path: foundFilePath }
+      //       });
+
+      //       if (res.available) {
+      //         // AUTO delivery → show Download, hide Checkout
+      //         showStatus(res.message || 'This modification can be delivered automatically.', 'success');
+      //         $('#delivery_mode').val('auto');
+      //         $('#btn-checkout').addClass('hide');
+      //         $('#btn-download').removeClass('hide');
+
+      //         // set fields needed by download-file route
+      //         // server may send res.mode; if missing, derive from stageName
               
-              $('#mode').val(res.mode);
-              $('#output_file_url').val(res.output_file_url || '');
+      //         $('#mode').val(res.mode);
+      //         $('#output_file_url').val(res.output_file_url || '');
 
-            } else {
-              // MANUAL delivery → show Checkout, hide Download
-              showStatus(res.message || 'This modification will be delivered manually (delayed).', 'danger');
-              $('#delivery_mode').val('manual');
-              $('#btn-download').addClass('hide');
-              $('#btn-checkout').removeClass('hide');
-            }
-          } catch (e) {
-            // On error, fall back to checkout
-            // console.log(e.message);
-            showStatus('Could not verify availability. Proceed to checkout.', 'danger');
-            $('#delivery_mode').val('manual');
-            $('#btn-download').addClass('hide');
-            $('#btn-checkout').removeClass('hide');
-          }
+      //       } else {
+      //         // MANUAL delivery → show Checkout, hide Download
+      //         showStatus(res.message || 'This modification will be delivered manually (delayed).', 'danger');
+      //         $('#delivery_mode').val('manual');
+      //         $('#btn-download').addClass('hide');
+      //         $('#btn-checkout').removeClass('hide');
+      //       }
+      //     } catch (e) {
+      //       // On error, fall back to checkout
+      //       // console.log(e.message);
+      //       showStatus('Could not verify availability. Proceed to checkout.', 'danger');
+      //       $('#delivery_mode').val('manual');
+      //       $('#btn-download').addClass('hide');
+      //       $('#btn-checkout').removeClass('hide');
+      //     }
 
-          // ---- your existing credits/UI refresh ----
-          let stages_str = `<div class="divider-light"></div>
-            <p class="tuning-resume">${stageName} <small>${stagePrice} credits</small></p>`;
-          $('#rows-for-credits').html(stages_str);
-          $('#total-credits').html(stagePrice);
-          $('#total_credits_to_submit').val(stagePrice);
+      //     // ---- your existing credits/UI refresh ----
+      //     let stages_str = `<div class="divider-light"></div>
+      //       <p class="tuning-resume">${stageName} <small>${stagePrice} credits</small></p>`;
+      //     $('#rows-for-credits').html(stages_str);
+      //     $('#total-credits').html(stagePrice);
+      //     $('#total_credits_to_submit').val(stagePrice);
 
-          // reset options and reload option credits for this stage (your current logic)
-          $(".options-checkbox").prop('checked', false);
-          $('.dtc-off-textarea, .vmax-off-textarea').addClass('hide');
+      //     // reset options and reload option credits for this stage (your current logic)
+      //     $(".options-checkbox").prop('checked', false);
+      //     $('.dtc-off-textarea, .vmax-off-textarea').addClass('hide');
 
-          valuesArray = null;
-          await $.ajax({
-            url: 'get_options_for_stage',
-            data: { stage_id: newStageId },
-            async: false,
-            type: "POST",
-            headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
-            success: function (options) {
-              valuesArray = $.parseJSON(options);
-              $.each(valuesArray, function (i, v) {
-                if (file_type === 'slave') {
-                  $('#option-credits-'+v.option_id).html(v.slave_credits);
-                  $('.option-credits-'+v.option_id).attr('data-price', v.slave_credits)
-                                                  .attr('data-default-price', v.slave_credits);
-                } else {
-                  $('#option-credits-'+v.option_id).html(v.master_credits);
-                  $('.option-credits-'+v.option_id).attr('data-price', v.master_credits)
-                                                  .attr('data-default-price', v.master_credits);
-                }
-              });
-            }
-          });
+      //     valuesArray = null;
+      //     await $.ajax({
+      //       url: 'get_options_for_stage',
+      //       data: { stage_id: newStageId },
+      //       async: false,
+      //       type: "POST",
+      //       headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
+      //       success: function (options) {
+      //         valuesArray = $.parseJSON(options);
+      //         $.each(valuesArray, function (i, v) {
+      //           if (file_type === 'slave') {
+      //             $('#option-credits-'+v.option_id).html(v.slave_credits);
+      //             $('.option-credits-'+v.option_id).attr('data-price', v.slave_credits)
+      //                                             .attr('data-default-price', v.slave_credits);
+      //           } else {
+      //             $('#option-credits-'+v.option_id).html(v.master_credits);
+      //             $('.option-credits-'+v.option_id).attr('data-price', v.master_credits)
+      //                                             .attr('data-default-price', v.master_credits);
+      //           }
+      //         });
+      //       }
+      //     });
 
-          // finally unlock UI
-          unlockUI();
-        });
+      //     // finally unlock UI
+      //     unlockUI();
+      //   });
 
       Array.prototype.getUnique = function() {
               var o = {}, a = []
