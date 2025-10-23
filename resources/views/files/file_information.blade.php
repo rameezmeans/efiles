@@ -731,7 +731,7 @@ $(function () {
     $('#sel_year').val(year);
     $('#sel_output_file_url').val(output);
 
-    $('#license_plate').focus();
+    // $('#license_plate').focus();
   });
 })();
 </script>
