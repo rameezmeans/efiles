@@ -1412,7 +1412,8 @@ class FileController extends Controller
     $payload = [
         // 'file_id' => '1084056',
         // 'input_file_path' => 'input.dec',
-        'mode' => 'stage 1',
+        // 'mode' => 'Stage 1',
+        'mode' => $stage->name,
         'timeout' => 10,
         'enable_max_diff_area' => 'off',
         'enable_max_diff_bytes' => 'off',
