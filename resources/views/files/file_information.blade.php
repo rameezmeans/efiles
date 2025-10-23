@@ -340,7 +340,7 @@ p.tuning-resume {
             <div class="bb-light fix-header">
             <div class="header-block header-block-w-p">
                 <h1>Add Information</h1>
-                <p>3/5</p>
+                <p>2/4</p>
         </div>
         </div>
         <div class="i-content-block price-level">
@@ -357,13 +357,145 @@ p.tuning-resume {
 
         <form method="POST" action="{{ route('set-mods') }}"  enctype="application/x-www-form-urlencoded" name="file_upload_tuning" id="file-upload-tuning-form" autocomplete="off">
             <input type="hidden" value="{{ $file->id }}" name="file_id" id="file_id">
+            
             <input type="hidden" id="file_tool_type" value="{{$file->tool_type}}">
+
+
+            <input type="hidden" name="selected[id]" id="sel_id">
+<input type="hidden" name="selected[brand]" id="sel_brand">
+<input type="hidden" name="selected[model]" id="sel_model">
+<input type="hidden" name="selected[version]" id="sel_version">
+<input type="hidden" name="selected[engine]" id="sel_engine">
+<input type="hidden" name="selected[ecu_type]" id="sel_ecu">
+<input type="hidden" name="selected[file_type]" id="sel_file_type">
+<input type="hidden" name="selected[vehicle_model_year]" id="sel_year">
+<input type="hidden" name="selected[output_file_url]" id="sel_output_file_url">
+
             @csrf
 
              <div class="row post-row">
                 
 
                 <div class="col-xl-12 col-lg-12 col-md-12">
+
+                          @if(!empty($apiReplies))
+  <style>
+    .api-picks-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .api-card {
+      position: relative;
+      width: 230px;
+      min-height: 130px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      padding: 20px 18px 16px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      border: 2px solid transparent;
+    }
+
+    .api-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 22px rgba(0,0,0,0.15);
+    }
+
+    .api-card.active {
+      border-color: #b01321;
+      box-shadow: 0 8px 25px rgba(176, 19, 33, 0.25);
+      background: #fff5f6;
+    }
+
+    .api-card img {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      width: 40px;
+      height: auto;
+      opacity: 0.85;
+    }
+
+    /* Radio visible and elegant */
+    .api-radio {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #b0b0b0;
+      border-radius: 50%;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      vertical-align: middle;
+      margin-right: 8px;
+      margin-top: -2px;
+    }
+
+    .api-radio:checked {
+      border-color: #b01321;
+      background: radial-gradient(circle at center, #b01321 40%, transparent 42%);
+      box-shadow: 0 0 6px rgba(176,19,33,0.5);
+    }
+
+    .api-card h5 {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0;
+      color: #1E293B;
+    }
+
+    .api-card small {
+      display: block;
+      font-size: 13px;
+      color: #64748B;
+    }
+  </style>
+
+  <div class="api-picks-wrapper">
+    @foreach($apiReplies as $f)
+      @php
+        $brand = trim($f->brand ?? '');
+        $model = trim($f->model ?? '');
+        $engine = trim($f->engine ?? '');
+        $ecu = trim($f->ecu_type ?? '');
+        $fileType = trim($f->file_type ?? '');
+        $year = trim($f->vehicle_model_year ?? '');
+        $ver = trim($f->version ?? '');
+        $title = trim(($brand.' '.$model)) ?: 'Unknown';
+        $fromLine = ($year || $ver) ? ('From '.$year.($ver ? ' - '.$ver : '')) : '';
+      @endphp
+
+      <label class="api-card text-left">
+        <div class="d-flex align-items-center mb-2">
+          <input type="radio" class="api-radio" name="api_pick"
+                 value="{{ $f->id }}"
+                 data-id="{{ $f->id }}"
+                 data-url="{{ $f->OUTPUT_FILE_URL }}"
+                 data-brand="{{ $brand }}"
+                 data-model="{{ $model }}"
+                 data-engine="{{ $engine }}"
+                 data-ecu="{{ $ecu }}"
+                 data-file_type="{{ $fileType }}"
+                 data-year="{{ $year }}"
+                 data-ver="{{ $ver }}">
+          <h5 title="{{ $title }}" class="mb-0">{{ $title }}</h5>
+        </div>
+
+        @if($fromLine)<small>{{ $fromLine }}</small>@endif
+        @if($ecu)<small>{{ $ecu }}</small>@endif
+        <img src="https://backend.ecutech.gr/icons/logos/{{ \Illuminate\Support\Str::slug($brand) }}.png" alt="{{ $brand }}">
+      </label>
+    @endforeach
+  </div>
+@endif
+                    
+
                                 <div class="form-group">
                                   <label for="exampleInputCompanyLP1">Brand *</label>
                                   
@@ -451,7 +583,7 @@ p.tuning-resume {
                                   </div>
                               </div>
 
-                              <input type="hidden" 
+                              {{-- <input type="hidden" 
                                             id="found_file_id" 
                                             name="found_file_id" 
                                             
@@ -463,7 +595,7 @@ p.tuning-resume {
                                             name="found_file_path" 
                                             
                                             value="{{ $selected['output_file_url'] }}" 
-                                            >
+                                            > --}}
 
              
              <div class="col-xl-12 col-lg-12 col-md-12">
@@ -556,11 +688,59 @@ $(function () {
 });
 </script>
 
+<script>
+(function(){
+  function ensureOption($sel, val){
+    if(!val) return;
+    if($sel.find('option[value="'+val+'"]').length===0){
+      $sel.append($('<option>', {value: val, text: val}));
+    }
+    $sel.prop('disabled', false).val(val).trigger('change');
+  }
+
+  $(document).on('change','input[name="api_pick"]', function(){
+    $('.api-card').removeClass('active');
+    $(this).closest('.api-card').addClass('active');
+
+    const $r = $(this);
+    const id      = $r.data('id')      || '';
+    const brand   = $r.data('brand')   || '';
+    const model   = $r.data('model')   || '';
+    const ver     = $r.data('ver')     || '';
+    const engine  = $r.data('engine')  || '';
+    const ecu     = $r.data('ecu')     || '';
+    const fileType= $r.data('file_type')|| '';
+    const year    = $r.data('year')    || '';
+    const output  = $r.data('url')     || '';
+
+    // Fill dropdowns visually
+    ensureOption($('#brand'),  brand);
+    ensureOption($('#model'),  model);
+    ensureOption($('#version'),ver);
+    ensureOption($('#engine'), engine);
+    ensureOption($('#ecu'),    ecu);
+
+    // Fill hidden inputs for form submission
+    $('#sel_id').val(id);
+    $('#sel_brand').val(brand);
+    $('#sel_model').val(model);
+    $('#sel_version').val(ver);
+    $('#sel_engine').val(engine);
+    $('#sel_ecu').val(ecu);
+    $('#sel_file_type').val(fileType);
+    $('#sel_year').val(year);
+    $('#sel_output_file_url').val(output);
+
+    $('#license_plate').focus();
+  });
+})();
+</script>
+
 <script type="text/javascript">
 
-    
 
-    function disable_dropdowns() {
+  
+      function disable_dropdowns() {
 
         $('#model').children().remove();
         $('#model').append('<option selected id="model">Model</option>');

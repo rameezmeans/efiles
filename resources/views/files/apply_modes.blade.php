@@ -3,6 +3,17 @@
 
 <style>
 
+  /* make the main content not clip children */
+#content { height: 100vh; overflow: hidden; }
+
+/* scroll INSIDE the row */
+.row.post-row{
+  max-height: calc(100vh - 260px); /* adjust if needed */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 8px; /* avoid scrollbar overlaying text */
+}
+
         /* 
   You want a simple and fancy tooltip?
   Just copy all [data-tooltip] blocks:
@@ -535,6 +546,20 @@ p.tuning-resume {
 @endsection
 
 @section('pagespecificscripts')
+
+<script>
+(function(){
+  function setScrollableHeight(){
+    var vh = window.innerHeight;
+    var topH = $('.fix-header').outerHeight(true) || 0;
+    // 40–80px extra margin/paddings; tweak as needed
+    var h = vh - topH - 180;
+    if(h < 300) h = 300;
+    $('.row.post-row').css({ maxHeight: h+'px', overflowY: 'auto' });
+  }
+  $(window).on('load resize', setScrollableHeight);
+})();
+</script>
 
 <script type="text/javascript">
 

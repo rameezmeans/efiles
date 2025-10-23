@@ -1771,7 +1771,7 @@ class FileController extends Controller
         $file->name          = $request->name;
         $file->email         = $request->email;
         $file->phone         = $request->phone;
-        $file->model_year    = $request->model_year;
+        $file->model_year    = $request->selected['vehicle_model_year'];
         $file->file_type     = $request->file_type;
         $file->license_plate = $request->license_plate;
         $file->vin_number    = $request->vin_number;
@@ -1920,8 +1920,8 @@ class FileController extends Controller
         return view('files.apply_modes', [ 
             
             'file' => $file, 
-            'foundFileID' => $request->found_file_id, 
-            'foundFilePath' => $request->found_file_path, 
+            'foundFileID' => $request->selected['id'], 
+            'foundFilePath' => $request->selected['output_file_url'],
             'mods' => $mods, 
             'stages' => $stages, 
             'options' => $options, 
@@ -1933,14 +1933,20 @@ class FileController extends Controller
     }
 
     public function nextStep(Request $request){
+
+        // dd($request->all());
         
-        $tempFileID = $request->temporary_file_id;
+        $tempFileID = $request->tempFileID;
         $file = TemporaryFile::findOrFail($tempFileID);
-        $selected = $request->selected;
-        $matchedChoice = $request->matched_choice;
+        $apiReplies = json_decode($request->apiResponse)->FILES;
+
+        // dd($apiReplies);
+
+        // $selected = $request->selected;
+        // $matchedChoice = $request->matched_choice;
         $file->modification = $request->modification;
         
-        $file->is_original = $request->is_original;
+        $file->is_original = 0;
 
         $file->save();
 
@@ -1950,11 +1956,12 @@ class FileController extends Controller
 
         $brands = $this->filesMainObj->getBrands();
 
-        return view('files.file_information', [ 
+    return view('files.file_information', [ 
             'brands' => $brands, 
             'file' => $file, 
-            'selected' => $selected, 
-            'matchedChoice' => $matchedChoice 
+            'apiReplies' => $apiReplies, 
+            // 'selected' => $selected, 
+            // 'matchedChoice' => $matchedChoice 
         ]);
     }
 
