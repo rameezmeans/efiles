@@ -1487,7 +1487,7 @@ class FileController extends Controller
                 return response()->json([
                     'available' => false,
                     'mode'      => (string) $mode,
-                    'message'   => 'Automatic delivery unavailable (remote service error).',
+                    'message'   => 'No automatic solution available, engineers will handle the request within 20-60mins.',
                 ]);
             }
 

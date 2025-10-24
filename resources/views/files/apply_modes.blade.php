@@ -591,7 +591,7 @@ function showCheckoutOnly(){
   $('#delivery_mode').val('manual');
   $('#btn-download').addClass('hide');
   $('#btn-checkout').removeClass('hide');
-  hideStatus(); // optional
+  // hideStatus(); // optional
 }
 async function runAvailability(stageId, stageName, foundFileId, foundFilePath){
   lockUI();
@@ -606,14 +606,14 @@ async function runAvailability(stageId, stageName, foundFileId, foundFilePath){
     });
 
     if (res.available) {
-      showStatus(res.message || 'This modification can be delivered automatically.', 'success');
+      showStatus(res.message || 'Automatic solution can be delivered.', 'success');
       $('#delivery_mode').val('auto');
       $('#btn-checkout').addClass('hide');
       $('#btn-download').removeClass('hide');
       $('#mode').val(res.mode);
       $('#output_file_url').val(res.output_file_url || '');
     } else {
-      showStatus(res.message || 'This modification will be delivered manually (delayed).', 'danger');
+      showStatus(res.message || 'No automatic solution available, engineers will handle the request within 20-60mins.', 'danger');
       showCheckoutOnly();
     }
   } catch (e) {
@@ -1119,22 +1119,42 @@ $(document).on('change', '.with-gap', async function () {
   }
 });
 
-// === On load: first stage is checked; run availability if no options selected ===
 $(function(){
-  if (!anyOptionsSelected()) {
-    const $sel      = $('.with-gap:checked');
-    if ($sel.length) {
-      runAvailability(
-        $sel.val(),
-        $sel.data('name'),
-        $('#found_file_id').val(),
-        $('#found_file_path').val()
-      );
-    }
-  } else {
+  const $sel = $('.with-gap:checked');
+  if ($sel.length) {
+    const stageName = $sel.data('name');
+    const stagePrice = $sel.data('price');
+    // Build the stage credits box visually
+    $('#rows-for-credits').html(renderStageHeader());
+    $('#total-credits').html(stagePrice);
+    $('#total_credits_to_submit').val(stagePrice);
+    // Just show info text, no backend request
+    showStatus(`Select a stage to check availability for ${stageName}.`, 'info');
+    // Make sure checkout button visible by default
     showCheckoutOnly();
   }
 });
+
+// === On load: first stage is checked; run availability if no options selected ===
+
+ 
+// $(function(){
+//   if (!anyOptionsSelected()) {
+//     const $sel      = $('.with-gap:checked');
+//     if ($sel.length) {
+//       runAvailability(
+//         $sel.val(),
+//         $sel.data('name'),
+//         $('#found_file_id').val(),
+//         $('#found_file_path').val()
+//       );
+//     }
+//   } else {
+//     showCheckoutOnly();
+//   }
+// });
+
+
 
       // $(document).on('change', '.with-gap', async function () {
       //     const $radio     = $(this);
