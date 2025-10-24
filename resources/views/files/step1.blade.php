@@ -742,15 +742,50 @@
                 $('.i-content-block').addClass('level2');
             }
             else{
-                console.log(response);
-                $('#show_temporary_file_id').val(response.tempFileID);
-                renderCars(response.api_response.FILES || []);
-                $('#show-files').removeClass('hide');
-                $('.master-tools').addClass('hide');
-                $('.slave-tools').addClass('hide');
-                $('.i-content-block').addClass('level2');
-                $('#step').html('Step 2/5');
-                $('#upload-area').addClass('hide');
+
+              // Prepare POST data
+              const postData = {
+                  tempFileID: response.tempFileID,
+                  apiResponse: JSON.stringify(response.api_response || {}),
+                  next_step: true
+              };
+
+                // Create a temporary form
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = "{{ route('next-step') }}"; // Blade route helper
+
+                // Add CSRF token (Laravel requires it)
+                const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                const inputToken = document.createElement('input');
+                inputToken.type = 'hidden';
+                inputToken.name = '_token';
+                inputToken.value = csrf;
+                form.appendChild(inputToken);
+
+                // Add POST parameters
+                for (const key in postData) {
+                    if (postData.hasOwnProperty(key)) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = key;
+                        input.value = postData[key];
+                        form.appendChild(input);
+                    }
+                }
+
+                // Append and submit
+                document.body.appendChild(form);
+                form.submit();
+                // console.log(response);
+                // $('#show_temporary_file_id').val(response.tempFileID);
+                // renderCars(response.api_response.FILES || []);
+                // $('#show-files').removeClass('hide');
+                // $('.master-tools').addClass('hide');
+                // $('.slave-tools').addClass('hide');
+                // $('.i-content-block').addClass('level2');
+                // $('#step').html('Step 2/5');
+                // $('#upload-area').addClass('hide');
 
             }
         },
