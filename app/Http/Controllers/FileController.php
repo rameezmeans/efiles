@@ -1273,7 +1273,7 @@ private function isAutoEligible(Service $service): bool
     $name = strtolower(trim($service->label));
     $type = strtolower(trim($service->type ?? ''));
 
-    dd($name);
+    // dd($name);
 
     if ($type === 'tunning') {
         // Stage 1 / Stage 2
