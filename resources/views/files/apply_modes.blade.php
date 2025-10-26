@@ -560,6 +560,41 @@ p.tuning-resume {
 @section('pagespecificscripts')
 
 <script>
+
+
+// NEW: track if we've already fired the 0→1 options check
+let hasFiredOptionCheck = false;
+
+// NEW: availability check for an option (uses same endpoint)
+async function runAvailabilityOption(serviceId){
+  lockUI();
+  showStatus('Checking option availability…', 'info');
+  try {
+    const res = await $.ajax({
+      url: "{{ route('check-stage-availability') }}",
+      type: "POST",
+      headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
+      data: { service_id: serviceId } // <-- key difference
+    });
+
+    if (res.available) {
+      showStatus(res.message || 'This option can be delivered automatically.', 'success');
+      // We STILL force checkout for any options picked:
+      showCheckoutOnly();
+      // If you ever want to enable auto-download for options, set #mode/#output_file_url here.
+      // $('#mode').val(res.mode); $('#output_file_url').val(res.output_file_url || '');
+    } else {
+      showStatus(res.message || 'No automatic solution for this option. Proceed to checkout.', 'danger');
+      showCheckoutOnly();
+    }
+  } catch (e) {
+    showStatus('Could not verify option. Proceed to checkout.', 'danger');
+    showCheckoutOnly();
+  } finally {
+    unlockUI();
+  }
+}
+
 (function(){
   function setScrollableHeight(){
     var vh = window.innerHeight;
@@ -871,21 +906,47 @@ $(document).on('click change','input.options-checkbox',function(){
 
         // === OPTIONS: whenever options change, force Checkout if any are selected ===
         $(document).on('change', '.options-checkbox', function(){
+
+          const selectedCount = $('.options-checkbox:checked').length;
+
+          // Always force checkout when any option is selected
+          if (selectedCount > 0) {
+            showCheckoutOnly();
+          }
+
+          // Fire ONE ajax only when going from 0 → 1 and this box is being checked
+          if ($(this).is(':checked') && selectedCount === 1 && !hasFiredOptionCheck) {
+            const serviceId = $(this).val();
+            hasFiredOptionCheck = true;
+            runAvailabilityOption(serviceId);
+          }
+
+          // If user clears all options, reset the flag so the next first selection triggers again
+          if (selectedCount === 0) {
+            hasFiredOptionCheck = false;
+
+            // optionally re-check current stage availability (no options now)
+            const $sel = $('.with-gap:checked');
+            if ($sel.length) {
+              runAvailability($sel.val(), $sel.data('name'), $('#found_file_id').val(), $('#found_file_path').val());
+            }
+          }
+
           // ... keep your existing comment/alerts logic above ...
 
-          // After your existing pricing/credits code runs, add:
-          if (anyOptionsSelected()) {
-            // Any option selected => skip auto, force checkout
-            showCheckoutOnly();
-          } else {
-            // No options selected => re-evaluate auto availability for current stage
-            const $sel      = $('.with-gap:checked');
-            const stageId   = $sel.val();
-            const stageName = $sel.data('name');
-            const foundFileId   = $('#found_file_id').val();
-            const foundFilePath = $('#found_file_path').val();
-            runAvailability(stageId, stageName, foundFileId, foundFilePath);
-          }
+          // // After your existing pricing/credits code runs, add:
+          // if (anyOptionsSelected()) {
+          //   // Any option selected => skip auto, force checkout
+          //   showCheckoutOnly();
+          // } else {
+          //   // No options selected => re-evaluate auto availability for current stage
+          //   const $sel      = $('.with-gap:checked');
+          //   const stageId   = $sel.val();
+          //   const stageName = $sel.data('name');
+          //   const foundFileId   = $('#found_file_id').val();
+          //   const foundFilePath = $('#found_file_path').val();
+          //   runAvailability(stageId, stageName, foundFileId, foundFilePath);
+          // }
         });
 
       // $(document).on('change', '.options-checkbox', function(){
