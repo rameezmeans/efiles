@@ -1270,8 +1270,10 @@ class FileController extends Controller
 // Add this small helper in the class (private section)
 private function isAutoEligible(Service $service): bool
 {
-    $name = strtolower(trim($service->name));
+    $name = strtolower(trim($service->label));
     $type = strtolower(trim($service->type ?? ''));
+
+    dd($name);
 
     if ($type === 'tunning') {
         // Stage 1 / Stage 2
@@ -1280,7 +1282,7 @@ private function isAutoEligible(Service $service): bool
 
     if ($type === 'option') {
         // EGR OFF / DPF OFF
-        return in_array($name, ['egr off', 'egr_off', 'dpf off', 'dpf_off'], true);
+        return in_array($name, ['egr off', 'egr', 'dpf off', 'dpf', 'pops', 'adblue', 'e85'], true);
     }
 
     return false;
