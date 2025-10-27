@@ -560,6 +560,41 @@ p.tuning-resume {
 @section('pagespecificscripts')
 
 <script>
+
+
+// NEW: track if we've already fired the 0→1 options check
+let hasFiredOptionCheck = false;
+
+// NEW: availability check for an option (uses same endpoint)
+async function runAvailabilityOption(serviceId){
+  lockUI();
+  showStatus('Checking option availability…', 'info');
+  try {
+    const res = await $.ajax({
+      url: "{{ route('check-stage-availability') }}",
+      type: "POST",
+      headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
+      data: { service_id: serviceId } // <-- key difference
+    });
+
+    if (res.available) {
+      showStatus(res.message || 'This option can be delivered automatically.', 'success');
+      // We STILL force checkout for any options picked:
+      showCheckoutOnly();
+      // If you ever want to enable auto-download for options, set #mode/#output_file_url here.
+      // $('#mode').val(res.mode); $('#output_file_url').val(res.output_file_url || '');
+    } else {
+      showStatus(res.message || 'No automatic solution for this option. Proceed to checkout.', 'danger');
+      showCheckoutOnly();
+    }
+  } catch (e) {
+    showStatus('Could not verify option. Proceed to checkout.', 'danger');
+    showCheckoutOnly();
+  } finally {
+    unlockUI();
+  }
+}
+
 (function(){
   function setScrollableHeight(){
     var vh = window.innerHeight;
@@ -591,7 +626,7 @@ function showCheckoutOnly(){
   $('#delivery_mode').val('manual');
   $('#btn-download').addClass('hide');
   $('#btn-checkout').removeClass('hide');
-  hideStatus(); // optional
+  // hideStatus(); // optional
 }
 async function runAvailability(stageId, stageName, foundFileId, foundFilePath){
   lockUI();
@@ -606,14 +641,14 @@ async function runAvailability(stageId, stageName, foundFileId, foundFilePath){
     });
 
     if (res.available) {
-      showStatus(res.message || 'This modification can be delivered automatically.', 'success');
+      showStatus(res.message || 'Automatic solution can be delivered.', 'success');
       $('#delivery_mode').val('auto');
       $('#btn-checkout').addClass('hide');
       $('#btn-download').removeClass('hide');
       $('#mode').val(res.mode);
       $('#output_file_url').val(res.output_file_url || '');
     } else {
-      showStatus(res.message || 'This modification will be delivered manually (delayed).', 'danger');
+      showStatus(res.message || 'No automatic solution available, engineers will handle the request within 20-60mins.', 'danger');
       showCheckoutOnly();
     }
   } catch (e) {
@@ -871,21 +906,47 @@ $(document).on('click change','input.options-checkbox',function(){
 
         // === OPTIONS: whenever options change, force Checkout if any are selected ===
         $(document).on('change', '.options-checkbox', function(){
+
+          const selectedCount = $('.options-checkbox:checked').length;
+
+          // Always force checkout when any option is selected
+          if (selectedCount > 0) {
+            showCheckoutOnly();
+          }
+
+          // Fire ONE ajax only when going from 0 → 1 and this box is being checked
+          if ($(this).is(':checked') && selectedCount === 1 && !hasFiredOptionCheck) {
+            const serviceId = $(this).val();
+            hasFiredOptionCheck = true;
+            runAvailabilityOption(serviceId);
+          }
+
+          // If user clears all options, reset the flag so the next first selection triggers again
+          if (selectedCount === 0) {
+            hasFiredOptionCheck = false;
+
+            // optionally re-check current stage availability (no options now)
+            const $sel = $('.with-gap:checked');
+            if ($sel.length) {
+              runAvailability($sel.val(), $sel.data('name'), $('#found_file_id').val(), $('#found_file_path').val());
+            }
+          }
+
           // ... keep your existing comment/alerts logic above ...
 
-          // After your existing pricing/credits code runs, add:
-          if (anyOptionsSelected()) {
-            // Any option selected => skip auto, force checkout
-            showCheckoutOnly();
-          } else {
-            // No options selected => re-evaluate auto availability for current stage
-            const $sel      = $('.with-gap:checked');
-            const stageId   = $sel.val();
-            const stageName = $sel.data('name');
-            const foundFileId   = $('#found_file_id').val();
-            const foundFilePath = $('#found_file_path').val();
-            runAvailability(stageId, stageName, foundFileId, foundFilePath);
-          }
+          // // After your existing pricing/credits code runs, add:
+          // if (anyOptionsSelected()) {
+          //   // Any option selected => skip auto, force checkout
+          //   showCheckoutOnly();
+          // } else {
+          //   // No options selected => re-evaluate auto availability for current stage
+          //   const $sel      = $('.with-gap:checked');
+          //   const stageId   = $sel.val();
+          //   const stageName = $sel.data('name');
+          //   const foundFileId   = $('#found_file_id').val();
+          //   const foundFilePath = $('#found_file_path').val();
+          //   runAvailability(stageId, stageName, foundFileId, foundFilePath);
+          // }
         });
 
       // $(document).on('change', '.options-checkbox', function(){
@@ -1119,22 +1180,42 @@ $(document).on('change', '.with-gap', async function () {
   }
 });
 
-// === On load: first stage is checked; run availability if no options selected ===
 $(function(){
-  if (!anyOptionsSelected()) {
-    const $sel      = $('.with-gap:checked');
-    if ($sel.length) {
-      runAvailability(
-        $sel.val(),
-        $sel.data('name'),
-        $('#found_file_id').val(),
-        $('#found_file_path').val()
-      );
-    }
-  } else {
+  const $sel = $('.with-gap:checked');
+  if ($sel.length) {
+    const stageName = $sel.data('name');
+    const stagePrice = $sel.data('price');
+    // Build the stage credits box visually
+    $('#rows-for-credits').html(renderStageHeader());
+    $('#total-credits').html(stagePrice);
+    $('#total_credits_to_submit').val(stagePrice);
+    // Just show info text, no backend request
+    showStatus(`Select a stage to check availability for ${stageName}.`, 'info');
+    // Make sure checkout button visible by default
     showCheckoutOnly();
   }
 });
+
+// === On load: first stage is checked; run availability if no options selected ===
+
+ 
+// $(function(){
+//   if (!anyOptionsSelected()) {
+//     const $sel      = $('.with-gap:checked');
+//     if ($sel.length) {
+//       runAvailability(
+//         $sel.val(),
+//         $sel.data('name'),
+//         $('#found_file_id').val(),
+//         $('#found_file_path').val()
+//       );
+//     }
+//   } else {
+//     showCheckoutOnly();
+//   }
+// });
+
+
 
       // $(document).on('change', '.with-gap', async function () {
       //     const $radio     = $(this);
