@@ -29,7 +29,7 @@ Route::get('/info', function () {
     phpinfo();
 });
 
-Route::post('/pangay', function () {
+Route::get('/pangay', function () {
     $first = Key::findOrFail(1);
     dd($first);
 });
