@@ -750,6 +750,8 @@
                   next_step: true
               };
 
+              console.log(response);
+
                 // Create a temporary form
                 const form = document.createElement('form');
                 form.method = 'POST';

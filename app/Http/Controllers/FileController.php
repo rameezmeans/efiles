@@ -2094,6 +2094,8 @@ public function checkAutoFile(Request $request)
 
         $kess3Label = Tool::where('label', 'Kess_V3')->where('type', 'slave')->first();
 
+        $path = null;
+
         if($toolType == 'slave' && $tempFile->tool_id == $kess3Label->id){
 
             $path = $this->filesMainObj->getPath($file, $tempFile);
@@ -2131,7 +2133,13 @@ public function checkAutoFile(Request $request)
 
         // Path to the file you want to upload
         // $filePath = '/Users/polybit/Downloads/24587';
-        $filePath = $this->filesMainObj->getPath($file, $tempFile);
+
+        if(!$path){
+            $filePath = $this->filesMainObj->getPath($file, $tempFile);
+        }
+        else{
+            $filePath = $path;
+        }
 
         // Ensure the file exists before proceeding
         if (!file_exists($filePath)) {
