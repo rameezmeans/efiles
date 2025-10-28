@@ -2014,7 +2014,7 @@ public function checkAutoFile(Request $request)
         $options = $this->filesMainObj->getOptionsForStep3($this->frontendID, $vehicleType);
 
         $firstStage = $stages[0];
-        
+
         return view('files.apply_modes', [ 
             
             'file' => $file, 
@@ -2035,6 +2035,9 @@ public function checkAutoFile(Request $request)
         // dd($request->all());
         
         $tempFileID = $request->tempFileID;
+
+        dd($request->all());
+        
         $file = TemporaryFile::findOrFail($tempFileID);
         $apiReplies = json_decode($request->apiResponse)->FILES;
 
