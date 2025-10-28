@@ -32,23 +32,23 @@ Route::get('/info', function () {
 Route::get('/pangay', function () {
     $first = Key::findOrFail(1);
 
-    $f = new Key();
-    $f->key = $first->key;
-    $f->value = $first->value;
-    $f->portal = 'ecutech';
-    $f->save();
+    // $f = new Key();
+    // $f->key = $first->key;
+    // $f->value = $first->value;
+    // $f->portal = 'ecutech';
+    // $f->save();
 
-    $s = new Key();
-    $s->key = $first->key;
-    $s->value = $first->value;
-    $s->portal = 'tuningx';
-    $s->save();
+    // $s = new Key();
+    // $s->key = $first->key;
+    // $s->value = $first->value;
+    // $s->portal = 'tuningx';
+    // $s->save();
 
-    $t = new Key();
-    $t->key = $first->key;
-    $t->value = $first->value;
-    $t->portal = 'etf';
-    $t->save();
+    // $t = new Key();
+    // $t->key = $first->key;
+    // $t->value = $first->value;
+    // $t->portal = 'etf';
+    // $t->save();
 
     dd($first);
 });
