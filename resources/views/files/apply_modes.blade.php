@@ -662,7 +662,7 @@ async function runAvailability(stageId, stageName, foundFileId, foundFilePath){
       $('#mode').val(res.mode);
       $('#output_file_url').val(res.output_file_url || '');
     } else {
-      showStatus('Manual processing — proceed to checkout.', 'info');
+      showStatus('No automatic solution available, engineers will handle the request within 20-60mins.', 'danger');
       showCheckoutOnly();
       $('#mode, #output_file_url').val('');
     }
