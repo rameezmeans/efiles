@@ -3,6 +3,71 @@
 
 <style>
 
+  /* Layout */
+.stage-layout{
+  display:flex;
+  gap:24px;
+}
+
+/* LEFT: single scroll for Tuning + Options */
+.stage-left{
+  flex:1 1 auto;
+  max-height: calc(100vh - 200px);     /* same headroom as your old calc */
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  padding-right:8px;
+}
+
+/* ============ FLOATING CENTERED RIGHT BOX ============ */
+
+.stage-right {
+  position: fixed;
+  top: 55%;                /* vertical center */
+  right: 17%;              /* start from middle */
+  transform: translate(50%, -50%); /* shift into true center of container */
+  width: 380px;            /* adjust width to your liking */
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  padding: 24px 20px;
+  z-index: 100;            /* make sure it's above content */
+}
+
+/* optional subtle fade/blur behind it for elegance */
+.stage-right::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(8px);
+  opacity: 0.4;
+  border-radius: 12px;
+}
+
+/* keep text + buttons above backdrop blur */
+.stage-right > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* adjust widths inside */
+.stage-right .btn {
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* Kill inner row scroll; we now scroll only .stage-left */
+.row.post-row{
+  max-height: none !important;
+  overflow: visible !important;
+  padding-right: 0 !important;
+}
+
+/* Optional: make the credits box scroll independently if it grows too tall */
+#rows-for-credits{
+  max-height: 300px;
+  overflow-y: auto;
+}
+
   /* make the main content not clip children */
 /* allow inner scroll, not top-level content */
 #content { height: auto; overflow: visible; }
@@ -385,6 +450,11 @@ p.tuning-resume {
             <input type="hidden" id="file_tool_type" value="{{$file->tool_type}}">
             @csrf
 
+            <div class="stage-layout">
+              <!-- LEFT: one scroll for both sections -->
+              <div class="stage-left">
+                <!-- Tuning row (unchanged inside) -->
+
              <div class="row post-row">
                 <div class="col-xl-3 col-lg-3 col-md-3 heading-column">
                     <div class="heading-column-box">  
@@ -423,42 +493,7 @@ p.tuning-resume {
                   @endforeach
                 </div>
               </div>
-              <div class="col-xl-4 col-lg-4 col-md-4">
-
-                <!-- status + loader -->
-                <div id="stage-status" class="alert alert-info hide" style="margin-bottom:12px;"></div>
-                <div id="stage-loader" class="loader hide"></div>
-
-                <div id="rows-for-credits" class="red-scroll" style=""></div>
-                <div class="total-box"> … </div>
-
-                <input type="hidden" id="total_credits_to_submit" name="total_credits_to_submit" value="">
-                <input type="hidden" id="mandatory_field" name="mandatory_field" value="">
-                <input type="hidden" id="delivery_mode" name="delivery_mode" value=""> <!-- auto | manual -->
-
-                <div class="text-center">
-                  <!-- Checkout (default) -->
-                  <button class="btn btn-red m-t-10" type="submit" id="btn-checkout">
-                    <i class="fa fa-arrow-right"></i> Go to Checkout Page
-                  </button>
-
-                  {{-- <form method="POST" id="file-upload-tuning-form" action="{{ route('download-file') }}"> --}}
-                    <input type="hidden" name="mode" id="mode">
-                    <input type="hidden" name="output_file_url" id="output_file_url">
-
-                    <button class="btn btn-red m-t-10 hide" 
-                            type="submit" 
-                            id="btn-download"
-                            formaction="{{ route('download-file') }}">
-                      <i class="fa fa-arrow-right"></i> Go to Download Page
-                    </button>
-
-                  {{-- </form> --}}
-                  <!-- Download (hidden by default) -->
-                  
-                </div>
-
-              </div>
+              
              
             </div>
 
@@ -547,6 +582,49 @@ p.tuning-resume {
                 </div>
               </div>
             </div>
+
+              </div>
+            
+
+            <div class="stage-right">
+
+                <!-- status + loader -->
+                <div id="stage-status" class="alert alert-info hide" style="margin-bottom:12px;"></div>
+                <div id="stage-loader" class="loader hide"></div>
+
+                <div id="rows-for-credits" class="red-scroll" style=""></div>
+                <div class="total-box"> … </div>
+
+                <input type="hidden" id="total_credits_to_submit" name="total_credits_to_submit" value="">
+                <input type="hidden" id="mandatory_field" name="mandatory_field" value="">
+                <input type="hidden" id="delivery_mode" name="delivery_mode" value=""> <!-- auto | manual -->
+
+                <div class="text-center">
+                  <!-- Checkout (default) -->
+                  <button class="btn btn-red m-t-10" type="submit" id="btn-checkout">
+                    <i class="fa fa-arrow-right"></i> Go to Checkout Page
+                  </button>
+
+                  {{-- <form method="POST" id="file-upload-tuning-form" action="{{ route('download-file') }}"> --}}
+                    <input type="hidden" name="mode" id="mode">
+                    <input type="hidden" name="output_file_url" id="output_file_url">
+
+                    <button class="btn btn-red m-t-10 hide" 
+                            type="submit" 
+                            id="btn-download"
+                            formaction="{{ route('download-file') }}">
+                      <i class="fa fa-arrow-right"></i> Go to Download Page
+                    </button>
+
+                  {{-- </form> --}}
+                  <!-- Download (hidden by default) -->
+                  
+                </div>
+
+              </div>
+
+            </div>
+
         </form>
         </div>
 
@@ -560,8 +638,25 @@ p.tuning-resume {
 @section('pagespecificscripts')
 
 <script>
+(function(){
+  function applyHeights(){
+    var vh   = window.innerHeight;
+    var topH = ($('.fix-header').outerHeight(true) || 0);
+    var pad  = 20; // small breathing room
 
+    // left pane scroll height
+    var h = vh - topH - 80;             // tune this margin if needed
+    if(h < 300) h = 300;
+    $('.stage-left').css({ maxHeight: h + 'px' });
 
+    // sticky offset for right pane
+    document.documentElement.style.setProperty('--stickyTop', (topH + pad) + 'px');
+  }
+  $(window).on('load resize', applyHeights);
+})();
+</script>
+
+<script>
 // NEW: track if we've already fired the 0→1 options check
 
 let hasFiredOptionCheck = false;
