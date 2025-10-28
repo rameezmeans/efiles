@@ -1308,9 +1308,7 @@ public function checkAutoFile(Request $request)
     // $mode = Str::of($service->name)->lower()->replace(' ', '_');
     $mode = $service->label;
     $apiUrl = 'http://212.205.214.152:5000/external-api2';
-
-    // dd($service->label);
-
+    
     $payload = [
         'mode'                 => $service->label, // API expects literal casing like "Stage 1"
         'timeout'              => 10,

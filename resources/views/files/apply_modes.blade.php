@@ -1046,21 +1046,55 @@ $(document).on('click change','input.options-checkbox',function(){
   $('#total_credits_to_submit').val(total);
 });
         
-$(document).on('change', '.options-checkbox', function(){
+
+$(document).on('change', '.options-checkbox', function () {
   const selectedCount = $('.options-checkbox:checked').length;
 
+  // ⬇️ Pricing summary refresh (kept as-is)
+  let options_str = '';
+  let checkbox_credits_count = 0;
+  $('#rows-for-credits').html(renderStageHeader());
+  $('input.options-checkbox:checked').each(function(){
+    const optionId = $(this).val();
+    let price = 0;
+    $.each(valuesArray || [], function(_, v){
+      if (v.option_id == optionId) {
+        price = (file_type === 'slave') ? parseInt(v.slave_credits,10) : parseInt(v.master_credits,10);
+        return false;
+      }
+    });
+    checkbox_credits_count += price;
+    const name = $(this).data('name');
+    options_str += `<div class="divider-light"></div>
+                    <p class="tuning-resume">${name} <small>${price} credits</small></p>`;
+  });
+  $('#rows-for-credits').append(options_str);
+
+  const stagePrice = parseInt($('.with-gap:checked').data('price'),10) || 0;
+  const total = stagePrice + checkbox_credits_count;
+  $('#total-credits').html(total);
+  $('#total_credits_to_submit').val(total);
+
+  // ⬇️ Delivery-mode logic
   if (selectedCount > 0) {
+    // force manual
     $('#delivery_mode').val('manual');
     $('#mode, #output_file_url').val('');
     $('#btn-download').addClass('hide');
     $('#btn-checkout').removeClass('hide');
+
+    // 🔴 NEW: also update the STATUS banner when we switched to manual
+    // (covers "more options added" case that invalidates previous success)
+    showStatus('No automatic solution available, engineers will handle the request within 20–60 mins.', 'danger');
   }
 
+  // First option toggled from 0 → 1? run availability for that single option
   if ($(this).is(':checked') && selectedCount === 1 && !hasFiredOptionCheck) {
     hasFiredOptionCheck = true;
-    runAvailabilityOption($(this).val());
+    runAvailabilityOption($(this).val()); // this may flip to auto and set success/status
   }
 
+  // When all options cleared → re-check current stage auto availability
   if (selectedCount === 0) {
     hasFiredOptionCheck = false;
     const $sel = $('.with-gap:checked');
