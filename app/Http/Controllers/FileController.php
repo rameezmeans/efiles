@@ -2036,8 +2036,8 @@ public function checkAutoFile(Request $request)
         
         $tempFileID = $request->tempFileID;
 
-        dd($request->all());
-        
+        // dd($request->all());
+
         $file = TemporaryFile::findOrFail($tempFileID);
         $apiReplies = json_decode($request->apiResponse)->FILES;
 
