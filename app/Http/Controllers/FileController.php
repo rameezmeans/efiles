@@ -181,6 +181,68 @@ class FileController extends Controller
         return response()->json( ['msg' => 'status not set to fail', 'fail' => 0, 'file_id' => $file->id] );
     }
 
+    // public function findVehicleTypeByBrand(Request $request){
+
+    //     $brand = $request->brand;
+
+    //     if($brand == 'VW'){
+    //         $brand = 'volkswagen';
+    //     }
+
+    //     return Vehicle::where('Make', '=', $brand)
+    //     // ->where('Model', '=', $this->model)
+    //     // ->where('Generation', '=', $this->version)
+    //     // ->where('Engine', '=', $this->engine)
+    //     // ->whereNotNull('Brand_image_url') // url_change
+    //     ->first();
+    // }
+
+public function findVehicleTypeByBrand(Request $request)
+{
+    $brand = strtolower(trim($request->brand));
+
+    // 🔧 Common abbreviations or alternate brand names
+    $brandMap = [
+        'vw'         => 'volkswagen',
+        // 'mb'         => 'mercedes-benz',
+        // 'merc'       => 'mercedes-benz',
+        // 'bmw ag'     => 'bmw',
+        // 'audi ag'    => 'audi',
+        // 'gm'         => 'general motors',
+        // 'chevy'      => 'chevrolet',
+        // 'vauxhall'   => 'opel',
+        // 'peugeot-citroen' => 'peugeot',
+        // 'toyota motor corp' => 'toyota',
+        // 'hyundai motor' => 'hyundai',
+        // 'land rover' => 'land-rover',
+        // 'rangerover' => 'land-rover',
+    ];
+
+    // Replace abbreviation if exists in map
+    if (array_key_exists($brand, $brandMap)) {
+        $brand = $brandMap[$brand];
+    }
+
+    // 🔍 Try to find the matching vehicle
+    $vehicle = Vehicle::whereRaw('LOWER(Make) = ?', [$brand])->first();
+
+    if ($vehicle) {
+        return response()->json([
+            'vehicle_found' => true,
+            'vehicle_type'  => $vehicle->type ?? null, // e.g. car, truck, agri, etc.
+            'brand'         => $vehicle->Make,
+            'message'       => 'Vehicle type found successfully.'
+        ]);
+    }
+
+    return response()->json([
+        'vehicle_found' => false,
+        'vehicle_type'  => null,
+        'brand'         => $brand,
+        'message'       => 'No vehicle type found for the specified brand.'
+    ]);
+}
+
     public function getComments(Request $request){
 
         $file = File::findOrFail($request->file_id);
@@ -1273,8 +1335,6 @@ private function isAutoEligible(Service $service): bool
     $name = strtolower(trim($service->label));
     $type = strtolower(trim($service->type ?? ''));
 
-    // dd($name);
-
     if ($type === 'tunning') {
         // Stage 1 / Stage 2
         return in_array($name, ['stage 1', 'stage_1', 'stage 2', 'stage_2'], true);
@@ -1308,7 +1368,7 @@ public function checkAutoFile(Request $request)
     // $mode = Str::of($service->name)->lower()->replace(' ', '_');
     $mode = $service->label;
     $apiUrl = 'http://212.205.214.152:5000/external-api2';
-    
+
     $payload = [
         'mode'                 => $service->label, // API expects literal casing like "Stage 1"
         'timeout'              => 10,
@@ -1883,13 +1943,26 @@ public function checkAutoFile(Request $request)
 
         // dd($request->all());
 
+        if($request->vehicle_type){
+            $vehicleType = $request->vehicle_type;
+        }
+        else{
+            $vehicle = Vehicle::whereRaw('LOWER(Make) = ?', [$request->brand])->first();
+            // dd($vehicle);
+            $vehicleType = $vehicle->type;
+        }
+
+        // dd($vehicleType);
+
         $file = TemporaryFile::findOrFail($request->file_id);
 
         $file->name          = $request->name;
         $file->email         = $request->email;
         $file->phone         = $request->phone;
         $file->model_year    = $request->selected['vehicle_model_year'];
-        $file->file_type     = $request->file_type;
+        $file->file_type = (strcasecmp($request->file_type, 'TCU') === 0)
+        ? 'gearbox_file'
+        : 'ecu_file';
         $file->license_plate = $request->license_plate;
         $file->vin_number    = $request->vin_number;
         $file->brand         = $request->brand;
@@ -1940,94 +2013,97 @@ public function checkAutoFile(Request $request)
 
         $mods = [];
 
-        $stages = [];
+        $stages = $this->filesMainObj->getStagesForStep3($this->frontendID, $vehicleType);
+        $options = $this->filesMainObj->getOptionsForStep3($this->frontendID, $vehicleType);
 
-        if($this->frontendID == 2){
+        // $stages = [];
 
-            $stagesFromLive = Service::orderBy('sorting', 'asc')
-            ->where('type', 'tunning')
-            ->whereNull('subdealer_group_id')
-            ->where('tuningx_active', 1)->get();
+        // if($this->frontendID == 2){
 
-            foreach($stagesFromLive as $stage ){
+        //     $stagesFromLive = Service::orderBy('sorting', 'asc')
+        //     ->where('type', 'tunning')
+        //     ->whereNull('subdealer_group_id')
+        //     ->where('tuningx_active', 1)->get();
+
+        //     foreach($stagesFromLive as $stage ){
                 
-                    $stages []= $stage;
+        //             $stages []= $stage;
                 
-            }
+        //     }
 
-        }
+        // }
 
-        else if($this->frontendID == 3){
+        // else if($this->frontendID == 3){
 
-            $stagesFromLive = Service::orderBy('sorting', 'asc')
-            ->where('type', 'tunning')
-            ->whereNull('subdealer_group_id')
-            ->where('efiles_active', 1)->get();
+        //     $stagesFromLive = Service::orderBy('sorting', 'asc')
+        //     ->where('type', 'tunning')
+        //     ->whereNull('subdealer_group_id')
+        //     ->where('efiles_active', 1)->get();
 
-            foreach($stagesFromLive as $stage ){
+        //     foreach($stagesFromLive as $stage ){
                 
-                    $stages []= $stage;
+        //             $stages []= $stage;
                 
-            }
+        //     }
 
-        }
+        // }
 
-        else{
+        // else{
 
-            $stagesFromLive = Service::orderBy('sorting', 'asc')
-            ->where('type', 'tunning')
-            ->whereNull('subdealer_group_id')
-            ->where('active', 1)->get();
+        //     $stagesFromLive = Service::orderBy('sorting', 'asc')
+        //     ->where('type', 'tunning')
+        //     ->whereNull('subdealer_group_id')
+        //     ->where('active', 1)->get();
 
-            foreach($stagesFromLive as $stage ){
+        //     foreach($stagesFromLive as $stage ){
                 
-                    $stages []= $stage;
+        //             $stages []= $stage;
                 
-            }
+        //     }
 
-        }
+        // }
 
-        $options = [];
+        // $options = [];
 
-        if($this->frontendID == 2){
+        // if($this->frontendID == 2){
 
-            $optionsFromLive = Service::orderBy('sorting', 'asc')
-            ->whereNull('subdealer_group_id')
-            ->where('type', 'option')->where('tuningx_active', 1)->get();
+        //     $optionsFromLive = Service::orderBy('sorting', 'asc')
+        //     ->whereNull('subdealer_group_id')
+        //     ->where('type', 'option')->where('tuningx_active', 1)->get();
             
-            foreach($optionsFromLive as $option ){
+        //     foreach($optionsFromLive as $option ){
                 
-                    $options []= $option;
+        //             $options []= $option;
                 
-            }
-        }
+        //     }
+        // }
 
-        else if($this->frontendID == 3){
+        // else if($this->frontendID == 3){
 
-            $optionsFromLive = Service::orderBy('sorting', 'asc')
-            ->whereNull('subdealer_group_id')
-            ->where('type', 'option')->where('efiles_active', 1)->get();
+        //     $optionsFromLive = Service::orderBy('sorting', 'asc')
+        //     ->whereNull('subdealer_group_id')
+        //     ->where('type', 'option')->where('efiles_active', 1)->get();
             
-            foreach($optionsFromLive as $option ){
+        //     foreach($optionsFromLive as $option ){
                 
-                    $options []= $option;
+        //             $options []= $option;
                 
-            }
-        }
+        //     }
+        // }
 
-        else{
+        // else{
 
-            $optionsFromLive = Service::orderBy('sorting', 'asc')
-            ->whereNull('subdealer_group_id')
-            ->where('type', 'option')->where('active', 1)->get();
+        //     $optionsFromLive = Service::orderBy('sorting', 'asc')
+        //     ->whereNull('subdealer_group_id')
+        //     ->where('type', 'option')->where('active', 1)->get();
             
-            foreach($optionsFromLive as $option ){
+        //     foreach($optionsFromLive as $option ){
                 
-                    $options []= $option;
+        //             $options []= $option;
                 
-            }
+        //     }
 
-        }
+        // }
 
         
         $firstStage = $stages[0];

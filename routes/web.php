@@ -280,6 +280,7 @@ Route::get('/files/pay-credits-download-file/{file}', [App\Http\Controllers\Paym
     ->name('pay-credits-download-file');
 Route::post('/checkout_file', [App\Http\Controllers\PaymentsController::class, 'checkoutFile'])->name('checkout.file');
 Route::post('get_comments', [App\Http\Controllers\FileController::class, 'getComments'])->name('get-comments');
+Route::post('find-vehicle-type-by-brand', [App\Http\Controllers\FileController::class, 'findVehicleTypeByBrand'])->name('find-vehicle-type-by-brand');
 
 Route::post('/check-stage-availability', [\App\Http\Controllers\FileController::class, 'checkAutoFile'])->name('check-stage-availability');
 Route::post('/download-auto-file-and-create-task', [\App\Http\Controllers\FileController::class, 'downloadAutoFileAndCreateTask'])->name('download-auto-file-and-create-task');

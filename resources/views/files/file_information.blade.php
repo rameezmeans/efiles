@@ -359,6 +359,9 @@ p.tuning-resume {
             <input type="hidden" value="{{ $file->id }}" name="file_id" id="file_id">
             
             <input type="hidden" id="file_tool_type" value="{{$file->tool_type}}">
+            
+            <!-- Add this hidden field in your form -->
+            <input type="hidden" name="vehicle_type" id="vehicle_type" value="">
 
 
             <input type="hidden" name="selected[id]" id="sel_id">
@@ -412,14 +415,23 @@ p.tuning-resume {
       background: #fff5f6;
     }
 
+    
     .api-card img {
-      position: absolute;
-      right: 18px;
-      top: 18px;
-      width: 40px;
-      height: auto;
-      opacity: 0.85;
-    }
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;                /* bigger logo */
+  height: auto;
+  opacity: 0.9;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.15));
+  pointer-events: none;
+}
+
+.api-card {
+  padding: 60px 18px 20px; /* extra top space for centered logo */
+}
+
 
     /* Radio visible and elegant */
     .api-radio {
@@ -689,7 +701,8 @@ $(function () {
 </script>
 
 <script>
-(function(){
+  
+  (function(){
   function ensureOption($sel, val){
     if(!val) return;
     if($sel.find('option[value="'+val+'"]').length===0){
@@ -698,42 +711,78 @@ $(function () {
     $sel.prop('disabled', false).val(val).trigger('change');
   }
 
-  $(document).on('change','input[name="api_pick"]', function(){
+  function resetPicked(){
     $('.api-card').removeClass('active');
-    $(this).closest('.api-card').addClass('active');
+    $('#vehicle_type').val('');
+    // Optionally clear selects and hidden fields
+    // $('#brand, #model, #version, #engine, #ecu').val('').prop('disabled', true);
+    // $('#sel_id, #sel_brand, #sel_model, #sel_version, #sel_engine, #sel_ecu, #sel_file_type, #sel_year, #sel_output_file_url').val('');
+  }
 
-    const $r = $(this);
-    const id      = $r.data('id')      || '';
-    const brand   = $r.data('brand')   || '';
-    const model   = $r.data('model')   || '';
-    const ver     = $r.data('ver')     || '';
-    const engine  = $r.data('engine')  || '';
-    const ecu     = $r.data('ecu')     || '';
-    const fileType= $r.data('file_type')|| '';
-    const year    = $r.data('year')    || '';
-    const output  = $r.data('url')     || '';
+  $(document).on('change','input[name="api_pick"]', function(){
+    const $card = $(this).closest('.api-card');
+    $('.api-card').removeClass('active');
+    $card.addClass('active');
 
-    // Fill dropdowns visually
-    ensureOption($('#brand'),  brand);
-    ensureOption($('#model'),  model);
-    ensureOption($('#version'),ver);
-    ensureOption($('#engine'), engine);
-    ensureOption($('#ecu'),    ecu);
+    const $r       = $(this);
+    const id       = $r.data('id')      || '';
+    const brand    = $r.data('brand')   || '';
+    const model    = $r.data('model')   || '';
+    const ver      = $r.data('ver')     || '';
+    const engine   = $r.data('engine')  || '';
+    const ecu      = $r.data('ecu')     || '';
+    const fileType = $r.data('file_type')|| '';
+    const year     = $r.data('year')    || '';
+    const output   = $r.data('url')     || '';
 
-    // Fill hidden inputs for form submission
-    $('#sel_id').val(id);
-    $('#sel_brand').val(brand);
-    $('#sel_model').val(model);
-    $('#sel_version').val(ver);
-    $('#sel_engine').val(engine);
-    $('#sel_ecu').val(ecu);
-    $('#sel_file_type').val(fileType);
-    $('#sel_year').val(year);
-    $('#sel_output_file_url').val(output);
+    $card.css('opacity', .6);
 
-    // $('#license_plate').focus();
+    $.ajax({
+      url: "/find-vehicle-type-by-brand",
+      type: "POST",
+      headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
+      data: { brand: brand },
+      success: function(res){
+        if (res.vehicle_found === true) {
+          // ✅ Fill dropdowns visually
+          ensureOption($('#brand'),  brand);
+          ensureOption($('#model'),  model);
+          ensureOption($('#version'),ver);
+          ensureOption($('#engine'), engine);
+          ensureOption($('#ecu'),    ecu);
+          $('#file_type').val(fileType);
+
+          // ✅ Fill hidden fields
+          $('#sel_id').val(id);
+          $('#sel_brand').val(brand);
+          $('#sel_model').val(model);
+          $('#sel_version').val(ver);
+          $('#sel_engine').val(engine);
+          $('#sel_ecu').val(ecu);
+          $('#sel_file_type').val(fileType);
+          $('#sel_year').val(year);
+          $('#sel_output_file_url').val(output);
+
+          // ✅ Set vehicle_type
+          $('#vehicle_type').val(res.vehicle_type || '');
+
+        } else {
+          // ❌ Not found — reset UI
+          resetPicked();
+          // Swal.fire('No Match', 'Vehicle type not found for this brand.', 'info');
+        }
+      },
+      error: function(){
+        resetPicked();
+        // Swal.fire('Error', 'Unable to verify vehicle type. Please try again.', 'error');
+      },
+      complete: function(){
+        $card.css('opacity', 1);
+      }
+    });
   });
 })();
+
 </script>
 
 <script type="text/javascript">
