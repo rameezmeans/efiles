@@ -725,7 +725,7 @@
 
     var dropzone = new Dropzone('#uploadfile', {
         thumbnailWidth: 200,
-        maxFilesize: 10,
+        maxFilesize: 30,
         //   acceptedFiles: "'',.cod,.bin",
 
         success: function(file, response) {

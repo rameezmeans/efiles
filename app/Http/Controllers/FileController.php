@@ -1298,17 +1298,21 @@ public function checkAutoFile(Request $request)
     if (!$this->isAutoEligible($service)) {
         return response()->json([
             'available' => false,
-            'mode'      => Str::of($service->name)->lower()->replace(' ', '_'),
+            // 'mode'      => Str::of($service->name)->lower()->replace(' ', '_'),
+            'mode'      => $service->label,
             'message'   => 'No automatic solution for this selection. Proceed to checkout.',
         ]);
     }
 
     // … keep your existing auto-call logic below, but use $service instead of $stage
-    $mode = Str::of($service->name)->lower()->replace(' ', '_');
+    // $mode = Str::of($service->name)->lower()->replace(' ', '_');
+    $mode = $service->label;
     $apiUrl = 'http://212.205.214.152:5000/external-api2';
 
+    // dd($service->label);
+
     $payload = [
-        'mode'                 => $service->name, // API expects literal casing like "Stage 1"
+        'mode'                 => $service->label, // API expects literal casing like "Stage 1"
         'timeout'              => 10,
         'enable_max_diff_area' => 'off',
         'enable_max_diff_bytes'=> 'off',
