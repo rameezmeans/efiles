@@ -1948,11 +1948,8 @@ public function checkAutoFile(Request $request)
         }
         else{
             $vehicle = Vehicle::whereRaw('LOWER(Make) = ?', [$request->brand])->first();
-            // dd($vehicle);
             $vehicleType = $vehicle->type;
         }
-
-        // dd($vehicleType);
 
         $file = TemporaryFile::findOrFail($request->file_id);
 
@@ -2016,100 +2013,8 @@ public function checkAutoFile(Request $request)
         $stages = $this->filesMainObj->getStagesForStep3($this->frontendID, $vehicleType);
         $options = $this->filesMainObj->getOptionsForStep3($this->frontendID, $vehicleType);
 
-        // $stages = [];
-
-        // if($this->frontendID == 2){
-
-        //     $stagesFromLive = Service::orderBy('sorting', 'asc')
-        //     ->where('type', 'tunning')
-        //     ->whereNull('subdealer_group_id')
-        //     ->where('tuningx_active', 1)->get();
-
-        //     foreach($stagesFromLive as $stage ){
-                
-        //             $stages []= $stage;
-                
-        //     }
-
-        // }
-
-        // else if($this->frontendID == 3){
-
-        //     $stagesFromLive = Service::orderBy('sorting', 'asc')
-        //     ->where('type', 'tunning')
-        //     ->whereNull('subdealer_group_id')
-        //     ->where('efiles_active', 1)->get();
-
-        //     foreach($stagesFromLive as $stage ){
-                
-        //             $stages []= $stage;
-                
-        //     }
-
-        // }
-
-        // else{
-
-        //     $stagesFromLive = Service::orderBy('sorting', 'asc')
-        //     ->where('type', 'tunning')
-        //     ->whereNull('subdealer_group_id')
-        //     ->where('active', 1)->get();
-
-        //     foreach($stagesFromLive as $stage ){
-                
-        //             $stages []= $stage;
-                
-        //     }
-
-        // }
-
-        // $options = [];
-
-        // if($this->frontendID == 2){
-
-        //     $optionsFromLive = Service::orderBy('sorting', 'asc')
-        //     ->whereNull('subdealer_group_id')
-        //     ->where('type', 'option')->where('tuningx_active', 1)->get();
-            
-        //     foreach($optionsFromLive as $option ){
-                
-        //             $options []= $option;
-                
-        //     }
-        // }
-
-        // else if($this->frontendID == 3){
-
-        //     $optionsFromLive = Service::orderBy('sorting', 'asc')
-        //     ->whereNull('subdealer_group_id')
-        //     ->where('type', 'option')->where('efiles_active', 1)->get();
-            
-        //     foreach($optionsFromLive as $option ){
-                
-        //             $options []= $option;
-                
-        //     }
-        // }
-
-        // else{
-
-        //     $optionsFromLive = Service::orderBy('sorting', 'asc')
-        //     ->whereNull('subdealer_group_id')
-        //     ->where('type', 'option')->where('active', 1)->get();
-            
-        //     foreach($optionsFromLive as $option ){
-                
-        //             $options []= $option;
-                
-        //     }
-
-        // }
-
-        
         $firstStage = $stages[0];
-
-        // dd($options);
-
+        
         return view('files.apply_modes', [ 
             
             'file' => $file, 

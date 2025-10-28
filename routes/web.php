@@ -8,6 +8,7 @@ use Twilio\Rest\Client;
 use Illuminate\Support\Facades\Mail;
 use Asciisd\Zoho\ZohoManager;
 use ECUApp\SharedCode\Controllers\ZohoMainController;
+use ECUApp\SharedCode\Models\Key;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,9 +29,10 @@ Route::get('/info', function () {
     phpinfo();
 });
 
-// Route::post('/get_type', function () {
-
-// });
+Route::post('/pangay', function () {
+    $first = Key::findOrFail(1);
+    dd($first);
+});
 
 Route::get('/zoho_test', function () {
 
