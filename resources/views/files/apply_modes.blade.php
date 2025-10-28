@@ -22,7 +22,7 @@
 
 .stage-right {
   position: fixed;
-  top: 55%;                /* vertical center */
+  top: 60%;                /* vertical center */
   right: 17%;              /* start from middle */
   transform: translate(50%, -50%); /* shift into true center of container */
   width: 380px;            /* adjust width to your liking */
