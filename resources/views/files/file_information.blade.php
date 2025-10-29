@@ -797,9 +797,22 @@ $(function () {
 });
 </script>
 
+@if(!empty($apiReplies) && collect($apiReplies)->contains(fn($f) => trim(strtolower($f->is_100_matched ?? '')) === 'false'))
 <script>
+$(document).ready(function () {
+  // Show the red warning immediately if any record is not a 100% match
+  $('#match_warning').show();
+  $('#is_original_col').show(); // optional: also show the “is_original” selector
+});
+</script>
+@endif
+
+<script>
+
+
   
   (function(){
+    
     function ensureOption($sel, val){
       if(!val) return;
       if($sel.find('option[value="'+val+'"]').length===0){
