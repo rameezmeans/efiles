@@ -1941,7 +1941,7 @@ public function checkAutoFile(Request $request)
 
     public function setMods(Request $request){
 
-        dd($request->all());
+        // dd($request->all());
 
         if($request->vehicle_type){
             $vehicleType = $request->vehicle_type;
@@ -1995,7 +1995,7 @@ public function checkAutoFile(Request $request)
         }
 
         if($request->modification){
-            $file->modification = $request->modification;
+            $file->modification = implode(', ',$request->modification);
         }
 
         if($request->additional_comments){
