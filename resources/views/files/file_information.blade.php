@@ -3,6 +3,17 @@
 
 <style>
 
+  .select2-search__field {
+    height: 1.8rem !important;
+}
+.select2-container{
+  width: 100% !important;
+}
+
+.hide1 {
+  display: none;
+}
+
         /* 
   You want a simple and fancy tooltip?
   Just copy all [data-tooltip] blocks:
@@ -473,6 +484,7 @@ p.tuning-resume {
     @foreach($apiReplies as $f)
       @php
         $brand = trim($f->brand ?? '');
+        $is_100_matched = trim($f->is_100_matched ?? '');
         $model = trim($f->model ?? '');
         $engine = trim($f->engine ?? '');
         $ecu = trim($f->ecu_type ?? '');
@@ -495,6 +507,7 @@ p.tuning-resume {
                  data-ecu="{{ $ecu }}"
                  data-file_type="{{ $fileType }}"
                  data-year="{{ $year }}"
+                 data-is_100_matched="{{ $is_100_matched }}"
                  data-ver="{{ $ver }}">
           <h5 title="{{ $title }}" class="mb-0">{{ $title }}</h5>
         </div>
@@ -595,6 +608,40 @@ p.tuning-resume {
                                   </div>
                               </div>
 
+                              <!-- === Is original (left) + Mods & Comments (right) === -->
+<div id="is_original_col" class="col-xl-6 col-lg-6 col-md-6" style="display:none;">
+  <div class="form-group">
+    <label for="is_original">Is this the original file? *</label>
+    <select id="is_original" name="is_original" class="form-control">
+      <option value="-1">I don't know</option>
+      <option value="1" selected>Yes — It is Original file.</option>
+      <option value="0">No — It is Not an original file.</option>
+    </select>
+  </div>
+</div>
+
+<div id="mods_col" class="col-xl-6 col-lg-6 col-md-6" style="display:none;">
+  <div class="form-group">
+    <label>Modifications</label>
+    <select id="modification" name="modification[]" multiple class="select-dropdown-multi form-control">
+      @foreach($modifications as $modification)
+        <option value="{{$modification->label}}">{{$modification->name}}</option>
+      @endforeach
+    </select>
+  </div>
+
+  <div id="mod_other_text_wrap" class="form-group" style="display:none;">
+    <input type="text" class="form-control" id="mod_other_text" name="mod_other_text"
+           placeholder="Describe other modification">
+  </div>
+
+  <div class="form-group mb-0">
+    <label for="additional_comments">Additional comments</label>
+    <textarea class="form-control" id="additional_comments" name="additional_comments" rows="3"
+              placeholder="Anything else we should know?"></textarea>
+  </div>
+</div>
+
                               {{-- <input type="hidden" 
                                             id="found_file_id" 
                                             name="found_file_id" 
@@ -652,7 +699,50 @@ $(function () {
 });
 </script>
 
+<!-- === Scripts (unchanged logic, no old() dependence) === -->
+<!-- === Scripts for the side-by-side behavior === -->
 <script>
+  (function () {
+    // init select2
+    $(".select-dropdown-multi").select2({
+      closeOnSelect: false,
+      placeholder: "{{__('Select Modifications')}}",
+      allowClear: true,
+      tags: true
+    });
+
+    function toggleMods() {
+      const show = String($('#is_original').val()) === '0';
+      $('#mods_col').toggle(show);
+
+      if (!show) {
+        // clear values when hidden
+        $('#modification').val(null).trigger('change');
+        $('#mod_other_text').val('');
+        $('#mod_other_text_wrap').hide();
+        $('#additional_comments').val('');
+      }
+    }
+
+    function toggleOtherText() {
+      const vals = ($('#modification').val() || []).map(v => String(v).toLowerCase());
+      const hasOther = vals.some(v => v === 'other' || v.includes('other (please'));
+      $('#mod_other_text_wrap').toggle(hasOther);
+      if (!hasOther) $('#mod_other_text').val('');
+    }
+
+    $(document).ready(function () {
+      toggleMods();
+      toggleOtherText();
+    });
+
+    $(document).on('change', '#is_original', toggleMods);
+    $(document).on('change', '#modification', toggleOtherText);
+  })();
+</script>
+
+<script>
+
   $(function () {
   const preselected = @json($selected ?? null);
 
@@ -703,86 +793,108 @@ $(function () {
 <script>
   
   (function(){
-  function ensureOption($sel, val){
-    if(!val) return;
-    if($sel.find('option[value="'+val+'"]').length===0){
-      $sel.append($('<option>', {value: val, text: val}));
-    }
-    $sel.prop('disabled', false).val(val).trigger('change');
-  }
-
-  function resetPicked(){
-    $('.api-card').removeClass('active');
-    $('#vehicle_type').val('');
-    // Optionally clear selects and hidden fields
-    // $('#brand, #model, #version, #engine, #ecu').val('').prop('disabled', true);
-    // $('#sel_id, #sel_brand, #sel_model, #sel_version, #sel_engine, #sel_ecu, #sel_file_type, #sel_year, #sel_output_file_url').val('');
-  }
-
-  $(document).on('change','input[name="api_pick"]', function(){
-    const $card = $(this).closest('.api-card');
-    $('.api-card').removeClass('active');
-    $card.addClass('active');
-
-    const $r       = $(this);
-    const id       = $r.data('id')      || '';
-    const brand    = $r.data('brand')   || '';
-    const model    = $r.data('model')   || '';
-    const ver      = $r.data('ver')     || '';
-    const engine   = $r.data('engine')  || '';
-    const ecu      = $r.data('ecu')     || '';
-    const fileType = $r.data('file_type')|| '';
-    const year     = $r.data('year')    || '';
-    const output   = $r.data('url')     || '';
-
-    $card.css('opacity', .6);
-
-    $.ajax({
-      url: "/find-vehicle-type-by-brand",
-      type: "POST",
-      headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
-      data: { brand: brand },
-      success: function(res){
-        if (res.vehicle_found === true) {
-          // ✅ Fill dropdowns visually
-          ensureOption($('#brand'),  brand);
-          ensureOption($('#model'),  model);
-          ensureOption($('#version'),ver);
-          ensureOption($('#engine'), engine);
-          ensureOption($('#ecu'),    ecu);
-          $('#file_type').val(fileType);
-
-          // ✅ Fill hidden fields
-          $('#sel_id').val(id);
-          $('#sel_brand').val(brand);
-          $('#sel_model').val(model);
-          $('#sel_version').val(ver);
-          $('#sel_engine').val(engine);
-          $('#sel_ecu').val(ecu);
-          $('#sel_file_type').val(fileType);
-          $('#sel_year').val(year);
-          $('#sel_output_file_url').val(output);
-
-          // ✅ Set vehicle_type
-          $('#vehicle_type').val(res.vehicle_type || '');
-
-        } else {
-          // ❌ Not found — reset UI
-          resetPicked();
-          // Swal.fire('No Match', 'Vehicle type not found for this brand.', 'info');
-        }
-      },
-      error: function(){
-        resetPicked();
-        // Swal.fire('Error', 'Unable to verify vehicle type. Please try again.', 'error');
-      },
-      complete: function(){
-        $card.css('opacity', 1);
+    function ensureOption($sel, val){
+      if(!val) return;
+      if($sel.find('option[value="'+val+'"]').length===0){
+        $sel.append($('<option>', {value: val, text: val}));
       }
-    });
-  });
-})();
+      $sel.prop('disabled', false).val(val).trigger('change');
+    }
 
+    function resetPicked(){
+      $('.api-card').removeClass('active');
+      $('#vehicle_type').val('');
+    }
+
+    function showIsOriginalRow(show){
+      $('#is_original_col').toggle(!!show);
+      $('#mods_col').toggle(false); // mods only show when is_original == 0
+
+      if(!show){
+        // reset values when hiding the whole row
+        $('#is_original').val('1'); // back to default “Yes”
+        $('#modification').val(null).trigger('change');
+        $('#mod_other_text').val('');
+        $('#mod_other_text_wrap').hide();
+        $('#additional_comments').val('');
+      } else {
+        // when showing, ensure the mods area respects current selection
+        // (your toggleMods() handles this)
+        if (typeof toggleMods === 'function') { toggleMods(); }
+      }
+    }
+
+    $(document).on('change','input[name="api_pick"]', function(){
+      const $card = $(this).closest('.api-card');
+      $('.api-card').removeClass('active');
+      $card.addClass('active');
+
+      const $r        = $(this);
+      const id        = $r.data('id')      || '';
+      const brand     = $r.data('brand')   || '';
+      const model     = $r.data('model')   || '';
+      const ver       = $r.data('ver')     || '';
+      const engine    = $r.data('engine')  || '';
+      const ecu       = $r.data('ecu')     || '';
+      const fileType  = $r.data('file_type') || '';
+      const year      = $r.data('year')    || '';
+      const output    = $r.data('url')     || '';
+
+
+      // Get the string value ("True" / "False")
+      const matchedStr = String($r.data('is_100_matched')).trim();
+
+      // Convert to boolean: "True" → true, "False" → false
+      const isMatched = matchedStr.toLowerCase() === 'true';
+
+      // ✅ Show the is_original section ONLY when matched is FALSE
+      const shouldShowIsOriginal = !isMatched;
+
+      console.log('is_100_matched:', matchedStr, '→ isMatched:', isMatched, '→ show is_original:', shouldShowIsOriginal);
+
+      // control the row visibility purely from is_100_matched
+      showIsOriginalRow(shouldShowIsOriginal);
+
+      $card.css('opacity', .6);
+
+      $.ajax({
+        url: "/find-vehicle-type-by-brand",
+        type: "POST",
+        headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
+        data: { brand: brand },
+        success: function(res){
+          if (res.vehicle_found === true) {
+            ensureOption($('#brand'),  brand);
+            ensureOption($('#model'),  model);
+            ensureOption($('#version'),ver);
+            ensureOption($('#engine'), engine);
+            ensureOption($('#ecu'),    ecu);
+            $('#file_type').val(fileType);
+
+            $('#sel_id').val(id);
+            $('#sel_brand').val(brand);
+            $('#sel_model').val(model);
+            $('#sel_version').val(ver);
+            $('#sel_engine').val(engine);
+            $('#sel_ecu').val(ecu);
+            $('#sel_file_type').val(fileType);
+            $('#sel_year').val(year);
+            $('#sel_output_file_url').val(output);
+
+            $('#vehicle_type').val(res.vehicle_type || '');
+          } else {
+            resetPicked();
+          }
+        },
+        error: function(){
+          resetPicked();
+        },
+        complete: function(){
+          $card.css('opacity', 1);
+        }
+      });
+    });
+  })();
 </script>
 
 <script type="text/javascript">

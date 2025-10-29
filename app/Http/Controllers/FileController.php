@@ -1941,7 +1941,7 @@ public function checkAutoFile(Request $request)
 
     public function setMods(Request $request){
 
-        // dd($request->all());
+        dd($request->all());
 
         if($request->vehicle_type){
             $vehicleType = $request->vehicle_type;
@@ -1957,9 +1957,11 @@ public function checkAutoFile(Request $request)
         $file->email         = $request->email;
         $file->phone         = $request->phone;
         $file->model_year    = $request->selected['vehicle_model_year'];
+
         $file->file_type = (strcasecmp($request->file_type, 'TCU') === 0)
         ? 'gearbox_file'
         : 'ecu_file';
+
         $file->license_plate = $request->license_plate;
         $file->vin_number    = $request->vin_number;
         $file->brand         = $request->brand;
@@ -1992,17 +1994,15 @@ public function checkAutoFile(Request $request)
             $file->ecu       = "Not Provided";
         }
 
-        if($request->file_type == 'ECU'){
-            $file->gearbox_ecu = NULL;
-        }else{
-            $file->gearbox_ecu = $request->file_type;
-        }
-
-        if(isset($data['modification'])){
+        if($request->modification){
             $file->modification = $request->modification;
         }
 
-        // $file->is_original = $request->is_original;
+        if($request->additional_comments){
+            $file->additional_comments = $request->additional_comments;
+        }
+
+        $file->is_original = $request->is_original;
         
         $file->credits = 0;
 
@@ -2032,32 +2032,27 @@ public function checkAutoFile(Request $request)
 
     public function nextStep(Request $request){
 
-        // dd($request->all());
-        
         $tempFileID = $request->tempFileID;
-
-        // dd($request->all());
 
         $file = TemporaryFile::findOrFail($tempFileID);
         $apiReplies = json_decode($request->apiResponse)->FILES;
+
+        $modifications = Modification::all();
 
         // dd($apiReplies);
 
         // $selected = $request->selected;
         // $matchedChoice = $request->matched_choice;
-        $file->modification = $request->modification;
+        // $file->modification = $request->modification;
         
-        $file->is_original = 0;
+        // $file->is_original = 0;
 
         $file->save();
 
-        // dd($file);
-
-        // dd($selected);
-
         $brands = $this->filesMainObj->getBrands();
 
-    return view('files.file_information', [ 
+        return view('files.file_information', [ 
+            'modifications' => $modifications, 
             'brands' => $brands, 
             'file' => $file, 
             'apiReplies' => $apiReplies, 
