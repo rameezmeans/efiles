@@ -392,6 +392,8 @@ p.tuning-resume {
 
                 <div class="col-xl-12 col-lg-12 col-md-12">
 
+                  
+
                           @if(!empty($apiReplies))
   <style>
     .api-picks-wrapper {
@@ -480,6 +482,8 @@ p.tuning-resume {
     }
   </style>
 
+  
+
   <div class="api-picks-wrapper">
     @foreach($apiReplies as $f)
       @php
@@ -521,6 +525,9 @@ p.tuning-resume {
 @endif
                     
 
+<div id="match_warning" class="alert alert-danger" style="display:none;">
+  <strong>Warning:</strong> This pick isn’t a 100% match. Please confirm if the file is original and list any modifications.
+</div>
                                 <div class="form-group">
                                   <label for="exampleInputCompanyLP1">Brand *</label>
                                   
@@ -847,13 +854,16 @@ $(function () {
       // Convert to boolean: "True" → true, "False" → false
       const isMatched = matchedStr.toLowerCase() === 'true';
 
-      // ✅ Show the is_original section ONLY when matched is FALSE
+      // Show is_original only when NOT matched
       const shouldShowIsOriginal = !isMatched;
+
+      // NEW: show/hide red warning box
+      $('#match_warning').toggle(shouldShowIsOriginal);
 
       console.log('is_100_matched:', matchedStr, '→ isMatched:', isMatched, '→ show is_original:', shouldShowIsOriginal);
 
-      // control the row visibility purely from is_100_matched
-      showIsOriginalRow(shouldShowIsOriginal);
+// control the row visibility purely from is_100_matched
+showIsOriginalRow(shouldShowIsOriginal);
 
       $card.css('opacity', .6);
 
