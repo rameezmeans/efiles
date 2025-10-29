@@ -2001,7 +2001,7 @@ public function checkAutoFile(Request $request)
         if($request->additional_comments){
             $file->additional_comments = $request->additional_comments;
         }
-
+        
         $file->is_original = $request->is_original;
         
         $file->credits = 0;

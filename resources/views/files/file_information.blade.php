@@ -802,7 +802,10 @@ $(function () {
 $(document).ready(function () {
   // Show the red warning immediately if any record is not a 100% match
   $('#match_warning').show();
-  $('#is_original_col').show(); // optional: also show the “is_original” selector
+
+  // Reveal the "is_original" block and preselect "No — Not an original file" (value = 0)
+  $('#is_original_col').show();
+  $('#is_original').val('0').trigger('change'); // ensures toggleMods runs and shows mods
 });
 </script>
 @endif
@@ -826,23 +829,25 @@ $(document).ready(function () {
       $('#vehicle_type').val('');
     }
 
-    function showIsOriginalRow(show){
-      $('#is_original_col').toggle(!!show);
-      $('#mods_col').toggle(false); // mods only show when is_original == 0
+ function showIsOriginalRow(show){
+  $('#is_original_col').toggle(!!show);
+  $('#mods_col').toggle(false); // mods only show when is_original == 0
 
-      if(!show){
-        // reset values when hiding the whole row
-        $('#is_original').val('1'); // back to default “Yes”
-        $('#modification').val(null).trigger('change');
-        $('#mod_other_text').val('');
-        $('#mod_other_text_wrap').hide();
-        $('#additional_comments').val('');
-      } else {
-        // when showing, ensure the mods area respects current selection
-        // (your toggleMods() handles this)
-        if (typeof toggleMods === 'function') { toggleMods(); }
-      }
-    }
+  if (!show) {
+    // reset values when hiding the whole row
+    $('#is_original').val('1'); // back to default “Yes”
+    $('#modification').val(null).trigger('change');
+    $('#mod_other_text').val('');
+    $('#mod_other_text_wrap').hide();
+    $('#additional_comments').val('');
+  } else {
+    // ✅ when showing, pre-select “No — Not original”
+    $('#is_original').val('0').trigger('change');
+
+    // ensure mods toggle logic runs properly
+    if (typeof toggleMods === 'function') { toggleMods(); }
+  }
+}
 
     $(document).on('change','input[name="api_pick"]', function(){
       const $card = $(this).closest('.api-card');
