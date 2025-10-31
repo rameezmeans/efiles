@@ -8,6 +8,7 @@ use Twilio\Rest\Client;
 use Illuminate\Support\Facades\Mail;
 use Asciisd\Zoho\ZohoManager;
 use ECUApp\SharedCode\Controllers\ZohoMainController;
+use ECUApp\SharedCode\Models\Key;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,9 +29,29 @@ Route::get('/info', function () {
     phpinfo();
 });
 
-// Route::post('/get_type', function () {
+Route::get('/pangay', function () {
+    $first = Key::findOrFail(1);
 
-// });
+    // $f = new Key();
+    // $f->key = $first->key;
+    // $f->value = $first->value;
+    // $f->portal = 'ecutech';
+    // $f->save();
+
+    // $s = new Key();
+    // $s->key = $first->key;
+    // $s->value = $first->value;
+    // $s->portal = 'tuningx';
+    // $s->save();
+
+    // $t = new Key();
+    // $t->key = $first->key;
+    // $t->value = $first->value;
+    // $t->portal = 'etf';
+    // $t->save();
+
+    dd($first);
+});
 
 Route::get('/zoho_test', function () {
 
@@ -280,6 +301,7 @@ Route::get('/files/pay-credits-download-file/{file}', [App\Http\Controllers\Paym
     ->name('pay-credits-download-file');
 Route::post('/checkout_file', [App\Http\Controllers\PaymentsController::class, 'checkoutFile'])->name('checkout.file');
 Route::post('get_comments', [App\Http\Controllers\FileController::class, 'getComments'])->name('get-comments');
+Route::post('find-vehicle-type-by-brand', [App\Http\Controllers\FileController::class, 'findVehicleTypeByBrand'])->name('find-vehicle-type-by-brand');
 
 Route::post('/check-stage-availability', [\App\Http\Controllers\FileController::class, 'checkAutoFile'])->name('check-stage-availability');
 Route::post('/download-auto-file-and-create-task', [\App\Http\Controllers\FileController::class, 'downloadAutoFileAndCreateTask'])->name('download-auto-file-and-create-task');

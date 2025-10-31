@@ -3,6 +3,71 @@
 
 <style>
 
+  /* Layout */
+.stage-layout{
+  display:flex;
+  gap:24px;
+}
+
+/* LEFT: single scroll for Tuning + Options */
+.stage-left{
+  flex:1 1 auto;
+  max-height: calc(100vh - 200px);     /* same headroom as your old calc */
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  padding-right:8px;
+}
+
+/* ============ FLOATING CENTERED RIGHT BOX ============ */
+
+.stage-right {
+  position: fixed;
+  top: 60%;                /* vertical center */
+  right: 17%;              /* start from middle */
+  transform: translate(50%, -50%); /* shift into true center of container */
+  width: 380px;            /* adjust width to your liking */
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  padding: 24px 20px;
+  z-index: 100;            /* make sure it's above content */
+}
+
+/* optional subtle fade/blur behind it for elegance */
+.stage-right::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(8px);
+  opacity: 0.4;
+  border-radius: 12px;
+}
+
+/* keep text + buttons above backdrop blur */
+.stage-right > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* adjust widths inside */
+.stage-right .btn {
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* Kill inner row scroll; we now scroll only .stage-left */
+.row.post-row{
+  max-height: none !important;
+  overflow: visible !important;
+  padding-right: 0 !important;
+}
+
+/* Optional: make the credits box scroll independently if it grows too tall */
+#rows-for-credits{
+  max-height: 300px;
+  overflow-y: auto;
+}
+
   /* make the main content not clip children */
 /* allow inner scroll, not top-level content */
 #content { height: auto; overflow: visible; }
@@ -385,6 +450,11 @@ p.tuning-resume {
             <input type="hidden" id="file_tool_type" value="{{$file->tool_type}}">
             @csrf
 
+            <div class="stage-layout">
+              <!-- LEFT: one scroll for both sections -->
+              <div class="stage-left">
+                <!-- Tuning row (unchanged inside) -->
+
              <div class="row post-row">
                 <div class="col-xl-3 col-lg-3 col-md-3 heading-column">
                     <div class="heading-column-box">  
@@ -423,42 +493,7 @@ p.tuning-resume {
                   @endforeach
                 </div>
               </div>
-              <div class="col-xl-4 col-lg-4 col-md-4">
-
-                <!-- status + loader -->
-                <div id="stage-status" class="alert alert-info hide" style="margin-bottom:12px;"></div>
-                <div id="stage-loader" class="loader hide"></div>
-
-                <div id="rows-for-credits" class="red-scroll" style=""></div>
-                <div class="total-box"> … </div>
-
-                <input type="hidden" id="total_credits_to_submit" name="total_credits_to_submit" value="">
-                <input type="hidden" id="mandatory_field" name="mandatory_field" value="">
-                <input type="hidden" id="delivery_mode" name="delivery_mode" value=""> <!-- auto | manual -->
-
-                <div class="text-center">
-                  <!-- Checkout (default) -->
-                  <button class="btn btn-red m-t-10" type="submit" id="btn-checkout">
-                    <i class="fa fa-arrow-right"></i> Go to Checkout Page
-                  </button>
-
-                  {{-- <form method="POST" id="file-upload-tuning-form" action="{{ route('download-file') }}"> --}}
-                    <input type="hidden" name="mode" id="mode">
-                    <input type="hidden" name="output_file_url" id="output_file_url">
-
-                    <button class="btn btn-red m-t-10 hide" 
-                            type="submit" 
-                            id="btn-download"
-                            formaction="{{ route('download-file') }}">
-                      <i class="fa fa-arrow-right"></i> Go to Download Page
-                    </button>
-
-                  {{-- </form> --}}
-                  <!-- Download (hidden by default) -->
-                  
-                </div>
-
-              </div>
+              
              
             </div>
 
@@ -547,6 +582,49 @@ p.tuning-resume {
                 </div>
               </div>
             </div>
+
+              </div>
+            
+
+            <div class="stage-right">
+
+                <!-- status + loader -->
+                <div id="stage-status" class="alert alert-info hide" style="margin-bottom:12px;"></div>
+                <div id="stage-loader" class="loader hide"></div>
+
+                <div id="rows-for-credits" class="red-scroll" style=""></div>
+                <div class="total-box"> … </div>
+
+                <input type="hidden" id="total_credits_to_submit" name="total_credits_to_submit" value="">
+                <input type="hidden" id="mandatory_field" name="mandatory_field" value="">
+                <input type="hidden" id="delivery_mode" name="delivery_mode" value=""> <!-- auto | manual -->
+
+                <div class="text-center">
+                  <!-- Checkout (default) -->
+                  <button class="btn btn-red m-t-10" type="submit" id="btn-checkout">
+                    <i class="fa fa-arrow-right"></i> Go to Checkout Page
+                  </button>
+
+                  {{-- <form method="POST" id="file-upload-tuning-form" action="{{ route('download-file') }}"> --}}
+                    <input type="hidden" name="mode" id="mode">
+                    <input type="hidden" name="output_file_url" id="output_file_url">
+
+                    <button class="btn btn-red m-t-10 hide" 
+                            type="submit" 
+                            id="btn-download"
+                            formaction="{{ route('download-file') }}">
+                      <i class="fa fa-arrow-right"></i> Go to Download Page
+                    </button>
+
+                  {{-- </form> --}}
+                  <!-- Download (hidden by default) -->
+                  
+                </div>
+
+              </div>
+
+            </div>
+
         </form>
         </div>
 
@@ -560,36 +638,67 @@ p.tuning-resume {
 @section('pagespecificscripts')
 
 <script>
+(function(){
+  function applyHeights(){
+    var vh   = window.innerHeight;
+    var topH = ($('.fix-header').outerHeight(true) || 0);
+    var pad  = 20; // small breathing room
 
+    // left pane scroll height
+    var h = vh - topH - 80;             // tune this margin if needed
+    if(h < 300) h = 300;
+    $('.stage-left').css({ maxHeight: h + 'px' });
 
+    // sticky offset for right pane
+    document.documentElement.style.setProperty('--stickyTop', (topH + pad) + 'px');
+  }
+  $(window).on('load resize', applyHeights);
+})();
+</script>
+
+<script>
 // NEW: track if we've already fired the 0→1 options check
-let hasFiredOptionCheck = false;
 
-// NEW: availability check for an option (uses same endpoint)
+let hasFiredOptionCheck = false;
 async function runAvailabilityOption(serviceId){
   lockUI();
-  showStatus('Checking option availability…', 'info');
+  showStatus('Checking option availability… please wait.', 'info');
+
   try {
     const res = await $.ajax({
       url: "{{ route('check-stage-availability') }}",
       type: "POST",
-      headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
-      data: { service_id: serviceId } // <-- key difference
+      headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
+      data: { service_id: serviceId }
     });
 
     if (res.available) {
+      // ✅ Option has an automatic file available
       showStatus(res.message || 'This option can be delivered automatically.', 'success');
-      // We STILL force checkout for any options picked:
-      showCheckoutOnly();
-      // If you ever want to enable auto-download for options, set #mode/#output_file_url here.
-      // $('#mode').val(res.mode); $('#output_file_url').val(res.output_file_url || '');
+      $('#delivery_mode').val('auto');
+      $('#btn-checkout').addClass('hide');
+      $('#btn-download').removeClass('hide');
+      $('#mode').val(res.mode || 'option');
+      $('#output_file_url').val(res.output_file_url || '');
     } else {
-      showStatus(res.message || 'No automatic solution for this option. Proceed to checkout.', 'danger');
-      showCheckoutOnly();
+      // ❌ Option not auto — manual route only
+      showStatus(res.message || 'No automatic solution available for this option. Proceed to checkout.', 'danger');
+      $('#delivery_mode').val('manual');
+      $('#btn-download').addClass('hide');
+      $('#btn-checkout').removeClass('hide');
+      $('#mode').val('');
+      $('#output_file_url').val('');
     }
+
   } catch (e) {
-    showStatus('Could not verify option. Proceed to checkout.', 'danger');
-    showCheckoutOnly();
+    // ⚠️ On error, fallback to manual
+    console.error('Option check failed', e);
+    showStatus('Could not verify option availability. Proceed to checkout.', 'danger');
+    $('#delivery_mode').val('manual');
+    $('#btn-download').addClass('hide');
+    $('#btn-checkout').removeClass('hide');
+    $('#mode').val('');
+    $('#output_file_url').val('');
   } finally {
     unlockUI();
   }
@@ -628,10 +737,10 @@ function showCheckoutOnly(){
   $('#btn-checkout').removeClass('hide');
   // hideStatus(); // optional
 }
+
 async function runAvailability(stageId, stageName, foundFileId, foundFilePath){
   lockUI();
   showStatus('Checking availability… please wait.', 'info');
-
   try {
     const res = await $.ajax({
       url: "{{ route('check-stage-availability') }}",
@@ -640,7 +749,7 @@ async function runAvailability(stageId, stageName, foundFileId, foundFilePath){
       data: { stage_id: stageId, found_file_id: foundFileId, found_file_path: foundFilePath }
     });
 
-    if (res.available) {
+    if (res.available && !anyOptionsSelected()) {
       showStatus(res.message || 'Automatic solution can be delivered.', 'success');
       $('#delivery_mode').val('auto');
       $('#btn-checkout').addClass('hide');
@@ -648,16 +757,50 @@ async function runAvailability(stageId, stageName, foundFileId, foundFilePath){
       $('#mode').val(res.mode);
       $('#output_file_url').val(res.output_file_url || '');
     } else {
-      showStatus(res.message || 'No automatic solution available, engineers will handle the request within 20-60mins.', 'danger');
+      showStatus('No automatic solution available, engineers will handle the request within 20-60mins.', 'danger');
       showCheckoutOnly();
+      $('#mode, #output_file_url').val('');
     }
-  } catch (e) {
+  } catch {
     showStatus('Could not verify availability. Proceed to checkout.', 'danger');
     showCheckoutOnly();
+    $('#mode, #output_file_url').val('');
   } finally {
     unlockUI();
   }
 }
+
+
+// async function runAvailability(stageId, stageName, foundFileId, foundFilePath){
+//   lockUI();
+//   showStatus('Checking availability… please wait.', 'info');
+
+//   try {
+//     const res = await $.ajax({
+//       url: "{{ route('check-stage-availability') }}",
+//       type: "POST",
+//       headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')},
+//       data: { stage_id: stageId, found_file_id: foundFileId, found_file_path: foundFilePath }
+//     });
+
+//     if (res.available) {
+//       showStatus(res.message || 'Automatic solution can be delivered.', 'success');
+//       $('#delivery_mode').val('auto');
+//       $('#btn-checkout').addClass('hide');
+//       $('#btn-download').removeClass('hide');
+//       $('#mode').val(res.mode);
+//       $('#output_file_url').val(res.output_file_url || '');
+//     } else {
+//       showStatus(res.message || 'No automatic solution available, engineers will handle the request within 20-60mins.', 'danger');
+//       showCheckoutOnly();
+//     }
+//   } catch (e) {
+//     showStatus('Could not verify availability. Proceed to checkout.', 'danger');
+//     showCheckoutOnly();
+//   } finally {
+//     unlockUI();
+//   }
+// }
 
   function showStatus(msg, type) {
     const $box = $('#stage-status');
@@ -904,50 +1047,107 @@ $(document).on('click change','input.options-checkbox',function(){
 });
         
 
-        // === OPTIONS: whenever options change, force Checkout if any are selected ===
-        $(document).on('change', '.options-checkbox', function(){
+$(document).on('change', '.options-checkbox', function () {
+  const selectedCount = $('.options-checkbox:checked').length;
 
-          const selectedCount = $('.options-checkbox:checked').length;
+  // ⬇️ Pricing summary refresh (kept as-is)
+  let options_str = '';
+  let checkbox_credits_count = 0;
+  $('#rows-for-credits').html(renderStageHeader());
+  $('input.options-checkbox:checked').each(function(){
+    const optionId = $(this).val();
+    let price = 0;
+    $.each(valuesArray || [], function(_, v){
+      if (v.option_id == optionId) {
+        price = (file_type === 'slave') ? parseInt(v.slave_credits,10) : parseInt(v.master_credits,10);
+        return false;
+      }
+    });
+    checkbox_credits_count += price;
+    const name = $(this).data('name');
+    options_str += `<div class="divider-light"></div>
+                    <p class="tuning-resume">${name} <small>${price} credits</small></p>`;
+  });
+  $('#rows-for-credits').append(options_str);
 
-          // Always force checkout when any option is selected
-          if (selectedCount > 0) {
-            showCheckoutOnly();
-          }
+  const stagePrice = parseInt($('.with-gap:checked').data('price'),10) || 0;
+  const total = stagePrice + checkbox_credits_count;
+  $('#total-credits').html(total);
+  $('#total_credits_to_submit').val(total);
 
-          // Fire ONE ajax only when going from 0 → 1 and this box is being checked
-          if ($(this).is(':checked') && selectedCount === 1 && !hasFiredOptionCheck) {
-            const serviceId = $(this).val();
-            hasFiredOptionCheck = true;
-            runAvailabilityOption(serviceId);
-          }
+  // ⬇️ Delivery-mode logic
+  if (selectedCount > 0) {
+    // force manual
+    $('#delivery_mode').val('manual');
+    $('#mode, #output_file_url').val('');
+    $('#btn-download').addClass('hide');
+    $('#btn-checkout').removeClass('hide');
 
-          // If user clears all options, reset the flag so the next first selection triggers again
-          if (selectedCount === 0) {
-            hasFiredOptionCheck = false;
+    // 🔴 NEW: also update the STATUS banner when we switched to manual
+    // (covers "more options added" case that invalidates previous success)
+    showStatus('No automatic solution available, engineers will handle the request within 20–60 mins.', 'danger');
+  }
 
-            // optionally re-check current stage availability (no options now)
-            const $sel = $('.with-gap:checked');
-            if ($sel.length) {
-              runAvailability($sel.val(), $sel.data('name'), $('#found_file_id').val(), $('#found_file_path').val());
-            }
-          }
+  // First option toggled from 0 → 1? run availability for that single option
+  if ($(this).is(':checked') && selectedCount === 1 && !hasFiredOptionCheck) {
+    hasFiredOptionCheck = true;
+    runAvailabilityOption($(this).val()); // this may flip to auto and set success/status
+  }
 
-          // ... keep your existing comment/alerts logic above ...
+  // When all options cleared → re-check current stage auto availability
+  if (selectedCount === 0) {
+    hasFiredOptionCheck = false;
+    const $sel = $('.with-gap:checked');
+    if ($sel.length) {
+      runAvailability($sel.val(), $sel.data('name'), $('#found_file_id').val(), $('#found_file_path').val());
+    }
+  }
+});
 
-          // // After your existing pricing/credits code runs, add:
-          // if (anyOptionsSelected()) {
-          //   // Any option selected => skip auto, force checkout
-          //   showCheckoutOnly();
-          // } else {
-          //   // No options selected => re-evaluate auto availability for current stage
-          //   const $sel      = $('.with-gap:checked');
-          //   const stageId   = $sel.val();
-          //   const stageName = $sel.data('name');
-          //   const foundFileId   = $('#found_file_id').val();
-          //   const foundFilePath = $('#found_file_path').val();
-          //   runAvailability(stageId, stageName, foundFileId, foundFilePath);
-          // }
-        });
+        // // === OPTIONS: whenever options change, force Checkout if any are selected ===
+        // $(document).on('change', '.options-checkbox', function(){
+
+        //   const selectedCount = $('.options-checkbox:checked').length;
+
+        //   // Always force checkout when any option is selected
+        //   if (selectedCount > 0) {
+        //     showCheckoutOnly();
+        //   }
+
+        //   // Fire ONE ajax only when going from 0 → 1 and this box is being checked
+        //   if ($(this).is(':checked') && selectedCount === 1 && !hasFiredOptionCheck) {
+        //     const serviceId = $(this).val();
+        //     hasFiredOptionCheck = true;
+        //     runAvailabilityOption(serviceId);
+        //   }
+
+        //   // If user clears all options, reset the flag so the next first selection triggers again
+        //   if (selectedCount === 0) {
+        //     hasFiredOptionCheck = false;
+
+        //     // optionally re-check current stage availability (no options now)
+        //     const $sel = $('.with-gap:checked');
+        //     if ($sel.length) {
+        //       runAvailability($sel.val(), $sel.data('name'), $('#found_file_id').val(), $('#found_file_path').val());
+        //     }
+        //   }
+
+        //   // ... keep your existing comment/alerts logic above ...
+
+        //   // // After your existing pricing/credits code runs, add:
+        //   // if (anyOptionsSelected()) {
+        //   //   // Any option selected => skip auto, force checkout
+        //   //   showCheckoutOnly();
+        //   // } else {
+        //   //   // No options selected => re-evaluate auto availability for current stage
+        //   //   const $sel      = $('.with-gap:checked');
+        //   //   const stageId   = $sel.val();
+        //   //   const stageName = $sel.data('name');
+        //   //   const foundFileId   = $('#found_file_id').val();
+        //   //   const foundFilePath = $('#found_file_path').val();
+        //   //   runAvailability(stageId, stageName, foundFileId, foundFilePath);
+        //   // }
+        // });
 
       // $(document).on('change', '.options-checkbox', function(){
           

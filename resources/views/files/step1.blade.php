@@ -725,7 +725,7 @@
 
     var dropzone = new Dropzone('#uploadfile', {
         thumbnailWidth: 200,
-        maxFilesize: 10,
+        maxFilesize: 30,
         //   acceptedFiles: "'',.cod,.bin",
 
         success: function(file, response) {
@@ -749,6 +749,8 @@
                   apiResponse: JSON.stringify(response.api_response || {}),
                   next_step: true
               };
+
+              console.log(response);
 
                 // Create a temporary form
                 const form = document.createElement('form');

@@ -181,6 +181,68 @@ class FileController extends Controller
         return response()->json( ['msg' => 'status not set to fail', 'fail' => 0, 'file_id' => $file->id] );
     }
 
+    // public function findVehicleTypeByBrand(Request $request){
+
+    //     $brand = $request->brand;
+
+    //     if($brand == 'VW'){
+    //         $brand = 'volkswagen';
+    //     }
+
+    //     return Vehicle::where('Make', '=', $brand)
+    //     // ->where('Model', '=', $this->model)
+    //     // ->where('Generation', '=', $this->version)
+    //     // ->where('Engine', '=', $this->engine)
+    //     // ->whereNotNull('Brand_image_url') // url_change
+    //     ->first();
+    // }
+
+public function findVehicleTypeByBrand(Request $request)
+{
+    $brand = strtolower(trim($request->brand));
+
+    // 🔧 Common abbreviations or alternate brand names
+    $brandMap = [
+        'vw'         => 'volkswagen',
+        // 'mb'         => 'mercedes-benz',
+        // 'merc'       => 'mercedes-benz',
+        // 'bmw ag'     => 'bmw',
+        // 'audi ag'    => 'audi',
+        // 'gm'         => 'general motors',
+        // 'chevy'      => 'chevrolet',
+        // 'vauxhall'   => 'opel',
+        // 'peugeot-citroen' => 'peugeot',
+        // 'toyota motor corp' => 'toyota',
+        // 'hyundai motor' => 'hyundai',
+        // 'land rover' => 'land-rover',
+        // 'rangerover' => 'land-rover',
+    ];
+
+    // Replace abbreviation if exists in map
+    if (array_key_exists($brand, $brandMap)) {
+        $brand = $brandMap[$brand];
+    }
+
+    // 🔍 Try to find the matching vehicle
+    $vehicle = Vehicle::whereRaw('LOWER(Make) = ?', [$brand])->first();
+
+    if ($vehicle) {
+        return response()->json([
+            'vehicle_found' => true,
+            'vehicle_type'  => $vehicle->type ?? null, // e.g. car, truck, agri, etc.
+            'brand'         => $vehicle->Make,
+            'message'       => 'Vehicle type found successfully.'
+        ]);
+    }
+
+    return response()->json([
+        'vehicle_found' => false,
+        'vehicle_type'  => null,
+        'brand'         => $brand,
+        'message'       => 'No vehicle type found for the specified brand.'
+    ]);
+}
+
     public function getComments(Request $request){
 
         $file = File::findOrFail($request->file_id);
@@ -1273,8 +1335,6 @@ private function isAutoEligible(Service $service): bool
     $name = strtolower(trim($service->label));
     $type = strtolower(trim($service->type ?? ''));
 
-    // dd($name);
-
     if ($type === 'tunning') {
         // Stage 1 / Stage 2
         return in_array($name, ['stage 1', 'stage_1', 'stage 2', 'stage_2'], true);
@@ -1298,17 +1358,19 @@ public function checkAutoFile(Request $request)
     if (!$this->isAutoEligible($service)) {
         return response()->json([
             'available' => false,
-            'mode'      => Str::of($service->name)->lower()->replace(' ', '_'),
+            // 'mode'      => Str::of($service->name)->lower()->replace(' ', '_'),
+            'mode'      => $service->label,
             'message'   => 'No automatic solution for this selection. Proceed to checkout.',
         ]);
     }
 
     // … keep your existing auto-call logic below, but use $service instead of $stage
-    $mode = Str::of($service->name)->lower()->replace(' ', '_');
+    // $mode = Str::of($service->name)->lower()->replace(' ', '_');
+    $mode = $service->label;
     $apiUrl = 'http://212.205.214.152:5000/external-api2';
 
     $payload = [
-        'mode'                 => $service->name, // API expects literal casing like "Stage 1"
+        'mode'                 => $service->label, // API expects literal casing like "Stage 1"
         'timeout'              => 10,
         'enable_max_diff_area' => 'off',
         'enable_max_diff_bytes'=> 'off',
@@ -1881,13 +1943,25 @@ public function checkAutoFile(Request $request)
 
         // dd($request->all());
 
+        if($request->vehicle_type){
+            $vehicleType = $request->vehicle_type;
+        }
+        else{
+            $vehicle = Vehicle::whereRaw('LOWER(Make) = ?', [$request->brand])->first();
+            $vehicleType = $vehicle->type;
+        }
+
         $file = TemporaryFile::findOrFail($request->file_id);
 
         $file->name          = $request->name;
         $file->email         = $request->email;
         $file->phone         = $request->phone;
         $file->model_year    = $request->selected['vehicle_model_year'];
-        $file->file_type     = $request->file_type;
+
+        $file->file_type = (strcasecmp($request->file_type, 'TCU') === 0)
+        ? 'gearbox_file'
+        : 'ecu_file';
+
         $file->license_plate = $request->license_plate;
         $file->vin_number    = $request->vin_number;
         $file->brand         = $request->brand;
@@ -1920,17 +1994,15 @@ public function checkAutoFile(Request $request)
             $file->ecu       = "Not Provided";
         }
 
-        if($request->file_type == 'ECU'){
-            $file->gearbox_ecu = NULL;
-        }else{
-            $file->gearbox_ecu = $request->file_type;
+        if($request->modification){
+            $file->modification = implode(', ',$request->modification);
         }
 
-        if(isset($data['modification'])){
-            $file->modification = $request->modification;
+        if($request->additional_comments){
+            $file->additional_comments = $request->additional_comments;
         }
-
-        // $file->is_original = $request->is_original;
+        
+        $file->is_original = $request->is_original;
         
         $file->credits = 0;
 
@@ -1938,99 +2010,10 @@ public function checkAutoFile(Request $request)
 
         $mods = [];
 
-        $stages = [];
+        $stages = $this->filesMainObj->getStagesForStep3($this->frontendID, $vehicleType);
+        $options = $this->filesMainObj->getOptionsForStep3($this->frontendID, $vehicleType);
 
-        if($this->frontendID == 2){
-
-            $stagesFromLive = Service::orderBy('sorting', 'asc')
-            ->where('type', 'tunning')
-            ->whereNull('subdealer_group_id')
-            ->where('tuningx_active', 1)->get();
-
-            foreach($stagesFromLive as $stage ){
-                
-                    $stages []= $stage;
-                
-            }
-
-        }
-
-        else if($this->frontendID == 3){
-
-            $stagesFromLive = Service::orderBy('sorting', 'asc')
-            ->where('type', 'tunning')
-            ->whereNull('subdealer_group_id')
-            ->where('efiles_active', 1)->get();
-
-            foreach($stagesFromLive as $stage ){
-                
-                    $stages []= $stage;
-                
-            }
-
-        }
-
-        else{
-
-            $stagesFromLive = Service::orderBy('sorting', 'asc')
-            ->where('type', 'tunning')
-            ->whereNull('subdealer_group_id')
-            ->where('active', 1)->get();
-
-            foreach($stagesFromLive as $stage ){
-                
-                    $stages []= $stage;
-                
-            }
-
-        }
-
-        $options = [];
-
-        if($this->frontendID == 2){
-
-            $optionsFromLive = Service::orderBy('sorting', 'asc')
-            ->whereNull('subdealer_group_id')
-            ->where('type', 'option')->where('tuningx_active', 1)->get();
-            
-            foreach($optionsFromLive as $option ){
-                
-                    $options []= $option;
-                
-            }
-        }
-
-        else if($this->frontendID == 3){
-
-            $optionsFromLive = Service::orderBy('sorting', 'asc')
-            ->whereNull('subdealer_group_id')
-            ->where('type', 'option')->where('efiles_active', 1)->get();
-            
-            foreach($optionsFromLive as $option ){
-                
-                    $options []= $option;
-                
-            }
-        }
-
-        else{
-
-            $optionsFromLive = Service::orderBy('sorting', 'asc')
-            ->whereNull('subdealer_group_id')
-            ->where('type', 'option')->where('active', 1)->get();
-            
-            foreach($optionsFromLive as $option ){
-                
-                    $options []= $option;
-                
-            }
-
-        }
-
-        
         $firstStage = $stages[0];
-
-        // dd($options);
 
         return view('files.apply_modes', [ 
             
@@ -2049,29 +2032,27 @@ public function checkAutoFile(Request $request)
 
     public function nextStep(Request $request){
 
-        // dd($request->all());
-        
         $tempFileID = $request->tempFileID;
+
         $file = TemporaryFile::findOrFail($tempFileID);
         $apiReplies = json_decode($request->apiResponse)->FILES;
+
+        $modifications = Modification::all();
 
         // dd($apiReplies);
 
         // $selected = $request->selected;
         // $matchedChoice = $request->matched_choice;
-        $file->modification = $request->modification;
+        // $file->modification = $request->modification;
         
-        $file->is_original = 0;
+        // $file->is_original = 0;
 
         $file->save();
 
-        // dd($file);
-
-        // dd($selected);
-
         $brands = $this->filesMainObj->getBrands();
 
-    return view('files.file_information', [ 
+        return view('files.file_information', [ 
+            'modifications' => $modifications, 
             'brands' => $brands, 
             'file' => $file, 
             'apiReplies' => $apiReplies, 
@@ -2107,6 +2088,8 @@ public function checkAutoFile(Request $request)
         $tempFile = $this->filesMainObj->createTemporaryFile($user, $file, $toolType, $toolID, $this->frontendID);
 
         $kess3Label = Tool::where('label', 'Kess_V3')->where('type', 'slave')->first();
+
+        $path = null;
 
         if($toolType == 'slave' && $tempFile->tool_id == $kess3Label->id){
 
@@ -2145,7 +2128,13 @@ public function checkAutoFile(Request $request)
 
         // Path to the file you want to upload
         // $filePath = '/Users/polybit/Downloads/24587';
-        $filePath = $this->filesMainObj->getPath($file, $tempFile);
+
+        if(!$path){
+            $filePath = $this->filesMainObj->getPath($file, $tempFile);
+        }
+        else{
+            $filePath = $path;
+        }
 
         // Ensure the file exists before proceeding
         if (!file_exists($filePath)) {
