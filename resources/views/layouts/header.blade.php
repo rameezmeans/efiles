@@ -26,7 +26,7 @@
     </div>
     <ul class="nav navbar-nav">
       <li class="m-r-8">
-          <button data-redirect="{{route('upload')}}" class="btn btn-info redirect-click"><i class="fa fa-cloud-upload"></i> <span>File Uplaod</span></button>
+          <button data-redirect="{{route('upload')}}" class="btn btn-info redirect-click"><i class="fa fa-cloud-upload"></i> <span>File Upload</span></button>
       </li>
       <li class="m-r-8">
             <button data-redirect="{{route('shop-product')}}" class="btn btn-success redirect-click"><i class="fa fa-cart-shopping"></i> <span>Buy Credits</span></button>     
