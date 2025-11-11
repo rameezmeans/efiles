@@ -1478,6 +1478,7 @@ function htmlEscape(str) {
 
 function renderCars(files){
   const $wrap = $('#carSelection').empty();
+  const backend_base = "{{ rtrim(env('BACKEND_URL'), '/') }}";
 
   (files||[]).forEach((f,i)=>{
     const brand = (f.brand||'').trim();
@@ -1490,7 +1491,8 @@ function renderCars(files){
 
     const title = [brand, model].filter(Boolean).join(' ') || 'Unknown';
     const fromLine = (year || ver) ? `From ${year}${ver?` - ${ver}`:''}` : '';
-    const imgPath = `https://backend.ecutech.gr/icons/logos/${slugBrand(brand)}.png`;
+    //p const imgPath = `https://backend.ecutech.gr/icons/logos/${slugBrand(brand)}.png`;
+    const imgPath = `${backend_base}/icons/logos/${slugBrand(brand)}.png`;
 
     $wrap.append(`
       <div class="col-xl-6 col-lg-6 col-md-6">
